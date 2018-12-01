@@ -21,7 +21,7 @@
 <meta property="og:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://image.baidu.com/search/detail?ct=503316480&amp;z=0&amp;ipn=d&amp;word=%E5%9B%BE%E7%89%87&amp;hs=0&amp;pn=0&amp;spn=0&amp;di=49949058060&amp;pi=0&amp;rn=1&amp;tn=baiduimagedetail&amp;is=0%2C0&amp;ie=utf-8&amp;oe=utf-8&amp;cl=2&amp;lm=-1&amp;cs=2310514390%2C3580363630&amp;os=1293248240%2C3146443768&amp;simid=0%2C0&amp;adpicid=0&amp;lpn=0&amp;ln=30&amp;fr=ala&amp;fm=&amp;sme=&amp;cg=&amp;bdtype=0&amp;oriquery=&amp;objurl=http%3A%2F%2Fpic28.photophoto.cn%2F20130818%2F0020033143720852_b.jpg&amp;fromurl=ippr_z2C%24qAzdH3FAzdH3Fooo_z%26e3Bri5p5ri5p5_z%26e3BvgAzdH3FrtvAzdH3Fa9c99ma0_z%26e3Bip4s&amp;gsm=0&amp;islist=&amp;querylist=">
-<meta property="og:updated_time" content="2018-12-01T14:40:26.672Z">
+<meta property="og:updated_time" content="2018-12-01T14:43:10.755Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HBase原理探究（1）">
 <meta name="twitter:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
@@ -181,7 +181,7 @@
 <h3 id="2-负载均衡"><a href="#2-负载均衡" class="headerlink" title="2. 负载均衡"></a>2. 负载均衡</h3><p>HBase中扩展和负载均衡的基本单元称为region。region为按照行键排列的区间，如果region太大，系统会将他们动态地拆分，相反就会合并多个region。</p>
 <p>一张表初始时只有一个region，当用户开始向表中插入数据时，系统会检查这个region大小，如果超过阈值，则会在中间键处将这些region分割开来，拆分成两个大致相等的region。</p>
 <p>每一个region只能由一台region server加载，有一个region server可以同时加载多个region。其中region在region server中的分布为分散分布(如下图)。</p>
-<p><img src="/images/hbase_img2.png" alt="img_2"></p>
+<p><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/hbase_img2.png" alt="img_2"></p>
 <p>每个region由多个store构成，一个store保存着一个column family。每个store由一个memStore和0个或多个storefile组成，storefile以HFile的形式存储在hdfs中。memstore用于在内存中缓存一定大小的数据，达到一定大小后批量写入HFile(flush)，数据是有序的。</p>
 
         </div>
@@ -190,7 +190,7 @@
 
 
 
-    <a data-url="http://yoursite.com/2018/12/01/hbase-construction1/" data-id="cjp5kdsp800009cu13q8wul4d" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://yoursite.com/2018/12/01/hbase-construction1/" data-id="cjp5kh7q30001lgu1tyki3rib" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
