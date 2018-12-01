@@ -214,37 +214,37 @@ body {
 .article-entry h1,
 .archive-article-inner h1,
 .widget h1 {
-  font-size: 2em;
+  font-size: 2.3em;
 }
 .article-inner h2,
 .article-entry h2,
 .archive-article-inner h2,
 .widget h2 {
-  font-size: 1.5em;
+  font-size: 1.8em;
 }
 .article-inner h3,
 .article-entry h3,
 .archive-article-inner h3,
 .widget h3 {
-  font-size: 1.3em;
+  font-size: 1.6em;
 }
 .article-inner h4,
 .article-entry h4,
 .archive-article-inner h4,
 .widget h4 {
-  font-size: 1.2em;
+  font-size: 1.5em;
 }
 .article-inner h5,
 .article-entry h5,
 .archive-article-inner h5,
 .widget h5 {
-  font-size: 1em;
+  font-size: 1.3em;
 }
 .article-inner h6,
 .article-entry h6,
 .archive-article-inner h6,
 .widget h6 {
-  font-size: 1em;
+  font-size: 1.3em;
   color: #999;
 }
 .article-inner hr,
@@ -298,7 +298,7 @@ body {
 .article-entry small,
 .archive-article-inner small,
 .widget small {
-  font-size: 0.85em;
+  font-size: 1.85em;
 }
 .article-inner acronym,
 .article-entry acronym,
@@ -544,6 +544,7 @@ body {
 .article-title {
   text-decoration: none;
   font-size: 40px !important;
+  font-weight: normal;
   color: #535353;
   line-height: 1.2;
   -webkit-transition: color 0.2s;
@@ -568,6 +569,7 @@ a.article-title:hover {
 }
 .article-entry p,
 .article-entry table {
+  font-size: 1.2em;
   font-weight: 500;
   line-height: 28px;
   margin: 0 0 22px 0;
@@ -1466,7 +1468,8 @@ pre .javascript .function {
 .widget {
   line-height: 28px;
   word-wrap: normal;
-  font-size: 0.9em;
+  font-size: 1em;
+  font-weight: normal;
 }
 .widget:before,
 .widget:after {
