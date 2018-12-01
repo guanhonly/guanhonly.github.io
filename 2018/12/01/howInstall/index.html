@@ -182,7 +182,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/01/howInstall/" data-id="cjp5gfwrc00011ou11ynm54ig" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/01/howInstall/" data-id="cjp5gs1220001v4u1h93q2gxa" class="article-share-link">Share</a>
       
         <div id="gitalk-container"></div>
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
@@ -227,9 +227,24 @@
 
 
 <section id="comments">
-  <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+  
+    <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        repo: 'guanhonly.github.io',
+        owner: 'guanhonly',
+        admin: 'guanhonly',
+        id: new Date().toJSON(),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    })
+    gitalk.render('gitalk-container')
+</script>
+
+  
 </section>
 </section>
       </div>

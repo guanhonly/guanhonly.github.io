@@ -13,13 +13,13 @@
 <meta property="og:site_name" content="Honly&#39;s Blog">
 <meta property="og:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/hbase_img1.png">
-<meta property="og:image" content="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/hbase_img2.png">
-<meta property="og:updated_time" content="2018-12-01T12:50:05.994Z">
+<meta property="og:image" content="http://yoursite.com/images/hbase_img1.png">
+<meta property="og:image" content="http://yoursite.com/images/hbase_img2.png">
+<meta property="og:updated_time" content="2018-12-01T12:58:43.719Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HBase原理探究（1）">
 <meta name="twitter:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
-<meta name="twitter:image" content="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/hbase_img1.png">
+<meta name="twitter:image" content="http://yoursite.com/images/hbase_img1.png">
   
   
     <link rel="icon" href="/favicon.png">
@@ -168,18 +168,18 @@
         <h3 id="1-HBase的行、列和列族"><a href="#1-HBase的行、列和列族" class="headerlink" title="1. HBase的行、列和列族"></a>1. HBase的行、列和列族</h3><p>HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。</p>
 <p>若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不能频繁修改，数量不能太多，而一个列族中的列可以有数百万，列值也没有类型和长度的规定。</p>
 <p>列中的值允许为空，有利于存储十分稀疏的数据（这也是与传统关系型数据库相比一个很大的优势）。</p>
-<p>关系型数据库和HBase的行列关系如下图：<br><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/hbase_img1.png" alt=""></p>
+<p>关系型数据库和HBase的行列关系如下图：<br><img src="/images/hbase_img1.png" alt=""></p>
 <p>取某个特定的值可以用table, rowkey, family, column, timestamp。其中timestamp由系统默认指定，也可以由用户使用。读取时优先读取新值。</p>
 <h3 id="2-负载均衡"><a href="#2-负载均衡" class="headerlink" title="2. 负载均衡"></a>2. 负载均衡</h3><p>HBase中扩展和负载均衡的基本单元称为region。region为按照行键排列的区间，如果region太大，系统会将他们动态地拆分，相反就会合并多个region。</p>
 <p>一张表初始时只有一个region，当用户开始向表中插入数据时，系统会检查这个region大小，如果超过阈值，则会在中间键处将这些region分割开来，拆分成两个大致相等的region。</p>
 <p>每一个region只能由一台region server加载，有一个region server可以同时加载多个region。其中region在region server中的分布为分散分布(如下图)。</p>
-<p><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/hbase_img2.png" alt=""></p>
+<p><img src="/images/hbase_img2.png" alt=""></p>
 <p>每个region由多个store构成，一个store保存着一个column family。每个store由一个memStore和0个或多个storefile组成，storefile以HFile的形式存储在hdfs中。memstore用于在内存中缓存一定大小的数据，达到一定大小后批量写入HFile(flush)，数据是有序的。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/01/hbase-construction1/" data-id="cjp5gfwqy00001ou1xbm9ghba" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/01/hbase-construction1/" data-id="cjp5gs11r0000v4u1kuwpqqi3" class="article-share-link">Share</a>
       
         <div id="gitalk-container"></div>
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
@@ -220,9 +220,24 @@
 
 
 <section id="comments">
-  <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+  
+    <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        repo: 'guanhonly.github.io',
+        owner: 'guanhonly',
+        admin: 'guanhonly',
+        id: new Date().toJSON(),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    })
+    gitalk.render('gitalk-container')
+</script>
+
+  
 </section>
 </section>
       </div>
