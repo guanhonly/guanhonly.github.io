@@ -6,26 +6,17 @@
     
 
     
-    <title>HBase原理探究（1） | Honly&#39;s Blog</title>
+    <title>分类：: 技术 | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="HBase">
-    
-    <meta name="description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
-<meta name="keywords" content="HBase">
-<meta property="og:type" content="article">
-<meta property="og:title" content="HBase原理探究（1）">
-<meta property="og:url" content="http://yoursite.com/2018/12/01///index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Honly&#39;s Blog">
+<meta property="og:url" content="http://guanhonly.github.io/categories/技术/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
-<meta property="og:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://www.hdwallpapers.net/previews/programming-800.jpg">
-<meta property="og:updated_time" content="2018-12-02T03:45:29.065Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HBase原理探究（1）">
-<meta name="twitter:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
-<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/programming-800.jpg">
+<meta name="twitter:title" content="Honly&#39;s Blog">
     
 
     
@@ -63,6 +54,10 @@
                         <a href="/" class="logo"></a>
                     </h1>
                     
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">Stay hungry, stay foolish.</p>
+                        </h2>
+                    
                 </div>
                 <div id="header-inner" class="nav-container">
                     <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
@@ -73,8 +68,12 @@
                                     <a class="main-nav-list-link" href="/">主页</a>
                                 </li>
                             
-                                        
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/技术/">技术</a></li></ul>
                                     
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/archives/">归档</a>
+                                </li>
+                            
                                 <li class="main-nav-list-item">
                                     <a class="main-nav-list-link" href="/2017/01/01/aboutme/">关于</a>
                                 </li>
@@ -132,135 +131,125 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    未分类
+    <i class="icon fa fa-folder-open"></i>分类：: <em class="page-title-link">技术</em>
     </h1>
 </div>
 
                         <div class="main-body-content">
-                            <article id="post-/" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
-    <div class="article-inner">
+                            
+
+    
+    
         
-            <header class="article-header">
-                
+        
+        <section class="archives-wrap">
+            <div class="archive-year-wrap">
+                <a href="/archives/2018" class="archive-year"><i class="icon fa fa-calendar-o"></i>2018</a>
+            </div>
+            <div class="archives">
+    
+    
+    
+        <div class="article-row">
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <a href="/2018/12/01/hbase-construction1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/programming-800.jpg)" alt="HBase原理探究（1）" class="thumbnail-image"></span>
+    
+    
+        
+<span class="comment-counter">
+    <i class="fa fa-comments-o"></i>
+    
+        <span><a href="http://guanhonly.github.io/2018/12/01/hbase-construction1/#isso-thread"></a></span>
+    
+</span>
+
+
+    
+</a>
+
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/技术/">技术</a>
+            </div>
+            <div class="date"><time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time></div>
+        </div>
+        
     
         <h1 class="article-title" itemprop="name">
-        HBase原理探究（1）
+        <a href="/2018/12/01/hbase-construction1/">HBase原理探究（1）</a>
         </h1>
     
 
-            </header>
-        
-        
-            <div class="article-meta">
-                
-    <div class="article-date">
-        <a href="/2018/12/01/" class="article-date">
-            <time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time>
-        </a>
-    </div>
-
-		
-
-                
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/HBase/">HBase</a>
-    </div>
-
-            </div>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-            <h3 id="1-HBase的行、列和列族"><a href="#1-HBase的行、列和列族" class="headerlink" title="1. HBase的行、列和列族"></a>1. HBase的行、列和列族</h3><p>HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。</p>
-<p>若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不能频繁修改，数量不能太多，而一个列族中的列可以有数百万，列值也没有类型和长度的规定。</p>
-<p>列中的值允许为空，有利于存储十分稀疏的数据（这也是与传统关系型数据库相比一个很大的优势）。</p>
-<p>关系型数据库和HBase的行列关系如下图：<br><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/hbase_img1.png" alt="img_1"></p>
-<p>取某个特定的值可以用table, rowkey, family, column, timestamp。其中timestamp由系统默认指定，也可以由用户使用。读取时优先读取新值。</p>
-<h3 id="2-负载均衡"><a href="#2-负载均衡" class="headerlink" title="2. 负载均衡"></a>2. 负载均衡</h3><p>HBase中扩展和负载均衡的基本单元称为region。region为按照行键排列的区间，如果region太大，系统会将他们动态地拆分，相反就会合并多个region。</p>
-<p>一张表初始时只有一个region，当用户开始向表中插入数据时，系统会检查这个region大小，如果超过阈值，则会在中间键处将这些region分割开来，拆分成两个大致相等的region。</p>
-<p>每一个region只能由一台region server加载，有一个region server可以同时加载多个region。其中region在region server中的分布为分散分布(如下图)。</p>
-<p><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/hbase_img2.png" alt="img_2"></p>
-<p>每个region由多个store构成，一个store保存着一个column family。每个store由一个memStore和0个或多个storefile组成，storefile以HFile的形式存储在hdfs中。memstore用于在内存中缓存一定大小的数据，达到一定大小后批量写入HFile(flush)，数据是有序的。</p>
-
-        </div>
-        <footer class="article-footer">
-            
-
-
-
-    <a data-url="http://yoursite.com/2018/12/01/" data-id="cjp6cf4n100004ku1hzobvz6b" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
-<script>
-    (function ($) {
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-        </footer>
+        <p class="article-excerpt">
+            1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。
+若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义
+        </p>
     </div>
 </article>
+    
 
-    <section id="comments">
+    
+    
+    
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <a href="/2018/12/01/howInstall/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/lioness-in-black-and-white-852.jpg)" alt="基于hexo的marble模板" class="thumbnail-image"></span>
+    
     
         
-    <div id="disqus_thread">
-        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
+<span class="comment-counter">
+    <i class="fa fa-comments-o"></i>
+    
+        <span><a href="http://guanhonly.github.io/2018/12/01/howInstall/#isso-thread"></a></span>
+    
+</span>
+
 
     
-    </section>
+</a>
+
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/技术/">技术</a>
+            </div>
+            <div class="date"><time datetime="2018-12-01T11:36:39.000Z" itemprop="datePublished">2018-12-01</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2018/12/01/howInstall/">基于hexo的marble模板</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            我的旧版博客使用的模板。项目github地址：hexo-theme-marble
+
+自己动手做的一个github个人主页，由于之前没有做过前端，所以在@ppoffice的Alex项目基础上改的。主要是根据我的个人喜好进行的界面的调整，并增加了评论功能。评论功能采用的gitalk。
+整个界面追求极致简洁，黑白配色，所以取名marble。
+安装方法：1. nodejs和hexo的安装可以参考这篇博客：
+        </p>
+    </div>
+</article>
+    
+        </div>
+    
+
+
+    </div></section>
+
 
 
 
@@ -299,32 +288,10 @@
         </ul>
     </div>
     
-        
-<nav id="article-nav">
-    
-    
-        <a href="/2018/12/01/howInstall/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">基于hexo的marble模板</p>
-        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
-        </a>
-    
-</nav>
-
-    
     <div class="widgets-container">
         
             
                 
-<div class="widget-wrap widget-list">
-    <h3 class="widget-title">目录</h3>
-    <div class="widget">
-        <div id="toc" class="toc-article">
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-HBase的行、列和列族"><span class="toc-number">1.</span> <span class="toc-text">1. HBase的行、列和列族</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-负载均衡"><span class="toc-number">2.</span> <span class="toc-text">2. 负载均衡</span></a></li></ol>
-        </div>
-    </div>
-</div>
-
 
             
                 
@@ -336,7 +303,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2018/12/01/" class="thumbnail">
+                            <a href="/2018/12/01/hbase-construction1/" class="thumbnail">
     
     
         <span style="background-image:url(https://www.hdwallpapers.net/previews/programming-800.jpg)" alt="HBase原理探究（1）" class="thumbnail-image"></span>
@@ -347,8 +314,8 @@
                         </div>
                         
                         <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/12/01/" class="title">HBase原理探究（1）</a></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2018/12/01/hbase-construction1/" class="title">HBase原理探究（1）</a></p>
                             <p class="item-date"><time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time></p>
                         </div>
                     </li>
@@ -367,7 +334,7 @@
                         </div>
                         
                         <div class="item-inner">
-                            <p class="item-category"></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
                             <p class="item-title"><a href="/2018/12/01/howInstall/" class="title">基于hexo的marble模板</a></p>
                             <p class="item-date"><time datetime="2018-12-01T11:36:39.000Z" itemprop="datePublished">2018-12-01</time></p>
                         </div>
@@ -399,6 +366,13 @@
 
             
                 
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">2</span></li></ul>
+        </div>
+    </div>
+
 
             
                 
@@ -476,23 +450,6 @@
 </footer>
 
         
-    
-    <script>
-    var disqus_shortname = 'guanhonly-github-io';
-    
-    
-    var disqus_url = 'http://yoursite.com/2018/12/01/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-
-
 
 
     

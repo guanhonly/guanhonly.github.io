@@ -19,9 +19,9 @@
 <meta property="og:url" content="http://guanhonly.github.io/2018/12/01/howInstall/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
 <meta property="og:description" content="我的旧版博客使用的模板。项目github地址：hexo-theme-marble  自己动手做的一个github个人主页，由于之前没有做过前端，所以在@ppoffice的Alex项目基础上改的。主要是根据我的个人喜好进行的界面的调整，并增加了评论功能。评论功能采用的gitalk。 整个界面追求极致简洁，黑白配色，所以取名marble。 安装方法：1. nodejs和hexo的安装可以参考这篇博客：">
-<meta property="og:locale" content="en">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/lioness-in-black-and-white-852.jpg">
-<meta property="og:updated_time" content="2018-12-02T02:24:46.803Z">
+<meta property="og:updated_time" content="2018-12-02T05:01:43.120Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于hexo的marble模板">
 <meta name="twitter:description" content="我的旧版博客使用的模板。项目github地址：hexo-theme-marble  自己动手做的一个github个人主页，由于之前没有做过前端，所以在@ppoffice的Alex项目基础上改的。主要是根据我的个人喜好进行的界面的调整，并增加了评论功能。评论功能采用的gitalk。 整个界面追求极致简洁，黑白配色，所以取名marble。 安装方法：1. nodejs和hexo的安装可以参考这篇博客：">
@@ -74,13 +74,17 @@
                         <ul id="main-nav">
                             
                                 <li class="main-nav-list-item">
-                                    <a class="main-nav-list-link" href="/">Home</a>
+                                    <a class="main-nav-list-link" href="/">主页</a>
                                 </li>
                             
-                                        
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/技术/">技术</a></li></ul>
                                     
                                 <li class="main-nav-list-item">
-                                    <a class="main-nav-list-link" href="/2017/01/01/aboutme/">About</a>
+                                    <a class="main-nav-list-link" href="/archives/">归档</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/2017/01/01/aboutme/">关于</a>
                                 </li>
                             
                         </ul>
@@ -88,14 +92,14 @@
                             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索">
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
     <div class="ins-search-mask"></div>
     <div class="ins-search-container">
         <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么...">
             <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
         </div>
         <div class="ins-section-wrapper">
@@ -107,11 +111,11 @@
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
         },
         ROOT_URL: '/',
         CONTENT_URL: '/content.json',
@@ -136,7 +140,7 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    uncategorized
+    <a class="page-title-link" href="/categories/技术/">技术</a>
     </h1>
 </div>
 
@@ -200,7 +204,7 @@
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="cjp6di42v0004r8u1zu7z57dm" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="cjp6f01iy0005lwu17nmjkogw" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -291,7 +295,7 @@
                     <aside id="sidebar">
     <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
     <div class="sidebar-top">
-        <p>follow:</p>
+        <p>关注我 :</p>
         <ul class="social-links">
             
                 
@@ -325,7 +329,7 @@
 <nav id="article-nav">
     
         <a href="/2018/12/01/hbase-construction1/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">newer</strong>
+        <strong class="article-nav-caption">下一篇</strong>
         <p class="article-nav-title">
         
             HBase原理探究（1）
@@ -336,7 +340,7 @@
     
     
         <a href="/2017/01/01/aboutme/" id="article-nav-older" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">older</strong>
+        <strong class="article-nav-caption">上一篇</strong>
         <p class="article-nav-title">关于我</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
@@ -349,7 +353,7 @@
             
                 
 <div class="widget-wrap widget-list">
-    <h3 class="widget-title">Catalog</h3>
+    <h3 class="widget-title">目录</h3>
     <div class="widget">
         <div id="toc" class="toc-article">
             <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装方法："><span class="toc-number">1.</span> <span class="toc-text">安装方法：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-nodejs和hexo的安装可以参考这篇博客："><span class="toc-number">1.1.</span> <span class="toc-text">1. nodejs和hexo的安装可以参考这篇博客：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-在你新建的hexo目录下，安装这个主题："><span class="toc-number">1.2.</span> <span class="toc-text">2. 在你新建的hexo目录下，安装这个主题：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-更改clone后的marble中的-config-yml，相关参数可见Alex的文档"><span class="toc-number">1.3.</span> <span class="toc-text">3. 更改clone后的marble中的_config.yml，相关参数可见Alex的文档</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-gitalk相关配置"><span class="toc-number">1.4.</span> <span class="toc-text">4. gitalk相关配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-在个人主页的根目录下，运行"><span class="toc-number">1.5.</span> <span class="toc-text">5. 在个人主页的根目录下，运行</span></a></li></ol></li></ol>
@@ -361,7 +365,7 @@
             
                 
     <div class="widget-wrap">
-        <h3 class="widget-title">recents</h3>
+        <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
                 
@@ -379,7 +383,7 @@
                         </div>
                         
                         <div class="item-inner">
-                            <p class="item-category"></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
                             <p class="item-title"><a href="/2018/12/01/hbase-construction1/" class="title">HBase原理探究（1）</a></p>
                             <p class="item-date"><time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time></p>
                         </div>
@@ -399,7 +403,7 @@
                         </div>
                         
                         <div class="item-inner">
-                            <p class="item-category"></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
                             <p class="item-title"><a href="/2018/12/01/howInstall/" class="title">基于hexo的marble模板</a></p>
                             <p class="item-date"><time datetime="2018-12-01T11:36:39.000Z" itemprop="datePublished">2018-12-01</time></p>
                         </div>
@@ -431,13 +435,10 @@
 
             
                 
-
-            
-                
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">archives</h3>
+        <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">January 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">2</span></li></ul>
         </div>
     </div>
 
@@ -445,7 +446,17 @@
             
                 
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">tags</h3>
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
         <div class="widget">
             <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">1</span></li></ul>
         </div>
@@ -455,7 +466,7 @@
             
                 
     <div class="widget-wrap widget-float">
-        <h3 class="widget-title">tag cloud</h3>
+        <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
             <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/实用教程/" style="font-size: 10px;">实用教程</a>
         </div>
@@ -465,7 +476,7 @@
             
                 
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">links</h3>
+        <h3 class="widget-title">链接</h3>
         <div class="widget">
             <ul>
                 

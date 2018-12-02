@@ -21,7 +21,7 @@
 <meta property="og:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/programming-800.jpg">
-<meta property="og:updated_time" content="2018-12-02T04:29:37.760Z">
+<meta property="og:updated_time" content="2018-12-02T04:53:07.886Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HBase原理探究（1）">
 <meta name="twitter:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
@@ -77,8 +77,10 @@
                                     <a class="main-nav-list-link" href="/">主页</a>
                                 </li>
                             
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/技术/">技术</a></li></ul>
+                                    
                                 <li class="main-nav-list-item">
-                                    <a class="main-nav-list-link" href="/Techology">index.techology</a>
+                                    <a class="main-nav-list-link" href="/archives/">归档</a>
                                 </li>
                             
                                 <li class="main-nav-list-item">
@@ -176,7 +178,7 @@
 
 
 
-    <a data-url="http://guanhonly.github.io/Techology/hbase-construction1.html" data-id="cjp6e1oxu0002y4u1mq3iszh3" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/Techology/hbase-construction1.html" data-id="cjp6f01iy0004lwu1erfg3fhh" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -321,6 +323,46 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/12/01/hbase-construction1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/programming-800.jpg)" alt="HBase原理探究（1）" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2018/12/01/hbase-construction1/" class="title">HBase原理探究（1）</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/01/howInstall/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/lioness-in-black-and-white-852.jpg)" alt="基于hexo的marble模板" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2018/12/01/howInstall/" class="title">基于hexo的marble模板</a></p>
+                            <p class="item-date"><time datetime="2018-12-01T11:36:39.000Z" itemprop="datePublished">2018-12-01</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2017/01/01/aboutme/" class="thumbnail">
     
     
@@ -344,22 +386,43 @@
 
             
                 
-
-            
-                
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">归档</h3>
+        <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">2</span></li></ul>
         </div>
     </div>
 
 
             
                 
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
 
             
                 
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/实用教程/" style="font-size: 10px;">实用教程</a>
+        </div>
+    </div>
+
 
             
                 
