@@ -31,6 +31,8 @@
     
 
     
+        <link rel="icon" href="/favicon.png">
+    
 
     <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="/libs/titillium-web/styles.css">
@@ -204,7 +206,7 @@
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="cjp6f01iy0005lwu17nmjkogw" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="cjp6ihlpo0005nsu1l55bfv6k" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -270,21 +272,10 @@
 
     <section id="comments">
     
-        <div id="gitalk-container"></div>
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-    <script>
-        var gitalk = new Gitalk({
-            clientID: 'ba96b12559b1c6a7ff63',
-            clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
-            repo: 'guanhonly.github.io',
-            owner: 'guanhonly',
-            admin: 'guanhonly',
-            id: new Date().toJSON(),      // Ensure uniqueness and length less than 50
-            distractionFreeMode: false  // Facebook-like distraction free mode
-        });
-        gitalk.render('gitalk-container')
-    </script>
+        
+    <div id="valine-thread"></div>
+
+
     
     </section>
 
@@ -519,6 +510,25 @@
 </footer>
 
         
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify: 'false',
+            verify: 'true',
+            app_id: 'Gu1TdhzMDfEUfjGt6jCSA54H-gzGzoHsz',
+            app_key: '9FvpceMMndgkAtSnjSALnASe',
+            placeholder: 'Talk something',
+            pageSize: '10',
+            avatar: 'identicon',
+            avatar_cdn:  'https://gravatar.loli.net/avatar/'
+        });
+    </script>
+
+
+
 
 
     
