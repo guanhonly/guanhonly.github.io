@@ -6,26 +6,26 @@
     
 
     
-    <title>HBase原理探究（1） | Honly&#39;s Blog</title>
+    <title>找工作的一些感悟 | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="HBase">
+        <meta name="keywords" content="笔经面经">
     
-    <meta name="description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
-<meta name="keywords" content="HBase">
+    <meta name="description" content="转眼已经12月，工作已确定，写一点找工作时的体会回馈社会。 我的专业是一个计算机边缘专业（GIS），想找互联网技术岗的工作，相比于计算机专业的学生可能有些吃亏，于是在今年三月份左右开始准备找实习。开始就是刷牛客网看看前人的经验，越看压力越大，感觉自己啥都不会，牛客网大佬们真是令我难以望其项背。于是开始刷题，先是牛客网上的剑指offer，然后去leetcode刷题提升难度。春招找到了滴滴的实习，于是">
+<meta name="keywords" content="笔经面经">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HBase原理探究（1）">
-<meta property="og:url" content="http://guanhonly.github.io/2018/12/01/hbase-construction1/index.html">
+<meta property="og:title" content="找工作的一些感悟">
+<meta property="og:url" content="http://guanhonly.github.io/2018/12/02/找工作的一些感悟/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
-<meta property="og:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
+<meta property="og:description" content="转眼已经12月，工作已确定，写一点找工作时的体会回馈社会。 我的专业是一个计算机边缘专业（GIS），想找互联网技术岗的工作，相比于计算机专业的学生可能有些吃亏，于是在今年三月份左右开始准备找实习。开始就是刷牛客网看看前人的经验，越看压力越大，感觉自己啥都不会，牛客网大佬们真是令我难以望其项背。于是开始刷题，先是牛客网上的剑指offer，然后去leetcode刷题提升难度。春招找到了滴滴的实习，于是">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://www.hdwallpapers.net/previews/programming-800.jpg">
-<meta property="og:updated_time" content="2018-12-02T05:58:01.586Z">
+<meta property="og:image" content="https://www.hdwallpapers.net/previews/there-are-only-7-days-in-the-week-558.jpg">
+<meta property="og:updated_time" content="2018-12-02T08:39:57.340Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HBase原理探究（1）">
-<meta name="twitter:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
-<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/programming-800.jpg">
+<meta name="twitter:title" content="找工作的一些感悟">
+<meta name="twitter:description" content="转眼已经12月，工作已确定，写一点找工作时的体会回馈社会。 我的专业是一个计算机边缘专业（GIS），想找互联网技术岗的工作，相比于计算机专业的学生可能有些吃亏，于是在今年三月份左右开始准备找实习。开始就是刷牛客网看看前人的经验，越看压力越大，感觉自己啥都不会，牛客网大佬们真是令我难以望其项背。于是开始刷题，先是牛客网上的剑指offer，然后去leetcode刷题提升难度。春招找到了滴滴的实习，于是">
+<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/there-are-only-7-days-in-the-week-558.jpg">
     
 
     
@@ -142,19 +142,19 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <a class="page-title-link" href="/categories/技术/">技术</a>
+    <a class="page-title-link" href="/categories/生活/">生活</a>
     </h1>
 </div>
 
                         <div class="main-body-content">
-                            <article id="post-hbase-construction1" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+                            <article id="post-找工作的一些感悟" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        HBase原理探究（1）
+        找工作的一些感悟
         </h1>
     
 
@@ -164,8 +164,8 @@
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2018/12/01/hbase-construction1/" class="article-date">
-            <time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time>
+        <a href="/2018/12/02/找工作的一些感悟/" class="article-date">
+            <time datetime="2018-12-02T06:49:09.000Z" itemprop="datePublished">2018-12-02</time>
         </a>
     </div>
 
@@ -174,23 +174,49 @@
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/HBase/">HBase</a>
+        <a class="tag-link" href="/tags/笔经面经/">笔经面经</a>
     </div>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3 id="1-HBase的行、列和列族"><a href="#1-HBase的行、列和列族" class="headerlink" title="1. HBase的行、列和列族"></a>1. HBase的行、列和列族</h3><p>HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。</p>
-<p>若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不能频繁修改，数量不能太多，而一个列族中的列可以有数百万，列值也没有类型和长度的规定。</p>
-<p>列中的值允许为空，有利于存储十分稀疏的数据（这也是与传统关系型数据库相比一个很大的优势）。</p>
-<p>关系型数据库和HBase的行列关系如下图：<br><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/hbase_img1.png" alt="img_1"></p>
-<p>取某个特定的值可以用table, rowkey, family, column, timestamp。其中timestamp由系统默认指定，也可以由用户使用。读取时优先读取新值。</p>
-<h3 id="2-负载均衡"><a href="#2-负载均衡" class="headerlink" title="2. 负载均衡"></a>2. 负载均衡</h3><p>HBase中扩展和负载均衡的基本单元称为region。region为按照行键排列的区间，如果region太大，系统会将他们动态地拆分，相反就会合并多个region。</p>
-<p>一张表初始时只有一个region，当用户开始向表中插入数据时，系统会检查这个region大小，如果超过阈值，则会在中间键处将这些region分割开来，拆分成两个大致相等的region。</p>
-<p>每一个region只能由一台region server加载，有一个region server可以同时加载多个region。其中region在region server中的分布为分散分布(如下图)。</p>
-<p><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/hbase_img2.png" alt="img_2"></p>
-<p>每个region由多个store构成，一个store保存着一个column family。每个store由一个memStore和0个或多个storefile组成，storefile以HFile的形式存储在hdfs中。memstore用于在内存中缓存一定大小的数据，达到一定大小后批量写入HFile(flush)，数据是有序的。</p>
+            <p>转眼已经12月，工作已确定，写一点找工作时的体会回馈社会。</p>
+<p>我的专业是一个计算机边缘专业（GIS），想找互联网技术岗的工作，相比于计算机专业的学生可能有些吃亏，于是在今年三月份左右开始准备找实习。开始就是刷牛客网看看前人的经验，越看压力越大，感觉自己啥都不会，牛客网大佬们真是令我难以望其项背。于是开始刷题，先是牛客网上的<a href="https://www.nowcoder.com/ta/coding-interviews?page=1" target="_blank" rel="noopener">剑指offer</a>，然后去<a href="https://leetcode.com/" target="_blank" rel="noopener">leetcode</a>刷题提升难度。春招找到了滴滴的实习，于是从6月中旬到8月底在滴滴实习。回校后，陆续拿到了招银网络（软件开发）、滴滴（实习转正，后台研发）、华为（云计算开发）、Grab（后台开发）的offer，最终选择了Grab。</p>
+<p>下面分类别谈一谈找工作的一些感悟。</p>
+<h3 id="时间节点"><a href="#时间节点" class="headerlink" title="时间节点"></a>时间节点</h3><p>假设在y年毕业。</p>
+<ul>
+<li><p>y-2 年底或y-1年初 —— y-1年6月<br>开始准备找实习（如果导师实在不允许，那就尽量多做项目多打比赛）。这个时候一般笔试面试难度都要小于秋招，找学长内推或是关注学校的就业网站、就业群都可以获得很多机会。当然，机会是留给有准备的人，提升自身能力也很重要，可以把数据结构的书翻出来，选择一个自己擅长或是准备擅长的语言（建议C++或Java)，然后开始刷题。一般来说，只要学生阶段不是特别水，刷题较认真，都能拿到实习offer。</p>
+</li>
+<li><p>y-1年6月 —— y-1年8月<br>这个时候一般在实习，实习过程中好好表现，尽量拿到转正offer，也给自己留条后路。同时，也要好好刷题、复习。</p>
+</li>
+<li><p>y-1年7月 —— y-1年11月<br>互联网秋招打响！这个时候一定要全心全意投入到找工作中，7月开始第一波互联网公司提前批开招，一般都是神仙打架，可以投着试一试，我是在提前批投了阿里和网易，然后都凉了:expressionless:。<br>一般在8月底9月初正式秋招全面打响，这个时候一定要准备充分，然后疯狂海投。一句话，不要怂，就是投。当然，提升自身能力也很重要，花点心思想一下自己项目里面的东西应该怎么表达，包装一下自己的简历都很重要。<br>9月至10月是互联网秋招的黄金时期，这个时候一定要有一个offer在手，不然心里会没底。建议能投的都投，能面的都面，能拿offer的都拿，这样在和HR argue的时候才有底气。</p>
+</li>
+</ul>
+<h3 id="需要的知识"><a href="#需要的知识" class="headerlink" title="需要的知识"></a>需要的知识</h3><ul>
+<li><p>coding能力<br>这个不管是技术岗细分的什么岗位都是基本功，找工作需要靠刷题来锻炼这种能力。首先是数据结构的基本知识，比如几个排序要做到烂熟于心；然后如果算法功底好的话，可以随意刷刷剑指offer，然后里面开刷leetcode，基本上春招刷两百多题笔试都可以过；如果算法功底不好（比如我，算法知识基本为零），那还是先看看比较经典的算法，然后仔细刷剑指offer，最后再刷leetcode。</p>
+</li>
+<li><p>其他知识<br>做后台的可以看网络、操作系统、编程语言、计算机原理、数据库、高并发等之类的知识，相对于算法而言，知识面更广一些。建议把书翻出来仔细阅读几遍，勤做笔记，多做准备。<br>做算法的，现在一般都是ML/DL了。今年算法的火爆程度超越以往，预计以后会更加火爆，竞争的人基本上都是985硕士+顶会+牛x项目+扎实的基本功。需要对ML/DL的几种原理理解透彻，一些常用的特征提取、数据预处理、模型优化方法都要熟悉。如果有篇相关的牛x论文或牛x项目，可以拿出来说一说。现在ML/DL一般在CV和NLP领域用的比较多，如果有这些方面相关的项目或论文，那绝对是加分项。</p>
+</li>
+</ul>
+<h3 id="笔经面经"><a href="#笔经面经" class="headerlink" title="笔经面经"></a>笔经面经</h3><p>我感觉自身能力比较水，笔经面经能写的有限。</p>
+<ul>
+<li>滴滴（实习，内推，offer）<br>一面：电话面。自我介绍，聊项目，聊一聊用到的HMM模型。因为项目和他们的工作内容比较契合，聊了很久。最后做了一道简单的编程题，在一个数组中找最小和第二小的数字，O(n)的方法。<br>二面：电话面。自我介绍，继续聊项目，好像一面面得挺好，这一面没有聊啥。<br>HR：准确来说不能叫面试，是直接给的通知，拿到offer。</li>
+<li>Momenta（实习，内推，一面挂）<br>Momenta是一家做无人驾驶的公司。内推后HR打电话问能实习多久，我说最多三个月，HR说太短了，需要实习期长一点，六个月起步，我说不行，然后还是给了面试机会。<br>一面：电话面。聊项目，问得很深入。然后写代码，写出一个矩形类，实现矩形的基本操作。当时很久没有写代码了，导致很生疏，于是面试官给出结论：总体来说技术一般，并且实习期太短。挂。</li>
+<li>阿里菜鸟（秋招提前批，内推，一面挂）<br>面菜鸟的时候我正在滴滴实习，正在打球的时候突然一个电话过来，面得有点猝不及防。<br>笔经：先是性格测试吧，后来一道编程题，印象中没有AC<br>一面：电话面。自我介绍，聊项目，聊滴滴的实习。然后问了RF和Boosting的区别、xgboost和GBDT的区别，LR的原理和损失函数，常用的神经网络激活函数，怎么防止过拟合，L1和L2的作用，感知机（这个没答上来，好久没复习感知机了）。<br>面试的感觉挺好的，但答得不太好，挂。</li>
+<li>网易杭研院（秋招提前批，内推，一面挂）<br>直接跑去杭州面的，顺便看了下西湖:sweat_smile:<br>笔试：选择题+三道编程题，忘记题目了。。。可以在网上搜到。印象中编程题一道80%，一道60%，还有一道没做。然后收到面试邀请。<br>一面：现场面。自我介绍，聊在滴滴做的项目，问xgboost和GBDT的区别，数据不均衡问题怎么解决，路径规划算法知道哪些，聊一聊最简单的djiskra，常用的激活函数，深度学习优化问题。你是学这个专业的，这个专业是干嘛的？<br>面试过程不是很好，感觉和他们的需求不太契合，问了我很多“这个专业是干啥的”这种问题。</li>
+<li>滴滴（转正，offer）<br>滴滴转正也要再面一次:sweat:。<br>一面：自我介绍，实习经历。然后面试官说我是做算法的，不知道怎么面:sweat:，于是开始问C++、网络、多线程、海量数据处理等问题。有些没答上来，开始做题。两道牛客网原题：两个栈实现一个队列、链表反转。一道开放性题目：百万级的点数据中，获取与一个点的距离小于等于k的所有点（完全不会）。<br>因为是转正，一般来说都会拿offer，拿到了offer。</li>
+<li>华为（秋招，offer)<br>笔试：三道编程，牛客网原题，全AC<br>面试在一个酒店，一天面完。<br>一面：现场面。自我介绍，聊项目，聊实习。聊路径规划算法（这个真的是看到我在滴滴实习的都问过，一直没认真准备），蚁群算法，遗传算法。<br>二面：等二面等了两个小时，然后被安排到管理岗的面试官面试:mask:。开始聊人生，聊理想，和技术没关系。<br>官网上显示面试通过了，但是等了将近两个月才接到offer call。</li>
+<li>招银网络（秋招，offer）<br>笔试：选择题+三道编程，比较简单<br>电话面：问了下C++的基本知识，比较简单。<br>正式面试在一个酒店，一天面完。<br>一面：自我介绍，C++基本知识，手撕代码，写完后说思路，网络的相关问题，简单问了一下项目和实习，高并发问题怎么解决（完全没准备，，，不知道）。<br>二面：二面是所有面试中感觉最舒适的。问我的一个Redis的项目，问得很细，聊这个项目了四十分钟左右。<br>HR面：看成绩单，有无挂科，有无对象，家在哪，还有什么offer，balabala。<br>之后收到了资料审核的通知，然后马上发了offer并在就业系统上邀约了，招银网络是我见过校招效率最高的。</li>
+<li>Grab（秋招，offer)<br>Grab是一个东南亚的公司，相当于东南亚的支付宝+美团+滴滴。<br>笔试：比较简单，但考得十分全面，全是问答题。一道两个栈实现队列的编程题。<br>面试：只有一面，问项目，两道编程题。先是二叉树找最小路径，做出来了，然后一道题是：有一只爬旗杆的蜗牛，它一天爬一米的概率是50%，一天爬两米的概率是50%，问此蜗牛n天至少爬m米的概率是多少（做不出来）。然后换了一题，实现pow（乘方）函数。<br>面试过了之后里面发了offer，效率挺高。<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3></li>
+<li><p>投递技巧<br>在刷题的同时也要注意一下投递的deadline，如果平时比较忙，可以尽早准备刷题，然后先投自己不想去的刷经验，之后按照意愿等级从低到高投递。</p>
+</li>
+<li><p>心态<br>找工作可能心情比较浮躁，并且压力很大，需要调整自己的心态。</p>
+</li>
+<li><p>选择问题<br>我选择技术岗是因为我本身比较喜欢搞技术，并且我找工作没什么顾虑，基本可以随意找。可能我的经验并不适合所有人，要结合自身的情况来选择自己的工作。</p>
+</li>
+</ul>
+<p>最后，祝大家都能找到自己满意的工作。</p>
 
         </div>
         <footer class="article-footer">
@@ -198,7 +224,7 @@
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/01/hbase-construction1/" data-id="cjp6mw03r0002mcu1trxho1d4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/02/找工作的一些感悟/" data-id="cjp6mw04g000cmcu1yx7oc7or" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -311,20 +337,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/12/02/找工作的一些感悟/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            找工作的一些感悟
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2018/12/01/howInstall/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/12/01/hbase-construction1/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">基于hexo的marble模板</p>
+        <p class="article-nav-title">HBase原理探究（1）</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -339,7 +355,7 @@
     <h3 class="widget-title">目录</h3>
     <div class="widget">
         <div id="toc" class="toc-article">
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-HBase的行、列和列族"><span class="toc-number">1.</span> <span class="toc-text">1. HBase的行、列和列族</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-负载均衡"><span class="toc-number">2.</span> <span class="toc-text">2. 负载均衡</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#时间节点"><span class="toc-number">1.</span> <span class="toc-text">时间节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#需要的知识"><span class="toc-number">2.</span> <span class="toc-text">需要的知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#笔经面经"><span class="toc-number">3.</span> <span class="toc-text">笔经面经</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他"><span class="toc-number">4.</span> <span class="toc-text">其他</span></a></li></ol>
         </div>
     </div>
 </div>
