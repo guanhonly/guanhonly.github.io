@@ -173,7 +173,7 @@
 
 
 
-    <a data-url="http://guanhonly.github.io/2017/01/01/aboutme/" data-id="cjp6cpz2l0000xcu1lm34oea5" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2017/01/01/aboutme/" data-id="cjp6ct19d00002ku1d2oqu23m" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -240,6 +240,9 @@
     <section id="comments">
     
         
+    <div id="valine-thread"></div>
+
+
     
     </section>
 
@@ -453,20 +456,22 @@
 
         
     
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
     <script>
-    var disqus_shortname = 'guanhonly-github-io';
-    
-    
-    var disqus_url = 'http://guanhonly.github.io/2017/01/01/aboutme/';
-    
-    (function() {
-    var dsq = document.createElement('script');
-    dsq.type = 'text/javascript';
-    dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
+        new Valine({
+            el: '#valine-thread' ,
+            notify:false,
+            verify:true,
+            app_id: 'Gu1TdhzMDfEUfjGt6jCSA54H-gzGzoHsz',
+            app_key: '9FvpceMMndgkAtSnjSALnASe',
+            placeholder: 'Talk something',
+            pageSize: '10',
+            avatar: 'identicon',
+            avatar_cdn:  'https://gravatar.loli.net/avatar/'
+        });
     </script>
+
 
 
 
