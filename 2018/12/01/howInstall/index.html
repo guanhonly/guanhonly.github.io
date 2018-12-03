@@ -206,7 +206,7 @@
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="cjp7yf8n30002o0u1v9mvi518" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="cjp7ykgpb000258u1v4f2emq8" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -283,7 +283,7 @@
         owner: 'guanhonly',
         admin: 'guanhonly',
         distractionFreeMode: 'true',
-        id: new Date().toJSON(),    // Ensure uniqueness and length less than 50
+        id: "{{page.id | truncate: 50, ''}}",    // Ensure uniqueness and length less than 50
         
     });
     gitalk.render('gitalk-container')
