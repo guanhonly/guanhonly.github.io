@@ -21,7 +21,7 @@
 <meta property="og:description" content="我的旧版博客使用的模板。项目github地址：hexo-theme-marble  自己动手做的一个github个人主页，由于之前没有做过前端，所以在@ppoffice的Alex项目基础上改的。主要是根据我的个人喜好进行的界面的调整，并增加了评论功能。评论功能采用的gitalk。 整个界面追求极致简洁，黑白配色，所以取名marble。 安装方法：1. nodejs和hexo的安装可以参考这篇博客：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/lioness-in-black-and-white-852.jpg">
-<meta property="og:updated_time" content="2018-12-02T05:01:43.120Z">
+<meta property="og:updated_time" content="2018-12-03T11:16:33.951Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于hexo的marble模板">
 <meta name="twitter:description" content="我的旧版博客使用的模板。项目github地址：hexo-theme-marble  自己动手做的一个github个人主页，由于之前没有做过前端，所以在@ppoffice的Alex项目基础上改的。主要是根据我的个人喜好进行的界面的调整，并增加了评论功能。评论功能采用的gitalk。 整个界面追求极致简洁，黑白配色，所以取名marble。 安装方法：1. nodejs和hexo的安装可以参考这篇博客：">
@@ -187,16 +187,16 @@
 <p>整个界面追求极致简洁，黑白配色，所以取名marble。</p>
 <h3 id="安装方法："><a href="#安装方法：" class="headerlink" title="安装方法："></a>安装方法：</h3><h4 id="1-nodejs和hexo的安装可以参考这篇博客："><a href="#1-nodejs和hexo的安装可以参考这篇博客：" class="headerlink" title="1. nodejs和hexo的安装可以参考这篇博客："></a>1. nodejs和hexo的安装可以参考这篇博客：</h4><p><a href="https://blog.csdn.net/Hoshea_chx/article/details/78826689" target="_blank" rel="noopener">用Hexo + github搭建自己的博客 — 再也不用羡慕别人了！
 </a></p>
-<h4 id="2-在你新建的hexo目录下，安装这个主题："><a href="#2-在你新建的hexo目录下，安装这个主题：" class="headerlink" title="2. 在你新建的hexo目录下，安装这个主题："></a>2. 在你新建的hexo目录下，安装这个主题：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/guanhonly/hexo-theme-marble themes/marble</span><br></pre></td></tr></table></figure>
+<h4 id="2-在你新建的hexo目录下，安装这个主题："><a href="#2-在你新建的hexo目录下，安装这个主题：" class="headerlink" title="2. 在你新建的hexo目录下，安装这个主题："></a>2. 在你新建的hexo目录下，安装这个主题：</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/guanhonly/hexo-theme-marble themes/marble</span><br></pre></td></tr></table></figure>
 <p>marble要求Hexo 2.4及以上版本</p>
 <h4 id="3-更改clone后的marble中的-config-yml，相关参数可见Alex的文档"><a href="#3-更改clone后的marble中的-config-yml，相关参数可见Alex的文档" class="headerlink" title="3. 更改clone后的marble中的_config.yml，相关参数可见Alex的文档"></a>3. 更改clone后的marble中的<code>_config.yml</code>，相关参数可见<a href="https://github.com/ppoffice/hexo-theme-alex" target="_blank" rel="noopener">Alex</a>的文档</h4><h4 id="4-gitalk相关配置"><a href="#4-gitalk相关配置" class="headerlink" title="4. gitalk相关配置"></a>4. gitalk相关配置</h4><ul>
 <li>首先，去<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener">这里</a>申请github的授权，获得client ID和client Secret。</li>
-<li>然后，修改 <code>_config.yml</code>中的相关配置：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">gitalk:</span><br><span class="line"> enable: true</span><br><span class="line"> language: # 指定语言，默认从系统中获取</span><br><span class="line"> owner: # 申请时的owner</span><br><span class="line"> admin: # 管理员，如果没有其他人，填自己</span><br><span class="line"> github_repo: # 用与保存评论的仓库名，建议填个人主页对应的仓库</span><br><span class="line"> client_id: # 刚刚生成的client ID</span><br><span class="line"> client_secret: # 刚刚生成的client Secret</span><br></pre></td></tr></table></figure>
+<li>然后，修改 <code>_config.yml</code>中的相关配置：<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">gitalk:</span></span><br><span class="line"><span class="attr"> enable:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr"> language:</span> <span class="comment"># 指定语言，默认从系统中获取</span></span><br><span class="line"><span class="attr"> owner:</span> <span class="comment"># 申请时的owner</span></span><br><span class="line"><span class="attr"> admin:</span> <span class="comment"># 管理员，如果没有其他人，填自己</span></span><br><span class="line"><span class="attr"> github_repo:</span> <span class="comment"># 用与保存评论的仓库名，建议填个人主页对应的仓库</span></span><br><span class="line"><span class="attr"> client_id:</span> <span class="comment"># 刚刚生成的client ID</span></span><br><span class="line"><span class="attr"> client_secret:</span> <span class="comment"># 刚刚生成的client Secret</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h4 id="5-在个人主页的根目录下，运行"><a href="#5-在个人主页的根目录下，运行" class="headerlink" title="5. 在个人主页的根目录下，运行"></a>5. 在个人主页的根目录下，运行</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
-<p>然后运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure></p>
-<p>最后运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-在个人主页的根目录下，运行"><a href="#5-在个人主页的根目录下，运行" class="headerlink" title="5. 在个人主页的根目录下，运行"></a>5. 在个人主页的根目录下，运行</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
+<p>然后运行<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure></p>
+<p>最后运行<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure></p>
 <p>过一会儿就可以上看到使用了这个模板的个人主页了</p>
 <p>效果：<br><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/oldBlog1.png" alt="top"><br><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/oldBlog2.png" alt="bottom"></p>
 
@@ -206,7 +206,7 @@
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="cjp7yz9q10002gku10gkn2c3r" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="cjp87ivmc00023cu1pvpzwnoq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -375,6 +375,26 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/12/03/python-learn-1/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1543845210001&di=a8cbf00ca081fef392ccf73090a4406b&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2Fe499857dd1ed639e869b5b973aef06e182211f3d.jpg)" alt="（转载）Python基础" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2018/12/03/python-learn-1/" class="title">（转载）Python基础</a></p>
+                            <p class="item-date"><time datetime="2018-12-03T10:35:12.000Z" itemprop="datePublished">2018-12-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2018/12/02/找工作的一些感悟/" class="thumbnail">
     
     
@@ -461,7 +481,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -471,7 +491,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -481,7 +501,7 @@
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/笔经面经/">笔经面经</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/笔经面经/">笔经面经</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -491,7 +511,7 @@
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/实用教程/" style="font-size: 10px;">实用教程</a> <a href="/tags/笔经面经/" style="font-size: 10px;">笔经面经</a>
+            <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/实用教程/" style="font-size: 10px;">实用教程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/笔经面经/" style="font-size: 10px;">笔经面经</a>
         </div>
     </div>
 
