@@ -6,26 +6,26 @@
     
 
     
-    <title>HBase原理探究（1） | Honly&#39;s Blog</title>
+    <title>XZ曲线探究 | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="HBase">
+        <meta name="keywords" content="GIS,空间填充曲线">
     
-    <meta name="description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
-<meta name="keywords" content="HBase">
+    <meta name="description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
+<meta name="keywords" content="GIS,空间填充曲线">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HBase原理探究（1）">
-<meta property="og:url" content="http://guanhonly.github.io/2018/12/01/hbase-construction1/index.html">
+<meta property="og:title" content="XZ曲线探究">
+<meta property="og:url" content="http://guanhonly.github.io/2018/12/27/XZOdering/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
-<meta property="og:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
+<meta property="og:description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://www.hdwallpapers.net/previews/programming-800.jpg">
-<meta property="og:updated_time" content="2018-12-02T05:58:01.586Z">
+<meta property="og:image" content="https://www.hdwallpapers.net/previews/the-louvre-866.jpg">
+<meta property="og:updated_time" content="2018-12-28T05:23:53.084Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HBase原理探究（1）">
-<meta name="twitter:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
-<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/programming-800.jpg">
+<meta name="twitter:title" content="XZ曲线探究">
+<meta name="twitter:description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
+<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/the-louvre-866.jpg">
     
 
     
@@ -147,14 +147,14 @@
 </div>
 
                         <div class="main-body-content">
-                            <article id="post-hbase-construction1" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+                            <article id="post-XZOdering" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        HBase原理探究（1）
+        XZ曲线探究
         </h1>
     
 
@@ -164,8 +164,8 @@
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2018/12/01/hbase-construction1/" class="article-date">
-            <time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time>
+        <a href="/2018/12/27/XZOdering/" class="article-date">
+            <time datetime="2018-12-27T13:51:59.000Z" itemprop="datePublished">2018-12-27</time>
         </a>
     </div>
 
@@ -174,23 +174,72 @@
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/HBase/">HBase</a>
+        <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/空间填充曲线/">空间填充曲线</a>
     </div>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3 id="1-HBase的行、列和列族"><a href="#1-HBase的行、列和列族" class="headerlink" title="1. HBase的行、列和列族"></a>1. HBase的行、列和列族</h3><p>HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。</p>
-<p>若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不能频繁修改，数量不能太多，而一个列族中的列可以有数百万，列值也没有类型和长度的规定。</p>
-<p>列中的值允许为空，有利于存储十分稀疏的数据（这也是与传统关系型数据库相比一个很大的优势）。</p>
-<p>关系型数据库和HBase的行列关系如下图：<br><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/hbase_img1.png" alt="img_1"></p>
-<p>取某个特定的值可以用table, rowkey, family, column, timestamp。其中timestamp由系统默认指定，也可以由用户使用。读取时优先读取新值。</p>
-<h3 id="2-负载均衡"><a href="#2-负载均衡" class="headerlink" title="2. 负载均衡"></a>2. 负载均衡</h3><p>HBase中扩展和负载均衡的基本单元称为region。region为按照行键排列的区间，如果region太大，系统会将他们动态地拆分，相反就会合并多个region。</p>
-<p>一张表初始时只有一个region，当用户开始向表中插入数据时，系统会检查这个region大小，如果超过阈值，则会在中间键处将这些region分割开来，拆分成两个大致相等的region。</p>
-<p>每一个region只能由一台region server加载，有一个region server可以同时加载多个region。其中region在region server中的分布为分散分布(如下图)。</p>
-<p><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/hbase_img2.png" alt="img_2"></p>
-<p>每个region由多个store构成，一个store保存着一个column family。每个store由一个memStore和0个或多个storefile组成，storefile以HFile的形式存储在hdfs中。memstore用于在内存中缓存一定大小的数据，达到一定大小后批量写入HFile(flush)，数据是有序的。</p>
+            <p>最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番<a href="https://www.geomesa.org/documentation/#" target="_blank" rel="noopener">GeoMesa</a>和<a href="http://locationtech.github.io/geowave/" target="_blank" rel="noopener">GeoWave</a>。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了<a href="https://link.springer.com/chapter/10.1007/3-540-48482-5_7" target="_blank" rel="noopener">XZ曲线的论文</a>。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大致搞懂了。</p>
+<blockquote>
+<p>本文使用的名词解释：<br>cell: 传统Z曲线的格网单元<br>element: XZ曲线的格网单元<br>level: 层级<br>g: 最大分辨率，即最大层级<br>object: 对象，即需要存储的要素对象<br>quadrant sequences: 象限序列，即传统Z曲线的编码<br>interval: 一个区间(查询时使用)<br>interval set: 区间集合（查询时使用）</p>
+</blockquote>
+<h3 id="空间填充曲线"><a href="#空间填充曲线" class="headerlink" title="空间填充曲线"></a>空间填充曲线</h3><p>首先说一下空间填充曲线。空间填充曲线是一种将高维空间映射到一维空间的方法,经典的空间填充曲线有Z曲线、Hilbert曲线等，现在Google S2也经常被使用。Z曲线最常见的应用就是<a href="https://en.wikipedia.org/wiki/Geohash" target="_blank" rel="noopener">GeoHash</a>，Hilbert常和四叉树结合使用。关于GeoHash和Google s2可以参考<a href="https://www.jianshu.com/p/7332dcb978b2" target="_blank" rel="noopener">高效的多维空间点索引算法 — Geohash 和 Google S2</a>，Hilbert可以参考<a href="https://blog.csdn.net/u010793236/article/details/74500593" target="_blank" rel="noopener">Hilbert曲线介绍以及代码实现</a>。</p>
+<p>空间填充曲线将空间进行划分为一个个小格网，一般对这些小格网称为cell。在这里引入层级level的概念，level越高，对空间进行的划分越精细，即level越高，cell的大小越小，数量越多。</p>
+<h3 id="Z曲线"><a href="#Z曲线" class="headerlink" title="Z曲线"></a>Z曲线</h3><p>Z曲线是一种空间填充曲线。在Z曲线中，level 1将空间划分为四个cell，level 2则将level 1中的每个cell进行四等分，生成的cell的长宽是其parent cell的一半，即level 2中有16个格网。则在level n中，存在$(2^2)^n$个cell。</p>
+<p>Z曲线更加直观地显示如图1。<br><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Four-level_Z.svg/1024px-Four-level_Z.svg.png" alt="图1 Z曲线"></p>
+<p>XZ曲线是由Z曲线衍生出来的，首先说明一下论文中对Z曲线及其编码的定义，以及作者认为的传统Z曲线的缺点：</p>
+<ul>
+<li>Z曲线的cell按照象限序列（quadrant sequences，本文沿用论文名词）进行编码，即传统的Z曲线编码（见图2）。</li>
+<li>将数据空间归一化为经纬度范围均为1的正方形，即将整个需要编码的空间作为一个边长为1的正方形，并具有x轴和y轴。则level n中每个cell的边长为$0.5^n$。</li>
+<li>如果有很小的要素恰好在数据空间的正中心，则象限序列会为空（如图3）。</li>
+</ul>
+<p><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/z_ordering1.png?raw=true" alt="图2 Z曲线象限序列编码"></p>
+<p><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/xz_empty%20sequences.png?raw=true" alt="图3 Z曲线空序列情况"></p>
+<h3 id="XZ曲线"><a href="#XZ曲线" class="headerlink" title="XZ曲线"></a>XZ曲线</h3><p>鉴于Z曲线的缺点，XZ曲线具有以下特性：</p>
+<ul>
+<li>基本的单元（论文中称为element，本文沿用论文名词）为传统Z曲线cell向右上边长扩大一倍，这样使得临近的element之间存在50%的重叠度(如图4)。</li>
+<li>element的数量和cell的数量一致，即边界也向外延伸。</li>
+<li>存储的要素不作冗余存储，即单个要素只存储于一个element中。</li>
+</ul>
+<p><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/xz_enlarged%20element.png?raw=true" alt="图4 扩大的element"></p>
+<p>对于XZ曲线的一些性质和论文中给出的一些定理，本文不加证明地罗列出来，如果感兴趣可以去论文中查看证明过程。</p>
+<p>XZ曲线最大的一个特点就是将cell向右上扩大为element，关于element论文中有一个定义：<br><strong>定义1</strong></p>
+<blockquote>
+<p>设一个element的左下角cell的quadrant sequences为$s$，$|s|$为其长度，则element的边长为${0.5}^{|s|-1}$。</p>
+</blockquote>
+<p>由于一个对象（文中称为对象object，本文沿用论文名词）只存储在一个element中，则一个object最多只和一个cell的两条边相交。<br>则具有以下定理：</p>
+<p><strong>定理1</strong></p>
+<blockquote>
+<p>设$\lvert s\rvert$为一个quadrant sequences $s$的长度，w为一个object的宽度，h为一个object的高度。则$\lvert s\rvert$的范围为：<br> $$l_1 \le \lvert s\rvert \lt l_2，其中 \ l_1 = \lfloor log_{0.5}(max{w,h}) \rfloor,\ l_2 = l_1 + 2$$</p>
+</blockquote>
+<p>由于不作冗余存储，一个object直接存储于一个element中，相当于使用一个element去逼近object,造成的误差会比较大。在论文中也写出了误差指标和XZ曲线的误差。<br>设真实object面积为$A$，使用一个element进行存储时element的实际面积为$S_{ele}$，则逼近误差为：<br>$$ E_{rel} = \frac{A-S_{ele}}{S_{ele}} $$<br>XZ曲线的最大逼近误差小于15。</p>
+<p>设最大level为g，则对于一个level $l$的cell，其具有的level g后代数量为：<br>$$ N_{cell}(l) = 4^{g-l} $$<br>则可求出，对于一个level $l$的cell，其具有的所有level的后代数量，是为定理2：</p>
+<p><strong>定理2</strong></p>
+<blockquote>
+<p>对于一个quadrant sequences $s$所代表的cell（level为$l$），其具有的所有level的element后代数量（包括当前对应的element，最大level为g)为：<br>$$ N_{ele} = \frac{4^{g-l+1}-1}{3} $$</p>
+</blockquote>
+<p>接下来就是<strong>最重要</strong>的一条定义，是XZ曲线的编码，称为sequence code：</p>
+<p><strong>定义2</strong></p>
+<blockquote>
+<p>对于一个quadrant sequences $s = \langle \ q_0 \ q_1 \ … \ q_i \ … \ q_{l-1} \ \rangle$，可以得到其对应的XZ曲线编码为：<br>$$ C(s) = \sum_{0\le i \lt l} q_i \cdot \frac{4^{g-i}-1}{3}+1 $$</p>
+</blockquote>
+<p>论文中对XZ曲线编码推论出了两个定理：<br><strong>定理3</strong></p>
+<blockquote>
+<p>对于quadrant sequences $s$所对应的XZ编码值$C(s)$，其大小代表了$s$的字典序位置，即：<br>$$ s_1 \lt_{lex} s_2 \Longleftrightarrow C(s_1) \lt C(s_2) $$</p>
+</blockquote>
+<p><strong>定理4</strong></p>
+<blockquote>
+<p>从quadrant sequences映射到数值型编码的方法中，sequence code具有最好的临近性。即相近的两个quadrant sequences对应的sequence code值最相近。</p>
+</blockquote>
+<h4 id="XZ曲线的插入操作"><a href="#XZ曲线的插入操作" class="headerlink" title="XZ曲线的插入操作"></a>XZ曲线的插入操作</h4><p>将object转换为XZ编码，首先需要确定object对应的层级。根据定理1，一个object所在的层级为$l_1 = \lfloor log_{0.5}(max{w,h})\rfloor$或$l_1+1$。设$x_l$为object的x下界，w为object的宽度，$w_2 = {0.5}^{l_1+1}$。则可根据下式判断object的层级$l$：<br>$$ x_l + w \le \lfloor \frac{x_l}{x_2} \rfloor \cdot w_2 + 2w_2 $$<br><em>注：这个不等式和论文上不一致，经过讨论发现应该是论文出错，此处公式使用的是GeoWave源码中的公式</em><br>若该式成立，则object的层级$l = l_1 + 1$，否则$l = l_1$</p>
+<h4 id="XZ曲线的查询操作"><a href="#XZ曲线的查询操作" class="headerlink" title="XZ曲线的查询操作"></a>XZ曲线的查询操作</h4><p>XZ曲线查询得到的结果是一个区间集合（interval set，本文沿用论文名词），interval set中的一个interval代表一个element中所有后代element的集合，即interval表示的是sequence code范围。</p>
+<p>关于XZ曲线的查询生成interval set，论文中表述得较少并且不明确，GeoWave源码也没有完全按照论文中的方法来实现。本着实事求是的原则，以下按照GeoWave源码的方法讲述XZ曲线查询操作。</p>
+<p>查询的方法为：给定一个查询框，如果查询框和包含某个element，则将该element对应的interval（即其所有后代element）加入到interval set中；如果查询框与某个element相交，则将该element作为一个interval（这个interval中只有这个element对象）加入到interval set中，并将这个element分裂为其子element，再和查询框进行拓扑关系判断，直至interval set中的数量达到给定的阈值或分裂至最大层级。得到interval set后，将其中有交集的interval进行合并，生成最终的interval set。</p>
+<p>查询的伪代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">Queue&lt;Element&gt; remaining; <span class="comment">// 待处理队列</span></span><br><span class="line">List&lt;Interval&gt; intervalSet; <span class="comment">// 最终结果</span></span><br><span class="line">remaining.add(LevelOneElement); <span class="comment">// 加入第一层的element</span></span><br><span class="line">remaining.add(LevelTerminator); <span class="comment">// 加入一层的终止条件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (level &lt; g &amp;&amp; !remaining.empty() &amp;&amp; intervalSet.size() &lt; maxSize) &#123;</span><br><span class="line">    Element next = remaining.poll();</span><br><span class="line">    <span class="keyword">if</span> (next == LevelTerminator) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!remaining.isEmpty()) &#123;</span><br><span class="line">            level = level + <span class="number">1</span>;</span><br><span class="line">            remaining.add(LevelTerminator);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (query.contain(next)) &#123;</span><br><span class="line">            intervalSet.add(interval(next));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (query.intersect(next)) &#123;</span><br><span class="line">            intervalSet.add(next);</span><br><span class="line">            remaining.add(next.children());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 兜底策略，将未处理完的element处理完</span></span><br><span class="line"><span class="keyword">while</span> (!remaining.empty()) &#123;</span><br><span class="line">    Element next = remaining.poll();</span><br><span class="line">    <span class="keyword">if</span> (next == LevelTerminator) &#123;</span><br><span class="line">        level = level + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        intervalSet.add(interval(next));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">mergeIntervalsWhichAreIntersected(intervalSet);</span><br></pre></td></tr></table></figure></p>
+<p>以上就是XZ曲线的基本原理，感觉目前XZ曲线使用得很少，几乎查不到相关资料，只能根据原始论文和GeoWave实现的源码去慢慢摸索。希望我的这篇博文可以帮助大家理解XZ曲线，如果有疑问和建议可以在评论中指出！</p>
+<h3 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h3><p>感谢同组的@Louis Liu和我一起看XZ曲线的论文和源码（他没有GitHub和微博账号，只能这么感谢了😂）</p>
 
         </div>
         <footer class="article-footer">
@@ -198,7 +247,7 @@
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/01/hbase-construction1/" data-id="cjq7lcdwb0001tcu10f23basg" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/27/XZOdering/" data-id="cjq7lcdx6000btcu1x4j8tdc1" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -323,20 +372,10 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/12/02/找工作的一些感悟/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            找工作的一些感悟
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2018/12/01/howInstall/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/12/03/python-learn-1/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">基于hexo的marble模板</p>
+        <p class="article-nav-title">（转载）Python基础</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -351,7 +390,7 @@
     <h3 class="widget-title">目录</h3>
     <div class="widget">
         <div id="toc" class="toc-article">
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-HBase的行、列和列族"><span class="toc-number">1.</span> <span class="toc-text">1. HBase的行、列和列族</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-负载均衡"><span class="toc-number">2.</span> <span class="toc-text">2. 负载均衡</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#空间填充曲线"><span class="toc-number">1.</span> <span class="toc-text">空间填充曲线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Z曲线"><span class="toc-number">2.</span> <span class="toc-text">Z曲线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XZ曲线"><span class="toc-number">3.</span> <span class="toc-text">XZ曲线</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#XZ曲线的插入操作"><span class="toc-number">3.1.</span> <span class="toc-text">XZ曲线的插入操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#XZ曲线的查询操作"><span class="toc-number">3.2.</span> <span class="toc-text">XZ曲线的查询操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Acknowledgement"><span class="toc-number">4.</span> <span class="toc-text">Acknowledgement</span></a></li></ol>
         </div>
     </div>
 </div>
