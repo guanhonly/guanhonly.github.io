@@ -21,7 +21,7 @@
 <meta property="og:description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/the-louvre-866.jpg">
-<meta property="og:updated_time" content="2018-12-28T06:17:46.619Z">
+<meta property="og:updated_time" content="2019-01-04T01:43:20.450Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XZ曲线探究">
 <meta name="twitter:description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
@@ -233,7 +233,7 @@
 <blockquote>
 <p>从quadrant sequences映射到数值型编码的方法中，sequence code具有最好的临近性。即相近的两个quadrant sequences对应的sequence code值最相近。</p>
 </blockquote>
-<h4 id="XZ曲线的插入操作"><a href="#XZ曲线的插入操作" class="headerlink" title="XZ曲线的插入操作"></a>XZ曲线的插入操作</h4><p>将object转换为XZ编码，首先需要确定object对应的层级。根据定理1，一个object所在的层级为$l_1 = \lfloor log_{0.5}(max\{w,h\})\rfloor$或$l_1+1$。设$x_l$为object的x下界，w为object的宽度，$w_2 = {0.5}^{l_1+1}$。则可根据下式判断object的层级$l$：<br>$$ x_l + w \le \lfloor \frac{x_l}{x_2} \rfloor \cdot w_2 + 2w_2 $$<br><em>注：这个不等式和论文上不一致，经过讨论发现应该是论文出错，此处公式使用的是GeoWave源码中的公式</em><br>若该式成立，则object的层级$l = l_1 + 1$，否则$l = l_1$</p>
+<h4 id="XZ曲线的插入操作"><a href="#XZ曲线的插入操作" class="headerlink" title="XZ曲线的插入操作"></a>XZ曲线的插入操作</h4><p>将object转换为XZ编码，首先需要确定object对应的层级。根据定理1，一个object所在的层级为$l_1 = \lfloor log_{0.5}(max\{w,h\})\rfloor$或$l_1+1$。设$x_l$为object的x下界，w为object的宽度，$y_l$为object的y下界，h为object的宽度，$w_2 = {0.5}^{l_1+1}$。则可根据以下两个式子可判断object的层级$l$：<br>$$ x_l + w \le \lfloor \frac{x_l}{w_2} \rfloor \cdot w_2 + 2w_2 $$<br>$$ y_l + h \le \lfloor \frac{y_l}{w_2} \rfloor \cdot w_2 + 2w_2 $$<br><em>注：这个不等式和论文上不一致，经过讨论发现应该是论文出错，此处公式使用的是GeoWave源码中的公式</em><br>若以上两式同时成立，则object的层级$l = l_1 + 1$，否则$l = l_1$</p>
 <h4 id="XZ曲线的查询操作"><a href="#XZ曲线的查询操作" class="headerlink" title="XZ曲线的查询操作"></a>XZ曲线的查询操作</h4><p>XZ曲线查询得到的结果是一个区间集合（interval set，本文沿用论文名词），interval set中的一个interval代表一个element中所有后代element的集合，即interval表示的是sequence code范围。</p>
 <p>关于XZ曲线的查询生成interval set，论文中表述得较少并且不明确，GeoWave源码也没有完全按照论文中的方法来实现。本着实事求是的原则，以下按照GeoWave源码的方法讲述XZ曲线查询操作。</p>
 <p>查询的方法为：给定一个查询框，如果查询框和包含某个element，则将该element对应的interval（即其所有后代element）加入到interval set中；如果查询框与某个element相交，则将该element作为一个interval（这个interval中只有这个element对象）加入到interval set中，并将这个element分裂为其子element，再和查询框进行拓扑关系判断，直至interval set中的数量达到给定的阈值或分裂至最大层级。得到interval set后，将其中有交集的interval进行合并，生成最终的interval set。</p>
@@ -247,7 +247,7 @@
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/27/XZOdering/" data-id="cjq7nb79f000btou1i1nqd6r5" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/27/XZOdering/" data-id="cjqhdm45r000b68u1ivliepgv" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -579,7 +579,7 @@
                 <h1 class="logo-wrap">
                     <a href="/" class="logo"></a>
                 </h1>
-                <p>&copy; 2018 Honly</p>
+                <p>&copy; 2019 Honly</p>
                 <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
             </div>
             <div class="footer-plugins">
