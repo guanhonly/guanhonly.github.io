@@ -21,7 +21,7 @@
 <meta property="og:description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/the-louvre-866.jpg">
-<meta property="og:updated_time" content="2019-01-04T01:43:20.450Z">
+<meta property="og:updated_time" content="2019-01-10T08:19:26.092Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XZ曲线探究">
 <meta name="twitter:description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
@@ -225,7 +225,7 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>设$\lvert s\rvert$为一个quadrant sequences $s$的长度，w为一个object的宽度，h为一个object的高度。则$\lvert s\rvert$的范围为：<br> $$l_1 \le \lvert s\rvert \lt l_2，其中 \ l_1 = \lfloor log_{0.5}(max\{w,h\}) \rfloor,\ l_2 = l_1 + 2$$</p>
 </blockquote>
-<p>由于不作冗余存储，一个object直接存储于一个element中，相当于使用一个element去逼近object,造成的误差会比较大。在论文中也写出了误差指标和XZ曲线的误差。<br>设真实object面积为$A$，使用一个element进行存储时element的实际面积为$S_{ele}$，则逼近误差为：<br>$$ E_{rel} = \frac{A-S_{ele}}{S_{ele}} $$<br>XZ曲线的最大逼近误差小于15。</p>
+<p>由于不作冗余存储，一个object直接存储于一个element中，相当于使用一个element去逼近object,造成的误差会比较大。在论文中也写出了误差指标和XZ曲线的误差。<br>设object的实际面积为$S_{obj}$，使用一个element进行存储时element的实际面积为$S_{ele}$，则逼近误差为：<br>$$ E_{rel} = \frac{S_{ele}-S_{obj}}{S_{obj}} $$<br>XZ曲线的最大逼近误差小于15。</p>
 <p>设最大level为g，则对于一个level $l$的cell，其具有的level g后代数量为：<br>$$ N_{cell}(l) = 4^{g-l} $$<br>则可求出，对于一个level $l$的cell，其具有的所有level的后代数量，是为定理2：</p>
 <p><strong>定理2</strong></p>
 <blockquote>
@@ -258,7 +258,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/27/XZOdering/" data-id="cjqkl7mwc000b94u14sfupnsy" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/27/XZOdering/" data-id="cjqqcdv0v000bd0u1z86habm7" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
