@@ -6,25 +6,26 @@
     
 
     
-    <title>关于我 | Honly&#39;s Blog</title>
+    <title>Google s2 lib研究之空间覆盖 | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="">
+        <meta name="keywords" content="GIS,空间索引,谷歌（Google）">
     
-    <meta name="description" content="分享技术，分享阅读，分享生活，偶尔分享其他领域的东西 欢迎来稿，无论是技术还是你擅长的领域，但必须是markdown格式。如果有离线图片请一并发送，并标明图片在文中的位置。邮箱地址：guanhonly@gmail.com markdown的基本语法可以参考：markdown基本语法">
+    <meta name="description" content="本文适合于对Google s2有一定了解或对空间索引有一定了解的读者。 空间索引常用的方法是空间填充曲线，比如Hilbert, Geohash等，被用于许多查询场景中。Google也推出了自己的空间索引——Google s2，这个项目是一个开源项目，有兴趣的可以直接看Google s2 java版源码和官方文档。对Google s2的介绍可以看Google’s S2, geometry on th">
+<meta name="keywords" content="GIS,空间索引,谷歌（Google）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于我">
-<meta property="og:url" content="http://guanhonly.github.io/2017/01/01/aboutme/index.html">
+<meta property="og:title" content="Google s2 lib研究之空间覆盖">
+<meta property="og:url" content="http://guanhonly.github.io/2019/03/30/s2-approximate-polygon-by-cell/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
-<meta property="og:description" content="分享技术，分享阅读，分享生活，偶尔分享其他领域的东西 欢迎来稿，无论是技术还是你擅长的领域，但必须是markdown格式。如果有离线图片请一并发送，并标明图片在文中的位置。邮箱地址：guanhonly@gmail.com markdown的基本语法可以参考：markdown基本语法">
+<meta property="og:description" content="本文适合于对Google s2有一定了解或对空间索引有一定了解的读者。 空间索引常用的方法是空间填充曲线，比如Hilbert, Geohash等，被用于许多查询场景中。Google也推出了自己的空间索引——Google s2，这个项目是一个开源项目，有兴趣的可以直接看Google s2 java版源码和官方文档。对Google s2的介绍可以看Google’s S2, geometry on th">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://www.hdwallpapers.net/previews/banjo-player-486.jpg">
-<meta property="og:updated_time" content="2018-12-02T10:49:01.083Z">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1194012-81eadaf2f5da7e8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-03-31T02:30:42.254Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于我">
-<meta name="twitter:description" content="分享技术，分享阅读，分享生活，偶尔分享其他领域的东西 欢迎来稿，无论是技术还是你擅长的领域，但必须是markdown格式。如果有离线图片请一并发送，并标明图片在文中的位置。邮箱地址：guanhonly@gmail.com markdown的基本语法可以参考：markdown基本语法">
-<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/banjo-player-486.jpg">
+<meta name="twitter:title" content="Google s2 lib研究之空间覆盖">
+<meta name="twitter:description" content="本文适合于对Google s2有一定了解或对空间索引有一定了解的读者。 空间索引常用的方法是空间填充曲线，比如Hilbert, Geohash等，被用于许多查询场景中。Google也推出了自己的空间索引——Google s2，这个项目是一个开源项目，有兴趣的可以直接看Google s2 java版源码和官方文档。对Google s2的介绍可以看Google’s S2, geometry on th">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1194012-81eadaf2f5da7e8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
     
 
     
@@ -152,19 +153,19 @@ var _hmt = _hmt || [];
                         <div class="main-body-header">
     <h1 class="header">
     
-    未分类
+    <a class="page-title-link" href="/categories/技术/">技术</a>
     </h1>
 </div>
 
                         <div class="main-body-content">
-                            <article id="post-aboutme" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+                            <article id="post-s2-approximate-polygon-by-cell" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        关于我
+        Google s2 lib研究之空间覆盖
         </h1>
     
 
@@ -174,21 +175,55 @@ var _hmt = _hmt || [];
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2017/01/01/aboutme/" class="article-date">
-            <time datetime="2016-12-31T16:00:00.000Z" itemprop="datePublished">2017-01-01</time>
+        <a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="article-date">
+            <time datetime="2019-03-30T13:07:54.000Z" itemprop="datePublished">2019-03-30</time>
         </a>
     </div>
 
 		
 
                 
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/空间索引/">空间索引</a>, <a class="tag-link" href="/tags/谷歌（Google）/">谷歌（Google）</a>
+    </div>
+
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>分享技术，分享阅读，分享生活，偶尔分享其他领域的东西</p>
-<p>欢迎来稿，无论是技术还是你擅长的领域，但必须是markdown格式。如果有离线图片请一并发送，并标明图片在文中的位置。<br>邮箱地址：<a href="mailto:guanhonly@gmail.com" target="_blank" rel="noopener">guanhonly@gmail.com</a></p>
-<p>markdown的基本语法可以参考：<a href="https://www.markdownguide.org/basic-syntax" target="_blank" rel="noopener">markdown基本语法</a></p>
+            <p>本文适合于对Google s2有一定了解或对空间索引有一定了解的读者。</p>
+<p>空间索引常用的方法是空间填充曲线，比如Hilbert, Geohash等，被用于许多查询场景中。Google也推出了自己的空间索引——Google s2，这个项目是一个开源项目，有兴趣的可以直接看<a href="https://github.com/google/s2-geometry-library-java" target="_blank" rel="noopener">Google s2 java版源码</a>和<a href="https://docs.google.com/presentation/d/1Hl4KapfAENAOf4gv-pSngKwvS_jwNVHRPZTTDzXXn6Q/view#slide=id.i0" target="_blank" rel="noopener">官方文档</a>。对Google s2的介绍可以看<a href="http://blog.christianperone.com/2015/08/googles-s2-geometry-on-the-sphere-cells-and-hilbert-curve/" target="_blank" rel="noopener">Google’s S2, geometry on the sphere, cells and Hilbert curve</a>，中文的可以看<a href="https://www.jianshu.com/p/7332dcb978b2" target="_blank" rel="noopener">高效的多维空间点索引算法 — Geohash 和 Google S2</a>。关于Google s2的基本原理在此就不再赘述，本文主要讲s2中一个重要的算法——空间覆盖。</p>
+<p>可能这个算法名称乍一看有点一头雾水，在这里截取一张官方文档中的图：</p>
+<p><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/google_s2_1.png?raw=true" alt="regionCover"></p>
+<p>意思就是，使用若干个s2定义的空间单元去逼近一个任意形状的区域，这些空间单元可能大小不一，并且可以设置最大的空间单元、最小的空间单元和空间单元数量。</p>
+<p>官方文档没有给出其原理，在看了Google s2的源码之后，终于对这个算法有了一个初步的了解。</p>
+<p>在讲算法之前，先说几点重要的概念：</p>
+<ol>
+<li>每个非最底层的空间单元（简称cell，下同）都有四个子cell，即在Google s2中空间索引是四叉树的形式；</li>
+<li>每个cell都有其特定的id，id的命名方法请参考官方文档。</li>
+</ol>
+<p><strong>接下来开始说算法：</strong></p>
+<p>算法输入是一个空间区域region，cell的最小层级minLevel和最大层级maxLevel，返回cell的数量maxCells，返回结果是cell id的集合result。源代码中有一个十分重要的函数addCandidate，过程有点复杂，在之后讲。在此只描述maxCells大于等于4且层级粒度为1时（特定条件）的主体算法。</p>
+<ol>
+<li>定义一个优先队列candidateQueue，用于存储cell。其中排序的依据按照cell的权重由大到小排列，cell的权重计算方法后面讲。</li>
+<li>初始化candidateQueue：用四个cell完全覆盖region的最小外包圆，这四个cell是同一层级的刚好能覆盖region的四个cell，即如果cell的层级再高一层，就不能完全覆盖region。对这四个cell执行addCandidate函数。</li>
+<li>弹出candidateQueue的队首元素candidate，如果candidate的层级小于最小层级 || candidate的与region相交的子cell的数量只有1个 || resul.size()+candidateQueue.size()+candidate的与region相交的孩子的数量 &lt;= maxCells，则对candidate的与region相交的所有子cell执行addCandidate函数；否则将该candidate的id插入到result中。</li>
+<li>如果candidateQueue不为空且result中元素的数量小于maxCells，则返回步骤3；否则结束算法。</li>
+</ol>
+<p>接下来讲一下重点：addCandidate函数</p>
+<p>addCandidate函数的源码如下（在本文中，根据特定条件作了一点修改，以方便读者理解）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Process a candidate by either adding it to the result list or expanding its</span></span><br><span class="line"><span class="comment">   * children and inserting it into the priority queue. Passing an argument of</span></span><br><span class="line"><span class="comment">   * NULL does nothing.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">addCandidate</span><span class="params">(Candidate candidate)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (candidate == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (candidate.isTerminal) &#123;</span><br><span class="line">      result.add(candidate.cell.id());</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Expand one level at a time until we hit min_level_ to ensure that</span></span><br><span class="line">    <span class="comment">// we don't skip over it.</span></span><br><span class="line">    <span class="keyword">int</span> numLevels = (candidate.cell.level() &lt; minLevel) ? <span class="number">1</span> : levelMod;</span><br><span class="line">    <span class="keyword">int</span> numTerminals = expandChildren(candidate, candidate.cell, numLevels);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (candidate.numChildren == <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="comment">// Do nothing</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (numTerminals == <span class="number">1</span> &lt;&lt; <span class="number">2</span></span><br><span class="line">        &amp;&amp; candidate.cell.level() &gt;= minLevel) &#123;</span><br><span class="line">      <span class="comment">// Optimization: add the parent cell rather than all of its children.</span></span><br><span class="line">      candidate.isTerminal = <span class="keyword">true</span>;</span><br><span class="line">      addCandidate(candidate);</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// We negate the priority so that smaller absolute priorities are returned</span></span><br><span class="line">      <span class="comment">// first. The heuristic is designed to refine the largest cells first,</span></span><br><span class="line">      <span class="comment">// since those are where we have the largest potential gain. Among cells</span></span><br><span class="line">      <span class="comment">// at the same level, we prefer the cells with the smallest number of</span></span><br><span class="line">      <span class="comment">// intersecting children. Finally, we prefer cells that have the smallest</span></span><br><span class="line">      <span class="comment">// number of children that cannot be refined any further.</span></span><br><span class="line">      <span class="keyword">int</span> priority = -((((candidate.cell.level() &lt;&lt; <span class="number">2</span> + candidate.numChildren)</span><br><span class="line">          &lt;&lt; <span class="number">2</span>) + numTerminals);</span><br><span class="line">      candidateQueue.add(<span class="keyword">new</span> QueueEntry(priority, candidate));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>从代码中可以看到，如果candidate被标记了isTerminal，就可以直接加入到result中，cell被标记isTerminal的条件是：</p>
+<ol>
+<li>cell被region完全包含</li>
+<li>cell再向下剖分后层级会超过maxLevel</li>
+</ol>
+<p>其中expandChildren函数是获取一个cell有会被标记为isTerminal的子cell数量，这个数量被记为numTerminals。如果一个cell的所有子cell全被标记为isTerminal，则直接将这个cell加入到result中（这个是一个优化项（Optimization），再向下划分毫无意义，这样做减小了算法复杂度）；否则将这个cell加入到candidateQueue中，<u><strong>其中优先级的计算方法我至今没搞懂，有弄懂的欢迎评论</strong></u>，优先级的计算转换为数学公式如下：<br>$$<br>priority = -（(level \times 4 + numChildren)\times 4 + numTerminals）<br>$$<br>其中level表示这个cell的层级，numChildren表示这个cell的和region相交的子cell数量。candidateQueue按照这个优先级由高到低排列。</p>
+<p>做一个总结：这个算法相当于先将初始的cell（保证能完全覆盖region的cell，一般为4个）压入candidateQueue中，然后不断地从candidateQueue中获取需要处理的cell。如果cell有需要处理的子cell则将其子cell加入队列，如果cell已不需要处理则直接插入到结果列表中。直到candidateQueue为空或者result中元素的数量达到预设的</p>
+<p>以上就是我从Google s2的java版源码中看到的空间覆盖算法，在给出了的测试有如下效果：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1194012-7d494a6feb4e0b20.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Google s2空间覆盖示例"></p>
+<p>后来翻到了有人给出了更详细的s2空间覆盖源码剖析，是Go语言的：<a href="https://github.com/halfrost/Halfrost-Field/blob/master/contents/Go/go_s2_regionCoverer.md" target="_blank" rel="noopener">Google S2 是如何解决空间覆盖最优解问题的?</a></p>
 
         </div>
         <footer class="article-footer">
@@ -196,7 +231,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2017/01/01/aboutme/" data-id="cjtwb5jh70000xsu10pj9zt8d" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/03/30/s2-approximate-polygon-by-cell/" data-id="cjtwb5jht0005xsu1tj6vbf8y" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -260,6 +295,27 @@ var _hmt = _hmt || [];
     </div>
 </article>
 
+    <section id="comments">
+    
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<div id="gitalk-container"></div>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        repo: 'guanhonly.github.io',
+        owner: 'guanhonly',
+        admin: 'guanhonly',
+        distractionFreeMode: 'true',
+        id: window.location.pathname.substr(0, 50),    // Ensure uniqueness and length less than 50
+        
+    });
+    gitalk.render('gitalk-container')
+</script>
+    
+    </section>
+
 
 
                         </div>
@@ -300,16 +356,12 @@ var _hmt = _hmt || [];
         
 <nav id="article-nav">
     
-        <a href="/2018/12/01/howInstall/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            基于hexo的marble模板
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
+        <a href="/2018/12/27/XZOdering/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">XZ曲线探究</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
     
 </nav>
 
@@ -318,6 +370,15 @@ var _hmt = _hmt || [];
         
             
                 
+<div class="widget-wrap widget-list">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <div id="toc" class="toc-article">
+            
+        </div>
+    </div>
+</div>
+
 
             
                 
