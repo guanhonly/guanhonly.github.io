@@ -10,10 +10,10 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="GIS,算法">
+        <meta name="keywords" content="GIS,算法,Google,轨迹">
     
     <meta name="description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳（Timestamp）, $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
-<meta name="keywords" content="GIS,算法">
+<meta name="keywords" content="GIS,算法,Google,轨迹">
 <meta property="og:type" content="article">
 <meta property="og:title" content="轨迹压缩算法(Polyline encoding algorithm)探究">
 <meta property="og:url" content="http://guanhonly.github.io/2019/09/05/PolylineEncoding/index.html">
@@ -21,7 +21,7 @@
 <meta property="og:description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳（Timestamp）, $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/spiral-dots-990.jpg">
-<meta property="og:updated_time" content="2019-09-05T17:08:57.908Z">
+<meta property="og:updated_time" content="2019-09-05T18:03:39.483Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="轨迹压缩算法(Polyline encoding algorithm)探究">
 <meta name="twitter:description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳（Timestamp）, $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
@@ -185,7 +185,7 @@ var _hmt = _hmt || [];
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/算法/">算法</a>
+        <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/Google/">Google</a>, <a class="tag-link" href="/tags/算法/">算法</a>, <a class="tag-link" href="/tags/轨迹/">轨迹</a>
     </div>
 
             </div>
@@ -232,7 +232,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/09/05/PolylineEncoding/" data-id="ck06y3pi30000twu129vy79ps" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/09/05/PolylineEncoding/" data-id="ck0703ea70000sku1itcclrys" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -517,7 +517,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/环境配置/">环境配置</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/笔经面经/">笔经面经</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/谷歌（Google）/">谷歌（Google）</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/笔经面经/">笔经面经</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/轨迹/">轨迹</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -527,7 +527,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/GIS/" style="font-size: 20px;">GIS</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/实用教程/" style="font-size: 10px;">实用教程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/环境配置/" style="font-size: 10px;">环境配置</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 10px;">空间索引</a> <a href="/tags/笔经面经/" style="font-size: 10px;">笔经面经</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/谷歌（Google）/" style="font-size: 10px;">谷歌（Google）</a>
+            <a href="/tags/GIS/" style="font-size: 20px;">GIS</a> <a href="/tags/Google/" style="font-size: 15px;">Google</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/实用教程/" style="font-size: 15px;">实用教程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 10px;">空间索引</a> <a href="/tags/笔经面经/" style="font-size: 10px;">笔经面经</a> <a href="/tags/算法/" style="font-size: 15px;">算法</a> <a href="/tags/轨迹/" style="font-size: 10px;">轨迹</a>
         </div>
     </div>
 
