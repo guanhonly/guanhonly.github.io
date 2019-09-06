@@ -12,19 +12,19 @@
     
         <meta name="keywords" content="GIS,算法,Google,轨迹">
     
-    <meta name="description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳（Timestamp）, $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
+    <meta name="description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Timestamp), $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
 <meta name="keywords" content="GIS,算法,Google,轨迹">
 <meta property="og:type" content="article">
 <meta property="og:title" content="轨迹压缩算法(Polyline encoding algorithm)探究">
 <meta property="og:url" content="http://guanhonly.github.io/2019/09/05/PolylineEncoding/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
-<meta property="og:description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳（Timestamp）, $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
+<meta property="og:description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Timestamp), $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/spiral-dots-990.jpg">
-<meta property="og:updated_time" content="2019-09-05T18:03:39.483Z">
+<meta property="og:updated_time" content="2019-09-06T15:27:25.999Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="轨迹压缩算法(Polyline encoding algorithm)探究">
-<meta name="twitter:description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳（Timestamp）, $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
+<meta name="twitter:description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Timestamp), $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
 <meta name="twitter:image" content="https://www.hdwallpapers.net/previews/spiral-dots-990.jpg">
     
 
@@ -192,7 +192,7 @@ var _hmt = _hmt || [];
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><strong>文中的代码表达采用Java</strong><br>一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(<em>longitude</em>)，$y$一般对应纬度(<em>latitude</em>)），$t$是记录这个轨迹点的时间戳（<em>Timestamp</em>）, $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最基本的信息，则只需要保留其空间信息和时间信息，即可以将一个轨迹点表示为 $p = (x, y, t)$。在写代码时，一个轨迹点的类型可以定义如下：</p>
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><strong>文中的代码表达采用Java</strong><br>一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(<em>longitude</em>)，$y$一般对应纬度(<em>latitude</em>)），$t$是记录这个轨迹点的时间戳(<em>Timestamp</em>), $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最基本的信息，则只需要保留其空间信息和时间信息，即可以将一个轨迹点表示为 $p = (x, y, t)$。在写代码时，一个轨迹点的类型可以定义如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PointTs</span> </span>&#123;</span><br><span class="line">    <span class="keyword">double</span> lng;</span><br><span class="line">    <span class="keyword">double</span> lat;</span><br><span class="line">    <span class="keyword">long</span> timestamp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>而这样保存一个轨迹点，$x$和$y$一般使用<em>double</em>类型，$t$一般使用<em>long</em>类型，再加上至少3个字符的分隔符（分隔x,y,t和每个轨迹点），一个轨迹点就要占 <code>Double.SIZE * 2 + Long.SIZE + Character.SIZE * 3 == 27 * Byte.SIZE</code>, 也就是说保存一个轨迹点至少需要占27个字节。在如今轨迹数量越来越大的情况下，有必要使用轨迹压缩的算法来解决轨迹数据量过大的问题。在查阅了资料后，我在Google地图开发平台中看到了Google采用的轨迹数据压缩算法，名为<a href="https://developers.google.com/maps/documentation/utilities/polylinealgorithm" target="_blank" rel="noopener">Polyline encoding algorithm</a>（需要科学上网），可以将若干个轨迹点编码成一串字符串，并且实现轨迹的压缩。这是一个有损的压缩算法，并且可以压缩有符号的数字。<br>接下来我将从编码和解码两个方面解析这个算法，并给出示例代码。</p>
 <h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><p>这种编码其实主要是针对数字来编码的，比如说，有一个经度为：<br><code>-179.9832104</code></p>
@@ -210,7 +210,7 @@ var _hmt = _hmt || [];
 </li>
 <li><p>将这些分组顺序反转（reverse order）：<br><code>00001 11111 10000 01010 00010 00001</code><br>这样做的目的是在写代码时可以每次从低位取数据，更适合代码实现。因为一般而言，写代码读二进制时，读高位比较复杂，而读低位较简单（例如，读最后五位只需要 <code>&amp;0x1F</code>），读到最后几位后可以直接append到结果中，不用插入到结果的前端，效率更高。</p>
 </li>
-<li><p>除了最后一个chunk，其他chunk和<code>0x20</code>进行<code>与</code>操作：<br><code>100001 111111 110000 101010 100010 000001</code><br>这一步的目的是保证只有最后一个chunk是小于<code>0x20</code>的。起到了分隔的作用。</p>
+<li><p>除了最后一个chunk，其他chunk和<code>0x20</code>进行<code>或</code>操作：<br><code>100001 111111 110000 101010 100010 000001</code><br>这一步的目的是保证只有最后一个chunk是小于<code>0x20</code>的。起到了分隔的作用。</p>
 </li>
 <li><p>分别将每个二进制的chunk转化为十进制的数字：<br><code>33 63 48 42 34 1</code></p>
 </li>
@@ -232,7 +232,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/09/05/PolylineEncoding/" data-id="ck0703ea70000sku1itcclrys" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/09/05/PolylineEncoding/" data-id="ck089xax10000nsu15lt9yj9z" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
