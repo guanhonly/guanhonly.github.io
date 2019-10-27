@@ -10,7 +10,7 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="GIS,算法,空间索引,Uber">
+        <meta name="keywords" content="GIS,算法,空间索引,Uber">
     
     <meta name="description" content="2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译">
 <meta name="keywords" content="GIS,算法,空间索引,Uber">
@@ -40,7 +40,7 @@
 
     <link rel="stylesheet" href="/css/style.css">
 
-    <script src="/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
     
     
         <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
@@ -175,24 +175,18 @@ var _hmt = _hmt || [];
             <div class="article-meta">
                 
     <div class="article-date">
-      <i class="fa fa-calendar"></i>
-      <a href="/2019/10/27/uber-h3-preliminary-research/" class="article-date">
-         <time datetime="2019-10-27T03:05:13.000Z" itemprop="datePublished">2019-10-27</time>
-      </a>
+        <a href="/2019/10/27/uber-h3-preliminary-research/" class="article-date">
+            <time datetime="2019-10-27T03:05:13.000Z" itemprop="datePublished">2019-10-27</time>
+        </a>
     </div>
 
-
-                
+		
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
         <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/Uber/">Uber</a>, <a class="tag-link" href="/tags/空间索引/">空间索引</a>, <a class="tag-link" href="/tags/算法/">算法</a>
     </div>
-
-                
-
-                
 
             </div>
         
@@ -248,7 +242,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/" data-id="ck28wy3yd000y30u129xxdu3l" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/" data-id="ck28yna8d000y7wu144lxlfq0" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -310,35 +304,26 @@ var _hmt = _hmt || [];
 
         </footer>
     </div>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "author": {
-            "@type": "Person",
-            "name": "Honly"
-        },
-        "headline": "初探Uber H3原理",
-        "image": "http://guanhonly.github.iohttps://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/Twitter-H3.png",
-        "keywords": "GIS 算法 空间索引 Uber",
-        "genre": "技术",
-        "datePublished": "2019-10-27",
-        "dateCreated": "2019-10-27",
-        "dateModified": "2019-10-27",
-        "url": "http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/",
-        "description": "2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译",
-        "wordCount": 124
-    }
-</script>
-
 </article>
 
     <section id="comments">
     
+        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<div id="gitalk-container"></div>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        repo: '',
+        owner: 'guanhonly',
+        admin: 'guanhonly',
+        distractionFreeMode: 'true',
+        id: window.location.pathname.substr(0, 50),    // Ensure uniqueness and length less than 50
         
-<div id="comment-container"></div>
-
-
+    });
+    gitalk.render('gitalk-container')
+</script>
     
     </section>
 
@@ -607,24 +592,6 @@ var _hmt = _hmt || [];
 </footer>
 
         
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-<script>
-    var gitalk = new Gitalk({
-        clientID: 'ba96b12559b1c6a7ff63',
-        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
-        id: 'ad9b7279d214beedaa086f4853952424',
-        repo: '',
-        owner: 'guanhonly',
-        admin: "guanhonly",
-        distractionFreeMode: 'true'
-    });
-    gitalk.render('gitalk-container')
-</script>
-
-
-
 
 
     
