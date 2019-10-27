@@ -10,7 +10,7 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="实用教程">
+    <meta name="keywords" content="实用教程">
     
     <meta name="description" content="我的旧版博客使用的模板。项目github地址：hexo-theme-marble  自己动手做的一个github个人主页，由于之前没有做过前端，所以在@ppoffice的Alex项目基础上改的。主要是根据我的个人喜好进行的界面的调整，并增加了评论功能。评论功能采用的gitalk。 整个界面追求极致简洁，黑白配色，所以取名marble。 安装方法：1. nodejs和hexo的安装可以参考这篇博客：">
 <meta name="keywords" content="实用教程">
@@ -40,7 +40,7 @@
 
     <link rel="stylesheet" href="/css/style.css">
 
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/libs/jquery/3.4.1/jquery.min.js"></script>
     
     
         <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
@@ -175,18 +175,24 @@ var _hmt = _hmt || [];
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2018/12/01/howInstall/" class="article-date">
-            <time datetime="2018-12-01T11:36:39.000Z" itemprop="datePublished">2018-12-01</time>
-        </a>
+      <i class="fa fa-calendar"></i>
+      <a href="/2018/12/01/howInstall/" class="article-date">
+         <time datetime="2018-12-01T11:36:39.000Z" itemprop="datePublished">2018-12-01</time>
+      </a>
     </div>
 
-		
+
+                
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
         <a class="tag-link" href="/tags/实用教程/">实用教程</a>
     </div>
+
+                
+
+                
 
             </div>
         
@@ -221,7 +227,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="ck28z59sv0005xou1jbjw2kb3" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/01/howInstall/" data-id="ck28zkzlw000554u1y52jofgd" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -283,26 +289,39 @@ var _hmt = _hmt || [];
 
         </footer>
     </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "Honly"
+        },
+        "headline": "基于hexo的marble模板",
+        "image": "http://guanhonly.github.iohttps://www.hdwallpapers.net/previews/lioness-in-black-and-white-852.jpg",
+        "keywords": "实用教程",
+        "genre": "技术",
+        "datePublished": "2018-12-01",
+        "dateCreated": "2018-12-01",
+        "dateModified": "2019-03-30",
+        "url": "http://guanhonly.github.io/2018/12/01/howInstall/",
+        "description": "我的旧版博客使用的模板。项目github地址：hexo-theme-marble
+
+自己动手做的一个github个人主页，由于之前没有做过前端，所以在@ppoffice的Alex项目基础上改的。主要是根据我的个人喜好进行的界面的调整，并增加了评论功能。评论功能采用的gitalk。
+整个界面追求极致简洁，黑白配色，所以取名marble。
+安装方法：1. nodejs和hexo的安装可以参考这篇博客：",
+        "wordCount": 184
+    }
+</script>
+
 </article>
 
     <section id="comments">
     
-        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-<div id="gitalk-container"></div>
-<script>
-    var gitalk = new Gitalk({
-        clientID: 'ba96b12559b1c6a7ff63',
-        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
-        repo: 'guanhonly.github.io',
-        owner: 'guanhonly',
-        admin: 'guanhonly',
-        distractionFreeMode: 'true',
-        id: window.location.pathname.substr(0, 50),    // Ensure uniqueness and length less than 50
         
-    });
-    gitalk.render('gitalk-container')
-</script>
+<div id="comment-container"></div>
+
+
     
     </section>
 
@@ -581,6 +600,24 @@ var _hmt = _hmt || [];
 </footer>
 
         
+    
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        id: window.location.pathname.substr(0, 50),
+        repo: 'guanhonly.github.io',
+        owner: 'guanhonly',
+        distractionFreeMode: 'true',
+        admin: "guanhonly"
+    })
+    gitalk.render('comment-container')
+</script>
+
+
+
 
 
     

@@ -10,7 +10,7 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="GIS,空间填充曲线">
+    <meta name="keywords" content="GIS,空间填充曲线">
     
     <meta name="description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
 <meta name="keywords" content="GIS,空间填充曲线">
@@ -40,7 +40,7 @@
 
     <link rel="stylesheet" href="/css/style.css">
 
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/libs/jquery/3.4.1/jquery.min.js"></script>
     
     
         <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
@@ -175,18 +175,24 @@ var _hmt = _hmt || [];
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2018/12/27/XZOdering/" class="article-date">
-            <time datetime="2018-12-27T13:51:59.000Z" itemprop="datePublished">2018-12-27</time>
-        </a>
+      <i class="fa fa-calendar"></i>
+      <a href="/2018/12/27/XZOdering/" class="article-date">
+         <time datetime="2018-12-27T13:51:59.000Z" itemprop="datePublished">2018-12-27</time>
+      </a>
     </div>
 
-		
+
+                
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
         <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/空间填充曲线/">空间填充曲线</a>
     </div>
+
+                
+
+                
 
             </div>
         
@@ -258,7 +264,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/27/XZOdering/" data-id="ck28z59uv000xxou12eey51d9" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/27/XZOdering/" data-id="ck28zkznd000x54u1plb8b6wk" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -320,26 +326,35 @@ var _hmt = _hmt || [];
 
         </footer>
     </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "Honly"
+        },
+        "headline": "XZ曲线探究",
+        "image": "http://guanhonly.github.iohttps://www.hdwallpapers.net/previews/the-louvre-866.jpg",
+        "keywords": "GIS 空间填充曲线",
+        "genre": "技术",
+        "datePublished": "2018-12-27",
+        "dateCreated": "2018-12-27",
+        "dateModified": "2019-01-10",
+        "url": "http://guanhonly.github.io/2018/12/27/XZOdering/",
+        "description": "最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大",
+        "wordCount": 518
+    }
+</script>
+
 </article>
 
     <section id="comments">
     
-        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-<div id="gitalk-container"></div>
-<script>
-    var gitalk = new Gitalk({
-        clientID: 'ba96b12559b1c6a7ff63',
-        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
-        repo: 'guanhonly.github.io',
-        owner: 'guanhonly',
-        admin: 'guanhonly',
-        distractionFreeMode: 'true',
-        id: window.location.pathname.substr(0, 50),    // Ensure uniqueness and length less than 50
         
-    });
-    gitalk.render('gitalk-container')
-</script>
+<div id="comment-container"></div>
+
+
     
     </section>
 
@@ -618,6 +633,24 @@ var _hmt = _hmt || [];
 </footer>
 
         
+    
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        id: window.location.pathname.substr(0, 50),
+        repo: 'guanhonly.github.io',
+        owner: 'guanhonly',
+        distractionFreeMode: 'true',
+        admin: "guanhonly"
+    })
+    gitalk.render('comment-container')
+</script>
+
+
+
 
 
     

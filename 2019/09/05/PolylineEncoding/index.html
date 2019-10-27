@@ -10,7 +10,7 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="GIS,算法,Google,轨迹">
+    <meta name="keywords" content="GIS,算法,Google,轨迹">
     
     <meta name="description" content="前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Timestamp), $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最">
 <meta name="keywords" content="GIS,算法,Google,轨迹">
@@ -40,7 +40,7 @@
 
     <link rel="stylesheet" href="/css/style.css">
 
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/libs/jquery/3.4.1/jquery.min.js"></script>
     
     
         <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
@@ -175,18 +175,24 @@ var _hmt = _hmt || [];
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2019/09/05/PolylineEncoding/" class="article-date">
-            <time datetime="2019-09-05T12:17:10.000Z" itemprop="datePublished">2019-09-05</time>
-        </a>
+      <i class="fa fa-calendar"></i>
+      <a href="/2019/09/05/PolylineEncoding/" class="article-date">
+         <time datetime="2019-09-05T12:17:10.000Z" itemprop="datePublished">2019-09-05</time>
+      </a>
     </div>
 
-		
+
+                
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
         <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/Google/">Google</a>, <a class="tag-link" href="/tags/算法/">算法</a>, <a class="tag-link" href="/tags/轨迹/">轨迹</a>
     </div>
+
+                
+
+                
 
             </div>
         
@@ -232,7 +238,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/09/05/PolylineEncoding/" data-id="ck28z59se0000xou1lzjz5m23" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/09/05/PolylineEncoding/" data-id="ck28zkzlg000054u1km5izb6d" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -294,26 +300,35 @@ var _hmt = _hmt || [];
 
         </footer>
     </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "Honly"
+        },
+        "headline": "轨迹压缩算法(Polyline encoding algorithm)探究",
+        "image": "http://guanhonly.github.iohttps://www.hdwallpapers.net/previews/spiral-dots-990.jpg",
+        "keywords": "GIS 算法 Google 轨迹",
+        "genre": "技术",
+        "datePublished": "2019-09-05",
+        "dateCreated": "2019-09-05",
+        "dateModified": "2019-09-06",
+        "url": "http://guanhonly.github.io/2019/09/05/PolylineEncoding/",
+        "description": "前言文中的代码表达采用Java一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Timestamp), $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最",
+        "wordCount": 151
+    }
+</script>
+
 </article>
 
     <section id="comments">
     
-        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-<div id="gitalk-container"></div>
-<script>
-    var gitalk = new Gitalk({
-        clientID: 'ba96b12559b1c6a7ff63',
-        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
-        repo: 'guanhonly.github.io',
-        owner: 'guanhonly',
-        admin: 'guanhonly',
-        distractionFreeMode: 'true',
-        id: window.location.pathname.substr(0, 50),    // Ensure uniqueness and length less than 50
         
-    });
-    gitalk.render('gitalk-container')
-</script>
+<div id="comment-container"></div>
+
+
     
     </section>
 
@@ -592,6 +607,24 @@ var _hmt = _hmt || [];
 </footer>
 
         
+    
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        id: window.location.pathname.substr(0, 50),
+        repo: 'guanhonly.github.io',
+        owner: 'guanhonly',
+        distractionFreeMode: 'true',
+        admin: "guanhonly"
+    })
+    gitalk.render('comment-container')
+</script>
+
+
+
 
 
     

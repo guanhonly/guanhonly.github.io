@@ -31,7 +31,7 @@
 
     <link rel="stylesheet" href="/css/style.css">
 
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/libs/jquery/3.4.1/jquery.min.js"></script>
     
     
         <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
@@ -599,6 +599,24 @@ var _hmt = _hmt || [];
 </footer>
 
         
+    
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        id: window.location.pathname.substr(0, 50),
+        repo: 'guanhonly.github.io',
+        owner: 'guanhonly',
+        distractionFreeMode: 'true',
+        admin: "guanhonly"
+    })
+    gitalk.render('comment-container')
+</script>
+
+
+
 
 
     
