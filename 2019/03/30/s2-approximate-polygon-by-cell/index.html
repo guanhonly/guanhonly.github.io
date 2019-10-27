@@ -10,7 +10,7 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="GIS,算法,Google,空间索引">
+    <meta name="keywords" content="GIS,算法,Google,空间索引">
     
     <meta name="description" content="本文适合于对Google s2有一定了解或对空间索引有一定了解的读者。 空间索引常用的方法是空间填充曲线，比如Hilbert, Geohash等，被用于许多查询场景中。Google也推出了自己的空间索引——Google s2，这个项目是一个开源项目，有兴趣的可以直接看Google s2 java版源码和官方文档。对Google s2的介绍可以看Google’s S2, geometry on th">
 <meta name="keywords" content="GIS,算法,Google,空间索引">
@@ -40,7 +40,7 @@
 
     <link rel="stylesheet" href="/css/style.css">
 
-    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/libs/jquery/3.4.1/jquery.min.js"></script>
     
     
         <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
@@ -175,18 +175,24 @@ var _hmt = _hmt || [];
             <div class="article-meta">
                 
     <div class="article-date">
-        <a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="article-date">
-            <time datetime="2019-03-30T13:07:54.000Z" itemprop="datePublished">2019-03-30</time>
-        </a>
+      <i class="fa fa-calendar"></i>
+      <a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="article-date">
+         <time datetime="2019-03-30T13:07:54.000Z" itemprop="datePublished">2019-03-30</time>
+      </a>
     </div>
 
-		
+
+                
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
         <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/Google/">Google</a>, <a class="tag-link" href="/tags/空间索引/">空间索引</a>, <a class="tag-link" href="/tags/算法/">算法</a>
     </div>
+
+                
+
+                
 
             </div>
         
@@ -231,7 +237,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/03/30/s2-approximate-polygon-by-cell/" data-id="ck28wqp1h0009t4u11s763l0i" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/03/30/s2-approximate-polygon-by-cell/" data-id="ck28wy3wz000930u1n8892bwl" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -293,26 +299,36 @@ var _hmt = _hmt || [];
 
         </footer>
     </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "Honly"
+        },
+        "headline": "Google s2 lib研究之空间覆盖",
+        "image": "http://guanhonly.github.iohttp://upload-images.jianshu.io/upload_images/1194012-81eadaf2f5da7e8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240",
+        "keywords": "GIS 算法 Google 空间索引",
+        "genre": "技术",
+        "datePublished": "2019-03-30",
+        "dateCreated": "2019-03-30",
+        "dateModified": "2019-10-27",
+        "url": "http://guanhonly.github.io/2019/03/30/s2-approximate-polygon-by-cell/",
+        "description": "本文适合于对Google s2有一定了解或对空间索引有一定了解的读者。
+空间索引常用的方法是空间填充曲线，比如Hilbert, Geohash等，被用于许多查询场景中。Google也推出了自己的空间索引——Google s2，这个项目是一个开源项目，有兴趣的可以直接看Google s2 java版源码和官方文档。对Google s2的介绍可以看Google’s S2, geometry on th",
+        "wordCount": 540
+    }
+</script>
+
 </article>
 
     <section id="comments">
     
-        <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-<div id="gitalk-container"></div>
-<script>
-    var gitalk = new Gitalk({
-        clientID: 'ba96b12559b1c6a7ff63',
-        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
-        repo: 'guanhonly.github.io',
-        owner: 'guanhonly',
-        admin: 'guanhonly',
-        distractionFreeMode: 'true',
-        id: window.location.pathname.substr(0, 50),    // Ensure uniqueness and length less than 50
         
-    });
-    gitalk.render('gitalk-container')
-</script>
+<div id="comment-container"></div>
+
+
     
     </section>
 
@@ -549,7 +565,11 @@ var _hmt = _hmt || [];
             <ul>
                 
                     <li>
-                        <a href="http://hexo.io">Hexo</a>
+                        <a href="https://xctorres.github.io/">xcTorres&#39;s blog</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://lb-yu.github.io/">lb-yu&#39;s blog</a>
                     </li>
                 
             </ul>
@@ -587,6 +607,24 @@ var _hmt = _hmt || [];
 </footer>
 
         
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        id: '9a717d51779b0b7c449fdeffc34f25b8',
+        repo: '',
+        owner: 'guanhonly',
+        admin: "guanhonly",
+        distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container')
+</script>
+
+
+
 
 
     
