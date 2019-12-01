@@ -21,7 +21,7 @@
 <meta property="og:description" content="作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。为了行文方便，我把由一对花括号{ }框起来的区域叫做句法块（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg">
-<meta property="og:updated_time" content="2019-11-30T17:10:27.040Z">
+<meta property="og:updated_time" content="2019-12-01T02:58:35.501Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go的奇特之处1--Go语言的作用域">
 <meta name="twitter:description" content="作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。为了行文方便，我把由一对花括号{ }框起来的区域叫做句法块（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一">
@@ -218,10 +218,10 @@ var _hmt = _hmt || [];
 <p>看了这些例子后，除了感觉Go语言的作用域很奇特之外，能够对我们的日常搬砖工作造成什么影响呢？下面举两个工作中可能会遇到的相关问题。</p>
 <p>Go语言奇特的作用域可能会造成Bug（从Go语言圣经上抄的一个例子）：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cwd <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">    cwd, err := os.Getwd() <span class="comment">// compile error: unused: cwd</span></span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalf(<span class="string">"os.Getwd failed: %v"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上这段代码的本意是获取当前路径并赋值给包级变量<code>cwd</code>，但是由于开发人员想偷懒写成这样。但是由于使用了快速复制，在<code>init()</code>内又生成了一个跟包级变量同名的变量<code>cwd</code>，这样编译都通过不了，因为<code>init()</code>中的<code>cwd</code>未使用过。当然，现在的IDE比如GoLand都会在变量下标红色波浪线提示你这个变量没有被使用过，但多注意还是好的，万一哪一天你就到vim上写代码去了呢。<br>那么，如何改进这段代码，以达到最初始的目的呢？<br>很简单，不要用快速赋值，走传统语言先定义、后赋值的老路，事先定义一个变量<code>err</code>：</p>
+<p>以上这段代码的本意是获取当前路径并赋值给包级变量<code>cwd</code>，但是由于开发人员想偷懒写成这样。由于使用了快速赋值，在<code>init()</code>内又生成了一个跟包级变量同名的变量<code>cwd</code>，这样编译都通过不了，因为<code>init()</code>中的<code>cwd</code>未使用过。当然，现在的IDE比如GoLand都会在变量下标红色波浪线提示你这个变量没有被使用过，但多注意还是好的，万一哪一天你就到vim上写代码去了呢。<br>那么，如何改进这段代码，以达到最初始的目的呢？<br>很简单，不要用快速赋值，走传统语言先定义、后赋值的老路，事先定义一个变量<code>err</code>：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cwd <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> err error</span><br><span class="line">    cwd, err = os.Getwd()</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalf(<span class="string">"os.Getwd failed: %v"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这样的话，在<code>init()</code>内并没有新定义一个名为<code>cwd</code>的变量，而是对包级变量<code>cwd</code>进行了赋值。</p>
-<p>那么，除了能够规避错误，理解了Go语言的作用域还能有啥用不？<br>还有一点用处，可以偷懒，特别是对于像我这种懒得想新变量名并且懒得写注释的懒癌晚期患者来说，是一个特别实用的feature。<br>比如Go语言饱受诟病的异常捕捉方式，返回的错误显式地写在了返回值里，那么根据Go语言奇特的作用域，这种写法也可以：</p>
+<p>那么，除了能够规避错误，理解了Go语言的作用域还能有啥用不？<br>比尔盖茨曾经说过：”I choose a lazy person to do a hard job. Because a lazy person will find an easy way to do it.” Go语言奇特的作用域还可以用来偷懒，特别是对于懒得想新变量名并且懒得写注释的懒癌晚期患者来说，是一个特别实用的feature。<br>比如Go语言饱受诟病的异常捕捉方式，返回的错误显式地写在了返回值里，那么根据Go语言奇特的作用域，这种写法也可以：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...以上省略若干代码</span></span><br><span class="line">value, err := getValue()</span><br><span class="line"><span class="keyword">if</span> shouldRecord &#123;</span><br><span class="line">    err := record()</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Println(<span class="string">"record failed: "</span>, err) <span class="comment">// err is the returned error of record()</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> value, err <span class="comment">// err is the returned error of getValue()</span></span><br><span class="line"><span class="comment">// ...以下省略若干代码</span></span><br></pre></td></tr></table></figure>
 <p>以上代码的目的是获取值并返回，中间有个记录的步骤，如果记录失败则打印在日志里。那么在Go语言中，就不必再为<code>record</code>定义一个新错误名，直接用<code>err</code>即可，因为在if的句法块中，<code>err</code>相当于一个重新申请的一个变量，跟外面的那个<code>err</code>不是一个东西。通过类似的方法，巧用Go语言的作用域，可以节省想新变量名的时间和精力，也不用让同事被一个新出现的变量名抓耳挠腮，也可以不用专门写注释，做到了轻松、高效地搬砖，并改善了与同事之间的关系，何乐而不为呢。</p>
 <p>以上就是Go语言作用域的奇特之处以及程序员可以如何利用这个奇特之处的小技巧。希望可以对看到这篇博客的人有所帮助。<br>最后打个小广告，由于我写Go语言也只有不到半年的时间，并且是完全由于工作需要。为了锻炼自己的搬砖能力，我开了一个GitHub的仓库用来刷leetcode，主要按题目类型分类来刷，烦请看到的各位star一波:<br><a href="https://github.com/guanhonly/leetcode-solutions-in-Go" target="_blank" rel="noopener">https://github.com/guanhonly/leetcode-solutions-in-Go</a></p>
@@ -232,7 +232,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/11/30/strange-Go-1/" data-id="ck3ltxadn0007a0u1omw8r3cp" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/11/30/strange-Go-1/" data-id="ck3mf11dr00070cu1xz4jgxxx" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -311,7 +311,7 @@ var _hmt = _hmt || [];
         "dateModified": "2019-12-01",
         "url": "http://guanhonly.github.io/2019/11/30/strange-Go-1/",
         "description": "作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。为了行文方便，我把由一对花括号{ }框起来的区域叫做句法块（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一",
-        "wordCount": 549
+        "wordCount": 571
     }
 </script>
 
