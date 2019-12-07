@@ -21,7 +21,7 @@
 <meta property="og:description" content="2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/Twitter-H3.png">
-<meta property="og:updated_time" content="2019-10-27T13:07:37.750Z">
+<meta property="og:updated_time" content="2019-12-07T14:12:14.904Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初探Uber H3原理">
 <meta name="twitter:description" content="2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译">
@@ -218,7 +218,7 @@ var _hmt = _hmt || [];
 </tbody>
 </table>
 <p>上图展示了三种网格到其相邻网格的距离，可以看到，只有六边形到其相邻六边形的距离都是相等的。所以，H3就使用六边形作为网格索引的基本单元，实现空间索引。  </p>
-<h2 id="无变形的投影"><a href="#无变形的投影" class="headerlink" title="无变形的投影"></a>无变形的投影</h2><p>对空间填充曲线熟悉的同学应该知道，不论是GeoHash, Z2或者Hilbert，都是首先将地球投影到一个矩形后，再对这个矩形进行划分。由于地球是个椭球体，不可能展开为一个平面，因此地图投影总是会产生大大小小的畸变。而常用的墨卡托投影是一种等角正切圆柱投影，虽然保证了投影后的地图上经纬线正交并且间距相等，但地图上表现出来的面积却与实际面积不等。换句话说，墨卡托投影是一种非等积投影，对这样投影后的地图进行网格索引会造成一个网格所实际对应的面积并不相等，对于靠近南北极的地区来说这种畸变会很大。并且除了墨卡托投影，像高斯-克吕格投影、UTM投影等其他投影方法也基本上都是等角投影，使用等积投影的地图投影方法很少（<em>课外小知识：使用等角投影的原因是在十五六世纪的大航海时代，地图主要用于航海，而航海就是靠角度来确定方向的，这就要求投影到平面上的地图角度不能发生变形，所以地图投影从那时起便是等角投影</em>）。<br>这种实际面积不相等的网格索引可能会造成一个问题，那就是由于网格大小不一致导致网格内数据量不一致，造成热网格和冷网格，Uber认为这会大大降低空间查询效率（<em>笔者按：其实时空数据本身分布就十分不均匀，网格大小不一致倒不是一个很大的影响，个人感觉在这一点上Uber有点言过其实</em>）。于是，H3干脆摒弃传统的地图投影，直接在地球上铺满六边形（如图2）。<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image12.png" alt="图2 六边形铺满地球"><br>但是，理想很美好，现实却需要考虑如何实现。这么多六边形，到高层级的时候很难对齐进行一一编码，这么看来使用六边形铺满地球不太现实。那怎么办呢？一个办法就是对这些六边形进行分区管理。H3实现的方法是：将地球当作一个二十面体，这个二十面体的每一个面都是球面三角形，有12个顶点，称为球形二十面体（spherical icosahedron），在这个球形十二面体的每个面上都有相同排列方式的六边形。由于这个球形二十面体的12个顶点每一个都在地球上的水里，可以保证对于每个面做处理时不会遇到边界的edge case，因为Uber还没有轮船快艇业务，只需要保证在陆地上H3好使就行。这个球形二十面体的示意图见图3。<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image9-1-300x297.png" alt="图3 球形二十面体"><br>再考虑到图2所示的六边形网格，在第0层，这个球形二十面体的每一个面长这样：<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image3-1.png" alt="图4 二十面体的一个面"><br>这样一来，可以看到，在一个球面三角形的顶角处有个小三角形，这个小三角形就是H3的一种edge case：在二十面体的顶点处，有五个面交于这个顶点，每个面在这个顶点处都有一个小三角形，所以这些小三角形会形成一个五边形。也就是说，H3并不能保证每个空间单元都是六边形，在一些地方还是会存在五边形，但是这样做也不会造成很大影响，因为根据球形二十面体每个顶点都在水里的特性，这种五边形只会出现在水域周围，不会对Uber的打车和外卖业务造成很大的影响。根据这样的索引特性，H3规定在索引的第0层，每个面和图4一样，每个面上有5.5个六边形和$\frac{3}{5}$个五边形，即第0层一共有110个六边形和12个五边形。H3将这110个六边形称为基网格（base cells）。H3最高可以到15层，也就是说H3有16个层级的空间索引粒度，在粒度最细的第15层中，平均每个网格的大小为0.9平方米，平均边长为0.509713米。在往下一层划分时，每个父网格对应7个子网格，父子网格之间的对应关系是这样的：</p>
+<h2 id="无变形的投影"><a href="#无变形的投影" class="headerlink" title="无变形的投影"></a>无变形的投影</h2><p>在GIS领域中，对空间填充曲线熟悉的同学应该知道，不论是GeoHash, Z2或者Hilbert，虽然看起来都是将空间按照经纬度分割成了一个个大小相等的网格，但实际上这些网格的实际面积并不相等。对于靠近极地的网格，虽然经纬度的间隔没变，但由于地球的曲率，这些网格的实际面积远小于靠近赤道的网格。<br>这种实际面积不相等的网格索引可能会造成一个问题，那就是由于网格大小不一致导致网格内数据量不一致，造成热网格和冷网格，Uber认为这会大大降低空间查询效率（<em>笔者按：其实时空数据本身分布就十分不均匀，网格对应的实际大小不一致倒不是一个很大的影响，个人感觉在这一点上Uber有点言过其实</em>）。于是，H3干脆摒弃传统的地图投影，直接在地球上铺满六边形（如图2）。<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image12.png" alt="图2 六边形铺满地球"><br>但是，理想很美好，现实却需要考虑如何实现。这么多六边形，到高层级的时候很难对齐进行一一编码，这么看来使用六边形铺满地球不太现实。那怎么办呢？一个办法就是对这些六边形进行分区管理。H3实现的方法是：将地球当作一个二十面体，这个二十面体的每一个面都是球面三角形，有12个顶点，称为球形二十面体（spherical icosahedron），在这个球形十二面体的每个面上都有相同排列方式的六边形。由于这个球形二十面体的12个顶点每一个都在地球上的水里，可以保证对于每个面做处理时不会遇到边界的edge case，因为Uber还没有轮船快艇业务，只需要保证在陆地上H3好使就行。这个球形二十面体的示意图见图3。<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image9-1-300x297.png" alt="图3 球形二十面体"><br>再考虑到图2所示的六边形网格，在第0层，这个球形二十面体的每一个面长这样：<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image3-1.png" alt="图4 二十面体的一个面"><br>这样一来，可以看到，在一个球面三角形的顶角处有个小三角形，这个小三角形就是H3的一种edge case：在二十面体的顶点处，有五个面交于这个顶点，每个面在这个顶点处都有一个小三角形，所以这些小三角形会形成一个五边形。也就是说，H3并不能保证每个空间单元都是六边形，在一些地方还是会存在五边形，但是这样做也不会造成很大影响，因为根据球形二十面体每个顶点都在水里的特性，这种五边形只会出现在水域周围，不会对Uber的打车和外卖业务造成很大的影响。根据这样的索引特性，H3规定在索引的第0层，每个面和图4一样，每个面上有5.5个六边形和$\frac{3}{5}$个五边形，即第0层一共有110个六边形和12个五边形。H3将这110个六边形称为基网格（base cells）。H3最高可以到15层，也就是说H3有16个层级的空间索引粒度，在粒度最细的第15层中，平均每个网格的大小为0.9平方米，平均边长为0.509713米。在往下一层划分时，每个父网格对应7个子网格，父子网格之间的对应关系是这样的：</p>
 <table>
 <thead>
 <tr>
@@ -248,7 +248,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/" data-id="ck3mf11f400130cu16lcvqn0w" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/" data-id="ck3vpgzwr00177gu1dkxur5fx" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -324,7 +324,7 @@ var _hmt = _hmt || [];
         "genre": "技术",
         "datePublished": "2019-10-27",
         "dateCreated": "2019-10-27",
-        "dateModified": "2019-10-27",
+        "dateModified": "2019-12-07",
         "url": "http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/",
         "description": "2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译",
         "wordCount": 124
@@ -426,6 +426,26 @@ var _hmt = _hmt || [];
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2019/12/07/strange-Go-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg)" alt="Go的奇特之处2--Go语言的slice" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2019/12/07/strange-Go-2/" class="title">Go的奇特之处2--Go语言的slice</a></p>
+                            <p class="item-date"><time datetime="2019-12-07T14:21:20.000Z" itemprop="datePublished">2019-12-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2019/11/30/strange-Go-1/" class="thumbnail">
     
     
@@ -503,26 +523,6 @@ var _hmt = _hmt || [];
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/1194012-81eadaf2f5da7e8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="Google s2 lib研究之空间覆盖" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
-                            <p class="item-title"><a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="title">Google s2 lib研究之空间覆盖</a></p>
-                            <p class="item-date"><time datetime="2019-03-30T13:07:54.000Z" itemprop="datePublished">2019-03-30</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -532,7 +532,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">9</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">10</span></li></ul>
         </div>
     </div>
 
@@ -542,7 +542,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -552,7 +552,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go语言/">Go语言</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uber/">Uber</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/轨迹/">轨迹</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go语言/">Go语言</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uber/">Uber</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/轨迹/">轨迹</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -562,7 +562,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/GIS/" style="font-size: 20px;">GIS</a> <a href="/tags/Google/" style="font-size: 13.33px;">Google</a> <a href="/tags/Go语言/" style="font-size: 10px;">Go语言</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Uber/" style="font-size: 10px;">Uber</a> <a href="/tags/实用教程/" style="font-size: 13.33px;">实用教程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 13.33px;">空间索引</a> <a href="/tags/算法/" style="font-size: 16.67px;">算法</a> <a href="/tags/轨迹/" style="font-size: 10px;">轨迹</a>
+            <a href="/tags/GIS/" style="font-size: 20px;">GIS</a> <a href="/tags/Google/" style="font-size: 13.33px;">Google</a> <a href="/tags/Go语言/" style="font-size: 13.33px;">Go语言</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Uber/" style="font-size: 10px;">Uber</a> <a href="/tags/实用教程/" style="font-size: 13.33px;">实用教程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 13.33px;">空间索引</a> <a href="/tags/算法/" style="font-size: 16.67px;">算法</a> <a href="/tags/轨迹/" style="font-size: 10px;">轨迹</a>
         </div>
     </div>
 

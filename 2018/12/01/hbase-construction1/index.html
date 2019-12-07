@@ -12,19 +12,19 @@
     
     <meta name="keywords" content="HBase">
     
-    <meta name="description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
+    <meta name="description" content="HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不">
 <meta name="keywords" content="HBase">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HBase原理探究（1）">
 <meta property="og:url" content="http://guanhonly.github.io/2018/12/01/hbase-construction1/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
-<meta property="og:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
+<meta property="og:description" content="HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/programming-800.jpg">
-<meta property="og:updated_time" content="2018-12-02T05:58:01.586Z">
+<meta property="og:updated_time" content="2019-12-07T13:06:42.676Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HBase原理探究（1）">
-<meta name="twitter:description" content="1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义">
+<meta name="twitter:description" content="HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。 若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不">
 <meta name="twitter:image" content="https://www.hdwallpapers.net/previews/programming-800.jpg">
     
 
@@ -198,12 +198,12 @@ var _hmt = _hmt || [];
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3 id="1-HBase的行、列和列族"><a href="#1-HBase的行、列和列族" class="headerlink" title="1. HBase的行、列和列族"></a>1. HBase的行、列和列族</h3><p>HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。</p>
+            <h3 id="HBase的行、列和列族"><a href="#HBase的行、列和列族" class="headerlink" title="HBase的行、列和列族"></a>HBase的行、列和列族</h3><p>HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。</p>
 <p>若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不能频繁修改，数量不能太多，而一个列族中的列可以有数百万，列值也没有类型和长度的规定。</p>
 <p>列中的值允许为空，有利于存储十分稀疏的数据（这也是与传统关系型数据库相比一个很大的优势）。</p>
 <p>关系型数据库和HBase的行列关系如下图：<br><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/hbase_img1.png" alt="img_1"></p>
 <p>取某个特定的值可以用table, rowkey, family, column, timestamp。其中timestamp由系统默认指定，也可以由用户使用。读取时优先读取新值。</p>
-<h3 id="2-负载均衡"><a href="#2-负载均衡" class="headerlink" title="2. 负载均衡"></a>2. 负载均衡</h3><p>HBase中扩展和负载均衡的基本单元称为region。region为按照行键排列的区间，如果region太大，系统会将他们动态地拆分，相反就会合并多个region。</p>
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>HBase中扩展和负载均衡的基本单元称为region。region为按照行键排列的区间，如果region太大，系统会将他们动态地拆分，相反就会合并多个region。</p>
 <p>一张表初始时只有一个region，当用户开始向表中插入数据时，系统会检查这个region大小，如果超过阈值，则会在中间键处将这些region分割开来，拆分成两个大致相等的region。</p>
 <p>每一个region只能由一台region server加载，有一个region server可以同时加载多个region。其中region在region server中的分布为分散分布(如下图)。</p>
 <p><img src="https://raw.githubusercontent.com/guanhonly/HonlyBlogHelper/master/images/hbase_img2.png" alt="img_2"></p>
@@ -215,7 +215,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/01/hbase-construction1/" data-id="ck3mf11dh00020cu1msa1iopd" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/01/hbase-construction1/" data-id="ck3vpgzs800027gu1zy7t8uci" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -291,11 +291,11 @@ var _hmt = _hmt || [];
         "genre": "技术",
         "datePublished": "2018-12-01",
         "dateCreated": "2018-12-01",
-        "dateModified": "2018-12-02",
+        "dateModified": "2019-12-07",
         "url": "http://guanhonly.github.io/2018/12/01/hbase-construction1/",
-        "description": "1. HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。
-若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义",
-        "wordCount": 27
+        "description": "HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。
+若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不",
+        "wordCount": 23
     }
 </script>
 
@@ -378,7 +378,7 @@ var _hmt = _hmt || [];
     <h3 class="widget-title">目录</h3>
     <div class="widget">
         <div id="toc" class="toc-article">
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-HBase的行、列和列族"><span class="toc-number">1.</span> <span class="toc-text">1. HBase的行、列和列族</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-负载均衡"><span class="toc-number">2.</span> <span class="toc-text">2. 负载均衡</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#HBase的行、列和列族"><span class="toc-number">1.</span> <span class="toc-text">HBase的行、列和列族</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#负载均衡"><span class="toc-number">2.</span> <span class="toc-text">负载均衡</span></a></li></ol>
         </div>
     </div>
 </div>
@@ -390,6 +390,26 @@ var _hmt = _hmt || [];
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/12/07/strange-Go-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg)" alt="Go的奇特之处2--Go语言的slice" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2019/12/07/strange-Go-2/" class="title">Go的奇特之处2--Go语言的slice</a></p>
+                            <p class="item-date"><time datetime="2019-12-07T14:21:20.000Z" itemprop="datePublished">2019-12-07</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -471,26 +491,6 @@ var _hmt = _hmt || [];
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/1194012-81eadaf2f5da7e8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="Google s2 lib研究之空间覆盖" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
-                            <p class="item-title"><a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="title">Google s2 lib研究之空间覆盖</a></p>
-                            <p class="item-date"><time datetime="2019-03-30T13:07:54.000Z" itemprop="datePublished">2019-03-30</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -500,7 +500,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">9</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">10</span></li></ul>
         </div>
     </div>
 
@@ -510,7 +510,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -520,7 +520,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go语言/">Go语言</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uber/">Uber</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/轨迹/">轨迹</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go语言/">Go语言</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uber/">Uber</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/轨迹/">轨迹</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -530,7 +530,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/GIS/" style="font-size: 20px;">GIS</a> <a href="/tags/Google/" style="font-size: 13.33px;">Google</a> <a href="/tags/Go语言/" style="font-size: 10px;">Go语言</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Uber/" style="font-size: 10px;">Uber</a> <a href="/tags/实用教程/" style="font-size: 13.33px;">实用教程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 13.33px;">空间索引</a> <a href="/tags/算法/" style="font-size: 16.67px;">算法</a> <a href="/tags/轨迹/" style="font-size: 10px;">轨迹</a>
+            <a href="/tags/GIS/" style="font-size: 20px;">GIS</a> <a href="/tags/Google/" style="font-size: 13.33px;">Google</a> <a href="/tags/Go语言/" style="font-size: 13.33px;">Go语言</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Uber/" style="font-size: 10px;">Uber</a> <a href="/tags/实用教程/" style="font-size: 13.33px;">实用教程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 13.33px;">空间索引</a> <a href="/tags/算法/" style="font-size: 16.67px;">算法</a> <a href="/tags/轨迹/" style="font-size: 10px;">轨迹</a>
         </div>
     </div>
 

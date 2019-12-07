@@ -21,7 +21,7 @@
 <meta property="og:description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/the-louvre-866.jpg">
-<meta property="og:updated_time" content="2019-01-10T08:19:26.092Z">
+<meta property="og:updated_time" content="2019-12-07T15:04:15.423Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XZ曲线探究">
 <meta name="twitter:description" content="最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大">
@@ -200,63 +200,64 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
             <p>最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番<a href="https://www.geomesa.org/documentation/#" target="_blank" rel="noopener">GeoMesa</a>和<a href="http://locationtech.github.io/geowave/" target="_blank" rel="noopener">GeoWave</a>。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了<a href="https://link.springer.com/chapter/10.1007/3-540-48482-5_7" target="_blank" rel="noopener">XZ曲线的论文</a>。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大致搞懂了。</p>
 <blockquote>
-<p>本文使用的名词解释：<br>cell: 传统Z曲线的格网单元<br>element: XZ曲线的格网单元<br>level: 层级<br>g: 最大分辨率，即最大层级<br>object: 对象，即需要存储的要素对象<br>quadrant sequences: 象限序列，即传统Z曲线的编码<br>interval: 一个区间(查询时使用)<br>interval set: 区间集合（查询时使用）</p>
+<p>本文使用的名词解释：<br>cell: 传统Z曲线的网格单元<br>element: XZ曲线的网格单元<br>level: 层级<br>g: 最大分辨率，即最大层级<br>object: 对象，即需要存储的要素对象<br>quadrant sequences: 象限序列，即传统Z曲线的编码<br>interval: 一个区间(查询时使用)<br>interval set: 区间集合（查询时使用）</p>
 </blockquote>
-<h3 id="空间填充曲线"><a href="#空间填充曲线" class="headerlink" title="空间填充曲线"></a>空间填充曲线</h3><p>首先说一下空间填充曲线。空间填充曲线是一种将高维空间映射到一维空间的方法,经典的空间填充曲线有Z曲线、Hilbert曲线等，现在Google S2也经常被使用。Z曲线最常见的应用就是<a href="https://en.wikipedia.org/wiki/Geohash" target="_blank" rel="noopener">GeoHash</a>，Hilbert常和四叉树结合使用。关于GeoHash和Google s2可以参考<a href="https://www.jianshu.com/p/7332dcb978b2" target="_blank" rel="noopener">高效的多维空间点索引算法 — Geohash 和 Google S2</a>，Hilbert可以参考<a href="https://blog.csdn.net/u010793236/article/details/74500593" target="_blank" rel="noopener">Hilbert曲线介绍以及代码实现</a>。</p>
-<p>空间填充曲线将空间进行划分为一个个小格网，一般对这些小格网称为cell。在这里引入层级level的概念，level越高，对空间进行的划分越精细，即level越高，cell的大小越小，数量越多。</p>
-<h3 id="Z曲线"><a href="#Z曲线" class="headerlink" title="Z曲线"></a>Z曲线</h3><p>Z曲线是一种空间填充曲线。在Z曲线中，level 1将空间划分为四个cell，level 2则将level 1中的每个cell进行四等分，生成的cell的长宽是其parent cell的一半，即level 2中有16个格网。则在level n中，存在$(2^2)^n$个cell。</p>
+<h2 id="空间填充曲线"><a href="#空间填充曲线" class="headerlink" title="空间填充曲线"></a>空间填充曲线</h2><p>首先说一下空间填充曲线。空间填充曲线是一种将高维空间映射到一维空间的方法,经典的空间填充曲线有Z曲线、Hilbert曲线等，现在Google S2也经常被使用。Z曲线最常见的应用就是<a href="https://en.wikipedia.org/wiki/Geohash" target="_blank" rel="noopener">GeoHash</a>，Hilbert是现在理论上空间邻近性最好的空间填充线曲线。关于GeoHash和Google s2可以参考<a href="https://www.jianshu.com/p/7332dcb978b2" target="_blank" rel="noopener">高效的多维空间点索引算法 — Geohash 和 Google S2</a>，Hilbert可以参考<a href="https://blog.csdn.net/u010793236/article/details/74500593" target="_blank" rel="noopener">Hilbert曲线介绍以及代码实现</a>。</p>
+<p>空间填充曲线将空间进行划分为一个个大小相等的网格，一般对一个网格称为一个cell。那么，决定网格划分的数量的参数便是层级level，level越大，对空间进行的划分越精细，即level越大，cell的大小越小，数量越多。</p>
+<h2 id="Z曲线"><a href="#Z曲线" class="headerlink" title="Z曲线"></a>Z曲线</h2><p>Z曲线是空间填充曲线的一种。在Z曲线中，level 1将空间划分为四个cell，level 2则将level 1中的每个cell进行四等分，生成的cell的长宽是level1中cell的一半，即level 2中有16个格网。以此类推，在level n中，存在$(2^2)^n$个cell。</p>
 <p>Z曲线更加直观地显示如图1。<br><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Four-level_Z.svg/1024px-Four-level_Z.svg.png" alt="图1 Z曲线"></p>
-<p>XZ曲线是由Z曲线衍生出来的，首先说明一下论文中对Z曲线及其编码的定义，以及作者认为的传统Z曲线的缺点：</p>
+<p>XZ曲线是根据Z曲线衍生出来的，相当于优化版的Z曲线。论文中详细阐述了为什么Z曲线需要被优化，并且XZ曲线是怎么解决Z曲线中的一些不足的。首先说明一下论文中对传统Z曲线及其编码的定义：</p>
 <ul>
 <li>Z曲线的cell按照象限序列（quadrant sequences，本文沿用论文名词）进行编码，即传统的Z曲线编码（见图2）。</li>
 <li>将数据空间归一化为经纬度范围均为1的正方形，即将整个需要编码的空间作为一个边长为1的正方形，并具有x轴和y轴。则level n中每个cell的边长为$0.5^n$。</li>
+</ul>
+<p>那么，作者认为，Z曲线有个致命的缺陷：</p>
+<ul>
 <li>如果有很小的要素恰好在数据空间的正中心，则象限序列会为空（如图3）。</li>
 </ul>
 <p><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/z_ordering1.png?raw=true" alt="图2 Z曲线象限序列编码"></p>
 <p><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/xz_empty%20sequences.png?raw=true" alt="图3 Z曲线空序列情况"></p>
-<h3 id="XZ曲线"><a href="#XZ曲线" class="headerlink" title="XZ曲线"></a>XZ曲线</h3><p>鉴于Z曲线的缺点，XZ曲线具有以下特性：</p>
+<h2 id="XZ曲线"><a href="#XZ曲线" class="headerlink" title="XZ曲线"></a>XZ曲线</h2><p>鉴于以上描述的Z曲线缺点，XZ曲线在Z曲线的基础上进行了优化，XZ曲线具有以下特性：</p>
 <ul>
-<li>基本的单元（论文中称为element，本文沿用论文名词）为传统Z曲线cell向右上边长扩大一倍，这样使得临近的element之间存在50%的重叠度(如图4)。</li>
+<li>基本的单元（论文中称为element，本文沿用论文名词）为传统Z曲线cell向右上边长扩大一倍，临近的element之间存在50%的重叠度(如图4)。</li>
 <li>element的数量和cell的数量一致，即边界也向外延伸。</li>
-<li>存储的要素不作冗余存储，即单个要素只存储于一个element中。</li>
+<li>XZ曲线存储要素时不作冗余存储，即单个要素只存储于一个element中。</li>
 </ul>
 <p><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/xz_enlarged%20element.png?raw=true" alt="图4 扩大的element"></p>
-<p>对于XZ曲线的一些性质和论文中给出的一些定理，本文不加证明地罗列出来，如果感兴趣可以去论文中查看证明过程。</p>
-<p>XZ曲线最大的一个特点就是将cell向右上扩大为element，关于element论文中有一个定义：<br><strong>定义1</strong></p>
-<blockquote>
+<p>对于XZ曲线的一些性质和论文中给出的一些定理，本文不加证明地罗列出来，如果感兴趣可以去论文中查看证明过程。如果实在不想看这些，可以直接跳到XZ曲线的插入操作。</p>
+<p>XZ曲线最大的一个特点就是将cell向右上扩大为element，关于element论文中有一个定义：</p>
+<h3 id="定义1"><a href="#定义1" class="headerlink" title="定义1"></a>定义1</h3><blockquote>
 <p>设一个element的左下角cell的quadrant sequences为$s$，$|s|$为其长度，则element的边长为${0.5}^{|s|-1}$。</p>
 </blockquote>
 <p>由于一个对象（文中称为对象object，本文沿用论文名词）只存储在一个element中，则一个object最多只和一个cell的两条边相交。<br>则具有以下定理：</p>
-<p><strong>定理1</strong></p>
-<blockquote>
+<h3 id="定理1"><a href="#定理1" class="headerlink" title="定理1"></a>定理1</h3><blockquote>
 <p>设$\lvert s\rvert$为一个quadrant sequences $s$的长度，w为一个object的宽度，h为一个object的高度。则$\lvert s\rvert$的范围为：<br> $$l_1 \le \lvert s\rvert \lt l_2，其中 \ l_1 = \lfloor log_{0.5}(max\{w,h\}) \rfloor,\ l_2 = l_1 + 2$$</p>
 </blockquote>
 <p>由于不作冗余存储，一个object直接存储于一个element中，相当于使用一个element去逼近object,造成的误差会比较大。在论文中也写出了误差指标和XZ曲线的误差。<br>设object的实际面积为$S_{obj}$，使用一个element进行存储时element的实际面积为$S_{ele}$，则逼近误差为：<br>$$ E_{rel} = \frac{S_{ele}-S_{obj}}{S_{obj}} $$<br>XZ曲线的最大逼近误差小于15。</p>
 <p>设最大level为g，则对于一个level $l$的cell，其具有的level g后代数量为：<br>$$ N_{cell}(l) = 4^{g-l} $$<br>则可求出，对于一个level $l$的cell，其具有的所有level的后代数量，是为定理2：</p>
-<p><strong>定理2</strong></p>
-<blockquote>
+<h3 id="定理2"><a href="#定理2" class="headerlink" title="定理2"></a>定理2</h3><blockquote>
 <p>对于一个quadrant sequences $s$所代表的cell（level为$l$），其具有的所有level的element后代数量（包括当前对应的element，最大level为g)为：<br>$$ N_{ele} = \frac{4^{g-l+1}-1}{3} $$</p>
 </blockquote>
 <p>接下来就是<strong>最重要</strong>的一条定义，是XZ曲线的编码，称为sequence code：</p>
-<p><strong>定义2</strong></p>
-<blockquote>
-<p>对于一个quadrant sequences $s = \langle \ q_0 \ q_1 \ … \ q_i \ … \ q_{l-1} \ \rangle$，可以得到其对应的XZ曲线编码为：<br>$$ C(s) = \sum_{0\le i \lt l} q_i \cdot \frac{4^{g-i}-1}{3}+1 $$</p>
+<h3 id="定义2"><a href="#定义2" class="headerlink" title="定义2"></a>定义2</h3><blockquote>
+<p>对于一个quadrant sequences $s = \langle \ q_0 \ q_1 \ … \ q_i \ … \ q_{l-1} \ \rangle$，可以得到其对应的XZ曲线编码(论文中称为sequence code)为：<br>$$ C(s) = \sum_{0\le i \lt l} q_i \cdot \frac{4^{g-i}-1}{3}+1 $$</p>
 </blockquote>
-<p>论文中对XZ曲线编码推论出了两个定理：<br><strong>定理3</strong></p>
-<blockquote>
+<p>论文中对XZ曲线编码推论出了两个定理：</p>
+<h3 id="定理3"><a href="#定理3" class="headerlink" title="定理3"></a>定理3</h3><blockquote>
 <p>对于quadrant sequences $s$所对应的XZ编码值$C(s)$，其大小代表了$s$的字典序位置，即：<br>$$ s_1 \lt_{lex} s_2 \Longleftrightarrow C(s_1) \lt C(s_2) $$</p>
 </blockquote>
-<p><strong>定理4</strong></p>
-<blockquote>
+<h3 id="定理4"><a href="#定理4" class="headerlink" title="定理4"></a>定理4</h3><blockquote>
 <p>从quadrant sequences映射到数值型编码的方法中，sequence code具有最好的临近性。即相近的两个quadrant sequences对应的sequence code值最相近。</p>
 </blockquote>
-<h4 id="XZ曲线的插入操作"><a href="#XZ曲线的插入操作" class="headerlink" title="XZ曲线的插入操作"></a>XZ曲线的插入操作</h4><p>将object转换为XZ编码，首先需要确定object对应的层级。根据定理1，一个object所在的层级为$l_1 = \lfloor log_{0.5}(max\{w,h\})\rfloor$或$l_1+1$。设$x_l$为object的x下界，w为object的宽度，$y_l$为object的y下界，h为object的宽度，$w_2 = {0.5}^{l_1+1}$。则可根据以下两个式子可判断object的层级$l$：<br>$$ x_l + w \le \lfloor \frac{x_l}{w_2} \rfloor \cdot w_2 + 2w_2 $$<br>$$ y_l + h \le \lfloor \frac{y_l}{w_2} \rfloor \cdot w_2 + 2w_2 $$<br><em>注：这个不等式和论文上不一致，经过讨论发现应该是论文出错，此处公式使用的是GeoWave源码中的公式</em><br>若以上两式同时成立，则object的层级$l = l_1 + 1$，否则$l = l_1$</p>
-<h4 id="XZ曲线的查询操作"><a href="#XZ曲线的查询操作" class="headerlink" title="XZ曲线的查询操作"></a>XZ曲线的查询操作</h4><p>XZ曲线查询得到的结果是一个区间集合（interval set，本文沿用论文名词），interval set中的一个interval代表一个element中所有后代element的集合，即interval表示的是sequence code范围。</p>
+<h2 id="XZ曲线的插入操作"><a href="#XZ曲线的插入操作" class="headerlink" title="XZ曲线的插入操作"></a>XZ曲线的插入操作</h2><p>XZ曲线的插入操作实际上就是获取一个object对应的XZ曲线编码。在GIS领域里，一般为了方便对不规则形状进行管理，都会将object加上一个BoundingRectangle，可以想象成一个能够将这个object装下的最小矩形。这个矩形存储object的详细信息，需要做拓扑计算等操作的时候可以使用BoundingRectangle进行一个快速的预计算。<br>首先，需要确定object应该所处的层级，以确保一个element中能装下这个object的BoundingRectangle。<br>根据定理1，设：<br>$$ l_1 = \lfloor log_{0.5}(max\{w,h\})\rfloor $$<br>其中，$w$为BoundingRectangle的宽度，$h$为BoundingRectangle的高度，一个object所在的层级为$l_1$或$l_1+1$。<br>设$x_l$为BoundingRectangle的横轴（x轴）的下界，$y_l$为object的纵轴（y轴）的下界。设$w_2 = {0.5}^{l_1+1}$。则可根据以下两个式子可判断object的层级$l$：<br>$$ x_l + w \le \lfloor \frac{x_l}{w_2} \rfloor \cdot w_2 + 2w_2 $$<br>$$ y_l + h \le \lfloor \frac{y_l}{w_2} \rfloor \cdot w_2 + 2w_2 $$<br><em>注：这个不等式和论文上不一致，经过讨论发现应该是论文出错，此处公式使用的是GeoWave源码中的公式</em><br>若以上两式同时成立，则object的层级$l = l_1 + 1$，否则$l = l_1$</p>
+<p>得到层级$l$后，通过对空间的不断四分，得到BoundingRectangle左下角点所在的第$l$层的Z曲线编码(quadrant sequences)，然后，根据定义2，就可以得到XZ曲线编码(sequence code)。</p>
+<h2 id="XZ曲线的查询操作"><a href="#XZ曲线的查询操作" class="headerlink" title="XZ曲线的查询操作"></a>XZ曲线的查询操作</h2><p>XZ曲线查询得到的结果是一个区间集合（interval set，本文沿用论文名词），interval set中的一个interval代表一个element中所有后代element的集合，即interval表示的是sequence code范围。</p>
 <p>关于XZ曲线的查询生成interval set，论文中表述得较少并且不明确，GeoWave源码也没有完全按照论文中的方法来实现。本着实事求是的原则，以下按照GeoWave源码的方法讲述XZ曲线查询操作。</p>
 <p>查询的方法为：给定一个查询框，如果查询框和包含某个element，则将该element对应的interval（即其所有后代element）加入到interval set中；如果查询框与某个element相交，则将该element作为一个interval（这个interval中只有这个element对象）加入到interval set中，并将这个element分裂为其子element，再和查询框进行拓扑关系判断，直至interval set中的数量达到给定的阈值或分裂至最大层级。得到interval set后，将其中有交集的interval进行合并，生成最终的interval set。</p>
-<p>查询的伪代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">Queue&lt;Element&gt; remaining; <span class="comment">// 待处理队列</span></span><br><span class="line">List&lt;Interval&gt; intervalSet; <span class="comment">// 最终结果</span></span><br><span class="line">remaining.add(LevelOneElement); <span class="comment">// 加入第一层的element</span></span><br><span class="line">remaining.add(LevelTerminator); <span class="comment">// 加入一层的终止条件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (level &lt; g &amp;&amp; !remaining.empty() &amp;&amp; intervalSet.size() &lt; maxSize) &#123;</span><br><span class="line">    Element next = remaining.poll();</span><br><span class="line">    <span class="keyword">if</span> (next == LevelTerminator) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!remaining.isEmpty()) &#123;</span><br><span class="line">            level = level + <span class="number">1</span>;</span><br><span class="line">            remaining.add(LevelTerminator);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (query.contain(next)) &#123;</span><br><span class="line">            intervalSet.add(interval(next));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (query.intersect(next)) &#123;</span><br><span class="line">            intervalSet.add(next);</span><br><span class="line">            remaining.add(next.children());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 兜底策略，将未处理完的element处理完</span></span><br><span class="line"><span class="keyword">while</span> (!remaining.empty()) &#123;</span><br><span class="line">    Element next = remaining.poll();</span><br><span class="line">    <span class="keyword">if</span> (next == LevelTerminator) &#123;</span><br><span class="line">        level = level + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        intervalSet.add(interval(next));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">mergeIntervalsWhichAreIntersected(intervalSet);</span><br></pre></td></tr></table></figure></p>
-<p>以上就是XZ曲线的基本原理，感觉目前XZ曲线使用得很少，几乎查不到相关资料，只能根据原始论文和GeoWave实现的源码去慢慢摸索。希望我的这篇博文可以帮助大家理解XZ曲线，如果有疑问和建议可以在评论中指出！</p>
-<h3 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h3><p>感谢同组的@Louis Liu和我一起看XZ曲线的论文和源码（他没有GitHub和微博账号，只能这么感谢了😂）</p>
+<p>查询的伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">Queue&lt;Element&gt; remaining; <span class="comment">// 待处理队列</span></span><br><span class="line">List&lt;Interval&gt; intervalSet; <span class="comment">// 最终结果</span></span><br><span class="line">remaining.add(LevelOneElement); <span class="comment">// 加入第一层的element</span></span><br><span class="line">remaining.add(LevelTerminator); <span class="comment">// 加入一层的终止条件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (level &lt; g &amp;&amp; !remaining.empty() &amp;&amp; intervalSet.size() &lt; maxSize) &#123;</span><br><span class="line">    Element next = remaining.poll();</span><br><span class="line">    <span class="keyword">if</span> (next == LevelTerminator) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!remaining.isEmpty()) &#123;</span><br><span class="line">            level = level + <span class="number">1</span>;</span><br><span class="line">            remaining.add(LevelTerminator);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (query.contain(next)) &#123;</span><br><span class="line">            intervalSet.add(interval(next));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (query.intersect(next)) &#123;</span><br><span class="line">            intervalSet.add(next);</span><br><span class="line">            remaining.add(next.children());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 兜底策略，将未处理完的element处理完</span></span><br><span class="line"><span class="keyword">while</span> (!remaining.empty()) &#123;</span><br><span class="line">    Element next = remaining.poll();</span><br><span class="line">    <span class="keyword">if</span> (next == LevelTerminator) &#123;</span><br><span class="line">        level = level + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        intervalSet.add(interval(next));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">mergeIntervalsWhichAreIntersected(intervalSet);</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>XZ曲线的论文在1999年就发表了，是一篇会议论文，但是基本上没什么名气，用的人也很少，目前来看除了GeoMesa/GeoWave用过外，就没有什么知名开源项目使用过了，所以现在能获取的相关信息很少（感觉有一个原因是论文写得太晦涩难懂了），只能通过原始的论文和GeoWave的代码来一步步搞清楚原理。<br>论文作者在实验章节基于ORACLE-8做了一个实验（然而这个代码没公开），测试XZ曲线和传统Z曲线查询时磁盘页的访问数量，结果表明XZ曲线的磁盘页访问数量远小于Z曲线。然而我感觉虽然Z曲线会冗余存储，但是在查询速度上可能是要胜于XZ曲线的。<br>最后，在好不容易看完这篇论文后，我们又调研了其他的分布式时空数据库，然而没有发现其他使用XZ曲线的，所以我也没有测试XZ曲线的性能。如果看到了这篇博客并且有兴趣的大佬，可以尝试把GeoWave的代码clone下来后跑一跑他们XZ曲线相关的代码（项目地址在博客第一段已经给出）。</p>
+<h2 id="Acknowledgement"><a href="#Acknowledgement" class="headerlink" title="Acknowledgement"></a>Acknowledgement</h2><p>感谢同组的@Louis Liu和我一起看XZ曲线的论文和源码（他没有GitHub和微博账号，只能这么感谢了😂）</p>
 
         </div>
         <footer class="article-footer">
@@ -264,7 +265,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2018/12/27/XZOdering/" data-id="ck3mf11f200120cu1i1zsd0ci" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2018/12/27/XZOdering/" data-id="ck3vpgzwl00167gu1q1nclgtv" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -340,10 +341,10 @@ var _hmt = _hmt || [];
         "genre": "技术",
         "datePublished": "2018-12-27",
         "dateCreated": "2018-12-27",
-        "dateModified": "2019-01-10",
+        "dateModified": "2019-12-07",
         "url": "http://guanhonly.github.io/2018/12/27/XZOdering/",
         "description": "最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大",
-        "wordCount": 518
+        "wordCount": 550
     }
 </script>
 
@@ -426,7 +427,7 @@ var _hmt = _hmt || [];
     <h3 class="widget-title">目录</h3>
     <div class="widget">
         <div id="toc" class="toc-article">
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#空间填充曲线"><span class="toc-number">1.</span> <span class="toc-text">空间填充曲线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Z曲线"><span class="toc-number">2.</span> <span class="toc-text">Z曲线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XZ曲线"><span class="toc-number">3.</span> <span class="toc-text">XZ曲线</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#XZ曲线的插入操作"><span class="toc-number">3.1.</span> <span class="toc-text">XZ曲线的插入操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#XZ曲线的查询操作"><span class="toc-number">3.2.</span> <span class="toc-text">XZ曲线的查询操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Acknowledgement"><span class="toc-number">4.</span> <span class="toc-text">Acknowledgement</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#空间填充曲线"><span class="toc-number">1.</span> <span class="toc-text">空间填充曲线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Z曲线"><span class="toc-number">2.</span> <span class="toc-text">Z曲线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XZ曲线"><span class="toc-number">3.</span> <span class="toc-text">XZ曲线</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#定义1"><span class="toc-number">3.1.</span> <span class="toc-text">定义1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定理1"><span class="toc-number">3.2.</span> <span class="toc-text">定理1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定理2"><span class="toc-number">3.3.</span> <span class="toc-text">定理2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定义2"><span class="toc-number">3.4.</span> <span class="toc-text">定义2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定理3"><span class="toc-number">3.5.</span> <span class="toc-text">定理3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定理4"><span class="toc-number">3.6.</span> <span class="toc-text">定理4</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XZ曲线的插入操作"><span class="toc-number">4.</span> <span class="toc-text">XZ曲线的插入操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XZ曲线的查询操作"><span class="toc-number">5.</span> <span class="toc-text">XZ曲线的查询操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Acknowledgement"><span class="toc-number">7.</span> <span class="toc-text">Acknowledgement</span></a></li></ol>
         </div>
     </div>
 </div>
@@ -438,6 +439,26 @@ var _hmt = _hmt || [];
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/12/07/strange-Go-2/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg)" alt="Go的奇特之处2--Go语言的slice" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2019/12/07/strange-Go-2/" class="title">Go的奇特之处2--Go语言的slice</a></p>
+                            <p class="item-date"><time datetime="2019-12-07T14:21:20.000Z" itemprop="datePublished">2019-12-07</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -519,26 +540,6 @@ var _hmt = _hmt || [];
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/1194012-81eadaf2f5da7e8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="Google s2 lib研究之空间覆盖" class="thumbnail-image"></span>
-    
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
-                            <p class="item-title"><a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="title">Google s2 lib研究之空间覆盖</a></p>
-                            <p class="item-date"><time datetime="2019-03-30T13:07:54.000Z" itemprop="datePublished">2019-03-30</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -548,7 +549,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">分类</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">9</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">10</span></li></ul>
         </div>
     </div>
 
@@ -558,7 +559,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">归档</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -568,7 +569,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-list">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go语言/">Go语言</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uber/">Uber</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/轨迹/">轨迹</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go语言/">Go语言</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uber/">Uber</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/轨迹/">轨迹</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -578,7 +579,7 @@ var _hmt = _hmt || [];
     <div class="widget-wrap widget-float">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/GIS/" style="font-size: 20px;">GIS</a> <a href="/tags/Google/" style="font-size: 13.33px;">Google</a> <a href="/tags/Go语言/" style="font-size: 10px;">Go语言</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Uber/" style="font-size: 10px;">Uber</a> <a href="/tags/实用教程/" style="font-size: 13.33px;">实用教程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 13.33px;">空间索引</a> <a href="/tags/算法/" style="font-size: 16.67px;">算法</a> <a href="/tags/轨迹/" style="font-size: 10px;">轨迹</a>
+            <a href="/tags/GIS/" style="font-size: 20px;">GIS</a> <a href="/tags/Google/" style="font-size: 13.33px;">Google</a> <a href="/tags/Go语言/" style="font-size: 13.33px;">Go语言</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Uber/" style="font-size: 10px;">Uber</a> <a href="/tags/实用教程/" style="font-size: 13.33px;">实用教程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 13.33px;">空间索引</a> <a href="/tags/算法/" style="font-size: 16.67px;">算法</a> <a href="/tags/轨迹/" style="font-size: 10px;">轨迹</a>
         </div>
     </div>
 

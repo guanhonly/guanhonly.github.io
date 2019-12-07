@@ -12,7 +12,7 @@
     
     <meta property="og:type" content="website">
 <meta property="og:title" content="Honly&#39;s Blog">
-<meta property="og:url" content="http://guanhonly.github.io/index.html">
+<meta property="og:url" content="http://guanhonly.github.io/page/2/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
@@ -157,7 +157,7 @@ var _hmt = _hmt || [];
         
         <section class="archives-wrap">
             <div class="archive-year-wrap">
-                <a href="/archives/2019" class="archive-year"><i class="icon fa fa-calendar-o"></i>2019</a>
+                <a href="/archives/2017" class="archive-year"><i class="icon fa fa-calendar-o"></i>2017</a>
             </div>
             <div class="archives">
     
@@ -168,20 +168,13 @@ var _hmt = _hmt || [];
         <article class="article article-summary">
     <div class="article-summary-inner">
         
-        <a href="/2019/12/07/strange-Go-2/" class="thumbnail">
+        <a href="/2017/01/01/aboutme/" class="thumbnail">
     
     
-        <span style="background-image:url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg)" alt="Go的奇特之处2--Go语言的slice" class="thumbnail-image"></span>
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/banjo-player-486.jpg)" alt="关于我" class="thumbnail-image"></span>
     
     
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/12/07/strange-Go-2/#isso-thread"></a></span>
-    
-</span>
-
 
     
 </a>
@@ -189,472 +182,22 @@ var _hmt = _hmt || [];
         
         <div class="article-meta">
             <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
+            
             </div>
-            <div class="date"><time datetime="2019-12-07T14:21:20.000Z" itemprop="datePublished">2019-12-07</time></div>
+            <div class="date"><time datetime="2016-12-31T16:00:00.000Z" itemprop="datePublished">2017-01-01</time></div>
         </div>
         
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2019/12/07/strange-Go-2/">Go的奇特之处2--Go语言的slice</a>
+        <a href="/2017/01/01/aboutme/">关于我</a>
         </h1>
     
 
         <p class="article-excerpt">
-            Go语言中的slice，你可以将它简单地看作一个动态数组。动态数组在很多语言中都有实现，比如C++中的vector&lt;&gt;，Java中的Array&lt;&gt;，Python中的[]。那我为什么要说Go语言的slice奇怪？首先来回顾一下slice的基本知识：
+            Grab（中国）软件工程师。分享技术，分享阅读，分享生活。
+欢迎来稿，无论是技术还是你擅长的领域，但必须是markdown格式。如果有离线图片请一并发送，并标明图片在文中的位置。邮箱地址：guanhonly@gmail.com
+markdown的基本语法可以参考：markdown基本语法
 
-slice由三部分组成：首地址、长度len、容量cap
-
-那么，根据slice的这些特性，slice有啥奇特的呢？首先，举个例
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/11/30/strange-Go-1/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg)" alt="Go的奇特之处1--Go语言的作用域" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/11/30/strange-Go-1/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-11-30T15:09:45.000Z" itemprop="datePublished">2019-11-30</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/11/30/strange-Go-1/">Go的奇特之处1--Go语言的作用域</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。为了行文方便，我把由一对花括号{ }框起来的区域叫做句法块（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/10/27/uber-h3-preliminary-research/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/Twitter-H3.png)" alt="初探Uber H3原理" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-10-27T03:05:13.000Z" itemprop="datePublished">2019-10-27</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/10/27/uber-h3-preliminary-research/">初探Uber H3原理</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/09/05/PolylineEncoding/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/spiral-dots-990.jpg)" alt="轨迹压缩算法(Polyline encoding algorithm)探究" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/09/05/PolylineEncoding/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-09-05T12:17:10.000Z" itemprop="datePublished">2019-09-05</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/09/05/PolylineEncoding/">轨迹压缩算法(Polyline encoding algorithm)探究</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            前言文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Ti
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/04/20/nvidia-driver-error/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://www.aihami.com/uploads/allimg/181117/172-1Q11FZ910592.png)" alt="Ubuntu16.04+1080ti显卡驱动循环登录问题解决办法" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/04/20/nvidia-driver-error/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-04-20T14:35:42.000Z" itemprop="datePublished">2019-04-20</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/04/20/nvidia-driver-error/">Ubuntu16.04+1080ti显卡驱动循环登录问题解决办法</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            昨天发现Ubuntu在登录界面循环登录，百度之后说是显卡驱动问题，于是将显卡驱动卸了，可是之后却再也装不上，装上了之后又循环登录了。
-机器情况是两块NVIDIA 1080Ti，Ubuntu16.04系统。为了解决这个问题，百度、Google搜了半天，发现了一个写的很好的帖子Ubuntu16.04+1080ti显卡驱动安装流程+循环登录问题，上面的所有方法试过之后并没有什么卵用，尝试在NVIDIA官
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/1194012-81eadaf2f5da7e8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="Google s2 lib研究之空间覆盖" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/03/30/s2-approximate-polygon-by-cell/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-03-30T13:07:54.000Z" itemprop="datePublished">2019-03-30</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/03/30/s2-approximate-polygon-by-cell/">Google s2 lib研究之空间覆盖</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            本文适合于对Google s2有一定了解或对空间索引有一定了解的读者。
-空间索引常用的方法是空间填充曲线，比如Hilbert, Geohash等，被用于许多查询场景中。Google也推出了自己的空间索引——Google s2，这个项目是一个开源项目，有兴趣的可以直接看Google s2 java版源码和官方文档。对Google s2的介绍可以看Google’s S2, geometry on th
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-        
-            </div></section>
-        
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2018" class="archive-year"><i class="icon fa fa-calendar-o"></i>2018</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/12/27/XZOdering/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/the-louvre-866.jpg)" alt="XZ曲线探究" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2018/12/27/XZOdering/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2018-12-27T13:51:59.000Z" itemprop="datePublished">2018-12-27</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/12/27/XZOdering/">XZ曲线探究</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/12/03/python-learn-1/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1543845210001&di=a8cbf00ca081fef392ccf73090a4406b&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2Fe499857dd1ed639e869b5b973aef06e182211f3d.jpg)" alt="（转载）Python基础" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2018/12/03/python-learn-1/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2018-12-03T10:35:12.000Z" itemprop="datePublished">2018-12-03</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/12/03/python-learn-1/">（转载）Python基础</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            转载自：Python基础长文
-一、Day10.print123name = input("What is your name?")print("Hello "+name )# 或者print("Hello",name ),print中逗号分隔直接将字符串用空格分隔，若用+号连接，并且想留空格，则在前一字符串留空格即可
-1.输入输出123username=input("username:")pass
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/12/01/hbase-construction1/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/programming-800.jpg)" alt="HBase原理探究（1）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2018/12/01/hbase-construction1/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/12/01/hbase-construction1/">HBase原理探究（1）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。
-若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/12/01/howInstall/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/lioness-in-black-and-white-852.jpg)" alt="基于hexo的marble模板" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2018/12/01/howInstall/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2018-12-01T11:36:39.000Z" itemprop="datePublished">2018-12-01</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/12/01/howInstall/">基于hexo的marble模板</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            我的旧版博客使用的模板。项目github地址：hexo-theme-marble
-
-自己动手做的一个github个人主页，由于之前没有做过前端，所以在@ppoffice的Alex项目基础上改的。主要是根据我的个人喜好进行的界面的调整，并增加了评论功能。评论功能采用的gitalk。
-整个界面追求极致简洁，黑白配色，所以取名marble。
-安装方法：1. nodejs和hexo的安装可以参考这篇博客：
         </p>
     </div>
 </article>
@@ -667,8 +210,8 @@ slice由三部分组成：首地址、长度len、容量cap
 
 
     <nav id="page-nav">
-        <span class="pages">第 1 页，共 2 页</span>
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">&raquo;</a>
+        <span class="pages">第 2 页，共 2 页</span>
+        <a class="extend prev" rel="prev" href="/">&laquo;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
     </nav>
 
 
