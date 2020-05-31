@@ -6,26 +6,26 @@
     
 
     
-    <title>Go的奇特之处1--Go语言的作用域 | Honly&#39;s Blog</title>
+    <title>如何设计一个分布式限流器（distributed rate limiter） | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="Go语言">
+    <meta name="keywords" content="算法,工程">
     
-    <meta name="description" content="作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。为了行文方便，我把由一对花括号{ }框起来的区域叫做句法块（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一">
-<meta name="keywords" content="Go语言">
+    <meta name="description" content="Rate Limiter限流器（rate limiter）是一种在实际工程中广泛应用的组件，其主要作用就是限制上游服务的请求量。比如一个公司有两个服务：服务A和服务B，服务A需要经常请求服务B，那么服务B为了保证自己不被来自A的异常高的请求打挂（即是现在分布式系统时代做自动扩容很快，但对于TPS较大的服务来说这些异常高的请求量仍然是有显著影响的），就会和服务A协商，定一个服务A的TPS阈值，设置限">
+<meta name="keywords" content="算法,工程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Go的奇特之处1--Go语言的作用域">
-<meta property="og:url" content="http://guanhonly.github.io/2019/11/30/strange-Go-1/index.html">
+<meta property="og:title" content="如何设计一个分布式限流器（distributed rate limiter）">
+<meta property="og:url" content="http://guanhonly.github.io/2020/05/30/distributed-rate-limiter/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
-<meta property="og:description" content="作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。为了行文方便，我把由一对花括号{ }框起来的区域叫做句法块（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一">
+<meta property="og:description" content="Rate Limiter限流器（rate limiter）是一种在实际工程中广泛应用的组件，其主要作用就是限制上游服务的请求量。比如一个公司有两个服务：服务A和服务B，服务A需要经常请求服务B，那么服务B为了保证自己不被来自A的异常高的请求打挂（即是现在分布式系统时代做自动扩容很快，但对于TPS较大的服务来说这些异常高的请求量仍然是有显著影响的），就会和服务A协商，定一个服务A的TPS阈值，设置限">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg">
-<meta property="og:updated_time" content="2019-12-01T02:58:35.501Z">
+<meta property="og:image" content="https://www.hdwallpapers.net/previews/lake-ohau-new-zealand-1106.jpg">
+<meta property="og:updated_time" content="2020-05-31T14:32:32.659Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Go的奇特之处1--Go语言的作用域">
-<meta name="twitter:description" content="作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。为了行文方便，我把由一对花括号{ }框起来的区域叫做句法块（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一">
-<meta name="twitter:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg">
+<meta name="twitter:title" content="如何设计一个分布式限流器（distributed rate limiter）">
+<meta name="twitter:description" content="Rate Limiter限流器（rate limiter）是一种在实际工程中广泛应用的组件，其主要作用就是限制上游服务的请求量。比如一个公司有两个服务：服务A和服务B，服务A需要经常请求服务B，那么服务B为了保证自己不被来自A的异常高的请求打挂（即是现在分布式系统时代做自动扩容很快，但对于TPS较大的服务来说这些异常高的请求量仍然是有显著影响的），就会和服务A协商，定一个服务A的TPS阈值，设置限">
+<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/lake-ohau-new-zealand-1106.jpg">
     
 
     
@@ -158,14 +158,14 @@ var _hmt = _hmt || [];
 </div>
 
                         <div class="main-body-content">
-                            <article id="post-strange-Go-1" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+                            <article id="post-distributed-rate-limiter" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Go的奇特之处1--Go语言的作用域
+        如何设计一个分布式限流器（distributed rate limiter）
         </h1>
     
 
@@ -176,8 +176,8 @@ var _hmt = _hmt || [];
                 
     <div class="article-date">
       <i class="fa fa-calendar"></i>
-      <a href="/2019/11/30/strange-Go-1/" class="article-date">
-         <time datetime="2019-11-30T15:09:45.000Z" itemprop="datePublished">2019-11-30</time>
+      <a href="/2020/05/30/distributed-rate-limiter/" class="article-date">
+         <time datetime="2020-05-30T15:44:23.000Z" itemprop="datePublished">2020-05-30</time>
       </a>
     </div>
 
@@ -187,7 +187,7 @@ var _hmt = _hmt || [];
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Go语言/">Go语言</a>
+        <a class="tag-link" href="/tags/工程/">工程</a>, <a class="tag-link" href="/tags/算法/">算法</a>
     </div>
 
                 
@@ -198,33 +198,20 @@ var _hmt = _hmt || [];
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。<br>为了行文方便，我把由一对花括号<code>{ }</code>框起来的区域叫做<code>句法块</code>（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一个同名的东西。举个例子，如果一个变量<code>x</code>被定义在了一个句法块中，并赋值为<code>1</code>，那么调用<code>x</code>的时候，只在其句法块范围内值为<code>1</code>，如果在其作用域外定义了另一个<code>x</code>，那这个外面的<code>x</code>就不是句法块内的<code>x</code>，其值也就不一定是<code>1</code>了。<br>这些概念看起来可能有点别扭，举一个简单的示例：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...以上省略若干代码</span></span><br><span class="line">a := <span class="number">1</span></span><br><span class="line">flag := <span class="literal">true</span></span><br><span class="line"><span class="keyword">if</span> flag &#123;</span><br><span class="line">    a = <span class="number">2</span></span><br><span class="line">    fmt.Println(<span class="string">"inside: "</span>, a)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(<span class="string">"outside: "</span>, a)</span><br><span class="line"><span class="comment">// ...以下省略若干代码</span></span><br></pre></td></tr></table></figure>
-<p>以上这段代码大家都知道，会输出：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">inside:  2</span><br><span class="line">outside:  2</span><br></pre></td></tr></table></figure>
-<p>但是，Go语言的神奇之处在于，他允许你在if的句法块里再定义一个同名变量a：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...以上省略若干代码</span></span><br><span class="line">a := <span class="number">1</span></span><br><span class="line">flag := <span class="literal">true</span></span><br><span class="line"><span class="keyword">if</span> flag &#123;</span><br><span class="line">    a := <span class="number">2</span></span><br><span class="line">    fmt.Println(<span class="string">"inside: "</span>, a)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(<span class="string">"outside: "</span>, a)</span><br><span class="line"><span class="comment">// ...以下省略若干代码</span></span><br></pre></td></tr></table></figure>
-<p>以上这段代码能够编译成功并运行，输出结果是这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">inside:  2</span><br><span class="line">outside:  1</span><br></pre></td></tr></table></figure>
-<p>惊不惊喜，意不意外？<br>Go语言的机制就是这样，允许在句法块内定义同名的变量或函数。再举几个更加奇特的例子：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...以上省略若干代码</span></span><br><span class="line">a := []<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;</span><br><span class="line"><span class="keyword">for</span> _, a := <span class="keyword">range</span> a &#123;</span><br><span class="line">    a++</span><br><span class="line">    fmt.Println(<span class="string">"inside a: "</span>, a)</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(<span class="string">"outside a: "</span>, a)</span><br><span class="line"><span class="comment">// ...以下省略若干代码</span></span><br></pre></td></tr></table></figure>
-<p>以上代码是可以编译并运行的。在了解了Go语言作用域的概念后，以上这段代码的输出就可以理解了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">inside a:  2</span><br><span class="line">inside a:  3</span><br><span class="line">inside a:  4</span><br><span class="line">inside a:  5</span><br><span class="line">inside a:  6</span><br><span class="line">outside a:  [1 2 3 4 5]</span><br></pre></td></tr></table></figure>
-<p>还有可以定义和包级变量同名的变量：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...以上省略若干代码</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    a := <span class="number">2</span></span><br><span class="line">    fmt.Println(<span class="string">"main a: "</span>, a)</span><br><span class="line">    printA()</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">printA</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"global a: "</span>, a)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ...以下省略若干代码</span></span><br></pre></td></tr></table></figure>
-<p>输出为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">main a:  2</span><br><span class="line">global a:  1</span><br></pre></td></tr></table></figure>
-<p>当然，以上的代码虽然说逻辑正确，但是代码风格不太好，建议大家不要学着这样做，否则可能会让你的同事review你的代码时一头雾水，影响日常搬砖效率。  </p>
-<p>看了这些例子后，除了感觉Go语言的作用域很奇特之外，能够对我们的日常搬砖工作造成什么影响呢？下面举两个工作中可能会遇到的相关问题。</p>
-<p>Go语言奇特的作用域可能会造成Bug（从Go语言圣经上抄的一个例子）：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cwd <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">    cwd, err := os.Getwd() <span class="comment">// compile error: unused: cwd</span></span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalf(<span class="string">"os.Getwd failed: %v"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>以上这段代码的本意是获取当前路径并赋值给包级变量<code>cwd</code>，但是由于开发人员想偷懒写成这样。由于使用了快速赋值，在<code>init()</code>内又生成了一个跟包级变量同名的变量<code>cwd</code>，这样编译都通过不了，因为<code>init()</code>中的<code>cwd</code>未使用过。当然，现在的IDE比如GoLand都会在变量下标红色波浪线提示你这个变量没有被使用过，但多注意还是好的，万一哪一天你就到vim上写代码去了呢。<br>那么，如何改进这段代码，以达到最初始的目的呢？<br>很简单，不要用快速赋值，走传统语言先定义、后赋值的老路，事先定义一个变量<code>err</code>：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cwd <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> err error</span><br><span class="line">    cwd, err = os.Getwd()</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatalf(<span class="string">"os.Getwd failed: %v"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样的话，在<code>init()</code>内并没有新定义一个名为<code>cwd</code>的变量，而是对包级变量<code>cwd</code>进行了赋值。</p>
-<p>那么，除了能够规避错误，理解了Go语言的作用域还能有啥用不？<br>比尔盖茨曾经说过：”I choose a lazy person to do a hard job. Because a lazy person will find an easy way to do it.” Go语言奇特的作用域还可以用来偷懒，特别是对于懒得想新变量名并且懒得写注释的懒癌晚期患者来说，是一个特别实用的feature。<br>比如Go语言饱受诟病的异常捕捉方式，返回的错误显式地写在了返回值里，那么根据Go语言奇特的作用域，这种写法也可以：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...以上省略若干代码</span></span><br><span class="line">value, err := getValue()</span><br><span class="line"><span class="keyword">if</span> shouldRecord &#123;</span><br><span class="line">    err := record()</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Println(<span class="string">"record failed: "</span>, err) <span class="comment">// err is the returned error of record()</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> value, err <span class="comment">// err is the returned error of getValue()</span></span><br><span class="line"><span class="comment">// ...以下省略若干代码</span></span><br></pre></td></tr></table></figure>
-<p>以上代码的目的是获取值并返回，中间有个记录的步骤，如果记录失败则打印在日志里。那么在Go语言中，就不必再为<code>record</code>定义一个新错误名，直接用<code>err</code>即可，因为在if的句法块中，<code>err</code>相当于一个重新申请的一个变量，跟外面的那个<code>err</code>不是一个东西。通过类似的方法，巧用Go语言的作用域，可以节省想新变量名的时间和精力，也不用让同事被一个新出现的变量名抓耳挠腮，也可以不用专门写注释，做到了轻松、高效地搬砖，并改善了与同事之间的关系，何乐而不为呢。</p>
-<p>以上就是Go语言作用域的奇特之处以及程序员可以如何利用这个奇特之处的小技巧。希望可以对看到这篇博客的人有所帮助。<br>最后打个小广告，由于我写Go语言也只有不到半年的时间，并且是完全由于工作需要。为了锻炼自己的搬砖能力，我开了一个GitHub的仓库用来刷leetcode，主要按题目类型分类来刷，烦请看到的各位star一波:<br><a href="https://github.com/guanhonly/leetcode-solutions-in-Go" target="_blank" rel="noopener">https://github.com/guanhonly/leetcode-solutions-in-Go</a></p>
+            <h2 id="Rate-Limiter"><a href="#Rate-Limiter" class="headerlink" title="Rate Limiter"></a>Rate Limiter</h2><p>限流器（rate limiter）是一种在实际工程中广泛应用的组件，其主要作用就是限制上游服务的请求量。比如一个公司有两个服务：服务A和服务B，服务A需要经常请求服务B，那么服务B为了保证自己不被来自A的异常高的请求打挂（即是现在分布式系统时代做自动扩容很快，但对于TPS较大的服务来说这些异常高的请求量仍然是有显著影响的），就会和服务A协商，定一个服务A的TPS阈值，设置限流器来保证自己服务的安全。又比如某公司G提供某种有偿的API服务，G公司为了赚钱需要对不同级别的TPS定不同的收费标准，那么G公司就必须要对这个API做流量控制，如果用户的TPS超过了某个阈值，那就返回错误，要想访问这个API更频繁并且获得正确的结果就得多交钱。<br>很多提供API服务的公司都有自己的限流器，比如著名的同性交友网GitHub: <a href="https://developer.github.com/v3/#rate-limiting" target="_blank" rel="noopener">GitHub REST API v3</a>，明确了普通用户对API的请求必须在5000次/小时以内，否则就会返回<code>403 Forbidden</code>。类似的，领英也有自己的rate limiter，对不同的API有不同的限流准则：<a href="https://developer.linkedin.com/docs/rest-api?u=0#" target="_blank" rel="noopener">LinkedIn Getting started with the REST API</a>。</p>
+<h2 id="限流算法（rate-limiting-algorithm）"><a href="#限流算法（rate-limiting-algorithm）" class="headerlink" title="限流算法（rate limiting algorithm）"></a>限流算法（rate limiting algorithm）</h2><p>限流算法有很多，各有优劣，在这里简单介绍一下各种限流算法的差异。</p>
+<h3 id="漏桶法（Leaky-Bucket）和令牌桶法（Token-Bucket）"><a href="#漏桶法（Leaky-Bucket）和令牌桶法（Token-Bucket）" class="headerlink" title="漏桶法（Leaky Bucket）和令牌桶法（Token Bucket）"></a>漏桶法（Leaky Bucket）和令牌桶法（Token Bucket）</h3><p>其实我感觉两种算法虽然都带桶字，但两者的思路却完全不同。<br>漏桶法比较直观，想象一个底部有个洞的桶，向桶口灌水，水通过底部的洞漏出来。桶底的洞一般是比桶口小很多的，所以如果灌水太快了桶就会被灌满，这样水就会溢出。灌水相当于上游打来请求，底部洞中漏水相当于处理请求，桶的大小即服务能够承受的流量，溢出的水就是被拒绝处理的请求。用数据结构抽象，漏桶就是一个FIFO的队列，请求不断地从队尾插入，服务不断地从队首取出请求进行处理，队列的容量就是服务能够承受的流量。<br>漏桶法的好处很明显，服务完全不会被异常高的TPS打垮，并且原理很简单，比较容易实现。但如果有个请求处理时间较长，那么他后面的请求都会跟着遭殃，所以漏桶法会有一个请求阻塞其他请求的可能。并且如果上游打来的请求不均匀，则漏桶很容易被灌满，所以漏桶法也处理不了burst。<br>令牌桶是想象有一个桶里放满了令牌，每来一个请求就取一个令牌，如果没有令牌可取了就拒绝处理请求，同时也会以一定的速率往桶里加令牌。一般往桶里加令牌的速率就被配置为平均的TPS，桶的容量则为能够接受的最大burst。令牌桶相比漏桶就有一个比较大的好处，那就是能够处理请求量的burst，能够处理上游不均匀的请求。</p>
+<h3 id="固定窗口法（Fixed-Window）"><a href="#固定窗口法（Fixed-Window）" class="headerlink" title="固定窗口法（Fixed Window）"></a>固定窗口法（Fixed Window）</h3><p>这里所说的窗口（window）就是时间窗口。固定窗口法规定了在某个固定的时间范围内的请求量阈值，如果在这个时间范围内的请求量超过阈值，则直接拒绝处理。<br>固定窗口法的好处就是旧请求不会影响后面的新请求，但缺点也很明显，在窗口刷新的时候可能会放更多请求进来，比如配置的QPS是100，在上一个窗口的最后0.5秒打来了100个请求，在当前窗口的第一个0.5秒打来了100个请求，这样会在一秒内接受200个请求，与配置相去甚远。</p>
+<h3 id="滑动日志法（Sliding-Log）"><a href="#滑动日志法（Sliding-Log）" class="headerlink" title="滑动日志法（Sliding Log）"></a>滑动日志法（Sliding Log）</h3><p>滑动日志以日志的形式记录每个请求，每条日志包含一个请求的时间戳，如果有新请求，则根据其时间戳和之前的日志，计算TPS，如果TPS超过阈值则，则只加到日志不作处理。<br>滑动日志法更像是无限容量的漏桶法，解决了固定窗口法的edge case，但需要存储日志，对存储来说有压力，并且每次来请求都要计算一次日志量，计算成本太高。</p>
+<h3 id="滑动窗口法（Sliding-Window）"><a href="#滑动窗口法（Sliding-Window）" class="headerlink" title="滑动窗口法（Sliding Window）"></a>滑动窗口法（Sliding Window）</h3><p>滑动窗口法和固定窗口法很相似，区别就是固定窗口法每个时间窗口只能处理固定的请求量，而滑动窗口根据请求的时间往前找一个时间窗口，查看这个时间窗口的请求量是否超过了阈值，如果没有超过则处理请求，否则拒绝处理该请求。</p>
+<p>滑动窗口法咋看起来很漏桶法很类似，但漏桶法新请求可能会被旧请求阻塞住，滑动窗口法就不会，并且滑动窗口的原理也比较简单易懂。滑动窗口也能处理请求量的burst，比如我们设置了时间窗口为一小时，有可能在上一个小时请求量还没超过阈值，则相当于可以将上一个小时剩余的容量加到当前这个小时，当前小时就能够处理更多的请求。</p>
+<p>以上的方法都是对于单机而言的，关于单机版的限流器，比较著名的基本上都是基于令牌桶实现的，比如Google的<a href="https://github.com/google/guava/blob/master/guava/src/com/google/common/util/concurrent/RateLimiter.java" target="_blank" rel="noopener">Guava</a>，Go语言的官方库中也有<a href="https://github.com/golang/time/tree/master/rate" target="_blank" rel="noopener">rate</a>。</p>
+<h2 id="分布式限流器（distributed-rate-limiter）"><a href="#分布式限流器（distributed-rate-limiter）" class="headerlink" title="分布式限流器（distributed rate limiter）"></a>分布式限流器（distributed rate limiter）</h2><p>可以看到，以上的算法中，令牌桶（Token Bucket）和滑动窗口（Sliding Window）是两种最优的算法，都能够处理不均匀的请求。以上描述的算法都只是理论，在单机或许能够有效，但如今各个服务基本上都是分布式的，如何设计分布式限流器呢。</p>
+<h3 id="配置在负载均衡器（Load-Balancer）"><a href="#配置在负载均衡器（Load-Balancer）" class="headerlink" title="配置在负载均衡器（Load Balancer）"></a>配置在负载均衡器（Load Balancer）</h3><p>首先最容易想到的是，在服务的负载均衡器（Load Balancer）中配置一个限流器，这样每来一个请求就可以进行一次检查，并且配置绝对是全局性的。这样做确实可以做到丝毫不差。但由于负载均衡器一般是云服务商提供的，一般的程序员可能无法直接在上面写代码。并且配置在负载均衡器上也做不了容错，可能还会影响扩容。</p>
+<h3 id="配置在中心化数据库"><a href="#配置在中心化数据库" class="headerlink" title="配置在中心化数据库"></a>配置在中心化数据库</h3><p>由于我们想要一个全局的限流器，也就是说服务虽然部署在分布式系统中，但在外界看起来就像部署在单台机器上一样，那样就必须要一个中心化的存储设备去管理限流器，比如Redis。<br>一种直观的做法是，将限流器配置在数据库中，每个节点收到来自上游的请求后直接请求数据库，然后数据库根据限流器判断是否处理这个请求，最后返回给节点相关信息。如果用Redis实现，限流器的代码可以通过Lua脚本的方式放在Redis端，从而减少节点访问Redis的次数。<br>如果服务的流量不大的话，这种简单的基于中心化数据库的实现方法还能撑住。但如果服务的流量很大，这种方法则会有很大的成本和性能问题，每有一个上游的请求，节点就会请求一次数据库并等待数据库是否限流的回复，那么数据库的压力的特别大，会造成从数据库返回结果的延迟较高。并且为了得到正确的结果，每个节点访问数据库的时候还需要避免数据竞争，如果是支持事物的数据库还好，如果基于Redis做，这就需要对限流器加锁，Redis的延迟会更高，这样会导致服务处理请求的延迟很高。</p>
+<h3 id="优化基于中心化数据库的限流器"><a href="#优化基于中心化数据库的限流器" class="headerlink" title="优化基于中心化数据库的限流器"></a>优化基于中心化数据库的限流器</h3><p>为了解决因为对中心化数据库访问过于频繁并且需要加锁导致的延迟问题，做分布式限流器就必须要减少节点访问Redis的频次。这里我们就可以在节点上做一部分限流器的工作，再周期性地访问数据库同步，以达到减少对数据库请求的目的。以下称中心化数据库上的限流器为中心限流器，每个节点上的限流器为本地限流器。<br>第一种方法是在节点上积攒够一定的请求量N后再去请求中心限流器，这样节点对中心化数据库的请求频次会降低为1/N。但在请求积攒阶段这些请求就无法决定是否被处理，这样也会造成一定的延迟增加。并且如果请求十分不均匀，在积攒阶段迟迟攒不到N个，即使设置了积攒超时也会大大增加延迟。同时，由于是一次性发送N个请求，也会造成一定的误差。<br>第二种方法是认为负载均衡器会将流量十分均匀的分布在各个节点上，这样本地限流器的配置就等于全局限流器的配置除以节点数量。这样不需要中心限流器，只需要用一个中心化的数据库比如etcd/Redis存储节点的数量，每个节点以固定的频率请求节点数量更新本地的配置即可。每个节点可以定时向中心化数据库发送心跳，以便中心化数据库可以统计出活着的节点数。这样做对中心化数据库的压力更小，但误差也更大。首先负载均衡器并不能保证流量会十分均匀地打到各个节点上，其次中心化数据库也可能对活着的节点数量统计不准确，因为有可能节点在两次发送心跳图中就挂了。但个人觉得这个误差会始终在容忍范围内。<br>前两种方法对于令牌桶和滑动窗口都适用，还有一种针对于令牌桶的方法：每个节点初始时请求中心限流器N个令牌，当N个令牌都消耗完了再去数据库请求N个。这种方法和第一种方法比较类似，也会有误差，但相比之下延迟会有所降低。</p>
+<p>以上三种方法都会有一定的误差，就目前搜集到的资料来看，笔者没有发现没有误差且成本和性能都能接收的分布式限流器设计。如果是像G公司那样要靠限流来精准定价收费，可能他们就算建分布式数据库做中心化限流器也要准确地计算出TPS。如果是公司内部两个服务之间搞搞，那以上三种方法皆可，个人比较倾向于第二种方法，因为第二种方法对中心化数据库的压力最小，逻辑也比较简单，这样实现成本最小，误差虽然是最大的但感觉也在可容忍范围内。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>以上这些都是些原理性的东西，为什么我不写个示例代码？因为这玩意儿已经有很多开源项目都搞了，最著名的应该就是<a href="https://github.com/Netflix/Hystrix" target="_blank" rel="noopener">Hystrix</a>，还有一个轻量级的<a href="https://github.com/resilience4j/resilience4j" target="_blank" rel="noopener">resilience4j</a>，还有个人开发者弄的<a href="https://github.com/ystcode/SnowJena" target="_blank" rel="noopener">SnowJena</a>。</p>
 
         </div>
         <footer class="article-footer">
@@ -232,7 +219,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/11/30/strange-Go-1/" data-id="ckav63xda000atou1i5wq0irv" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2020/05/30/distributed-rate-limiter/" data-id="ckav63xf90016tou1bdiatj7d" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -302,16 +289,16 @@ var _hmt = _hmt || [];
             "@type": "Person",
             "name": "Honly"
         },
-        "headline": "Go的奇特之处1--Go语言的作用域",
-        "image": "http://guanhonly.github.iohttps://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg",
-        "keywords": "Go语言",
+        "headline": "如何设计一个分布式限流器（distributed rate limiter）",
+        "image": "http://guanhonly.github.iohttps://www.hdwallpapers.net/previews/lake-ohau-new-zealand-1106.jpg",
+        "keywords": "算法 工程",
         "genre": "技术",
-        "datePublished": "2019-11-30",
-        "dateCreated": "2019-11-30",
-        "dateModified": "2019-12-01",
-        "url": "http://guanhonly.github.io/2019/11/30/strange-Go-1/",
-        "description": "作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。为了行文方便，我把由一对花括号{ }框起来的区域叫做句法块（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一",
-        "wordCount": 571
+        "datePublished": "2020-05-30",
+        "dateCreated": "2020-05-30",
+        "dateModified": "2020-05-31",
+        "url": "http://guanhonly.github.io/2020/05/30/distributed-rate-limiter/",
+        "description": "Rate Limiter限流器（rate limiter）是一种在实际工程中广泛应用的组件，其主要作用就是限制上游服务的请求量。比如一个公司有两个服务：服务A和服务B，服务A需要经常请求服务B，那么服务B为了保证自己不被来自A的异常高的请求打挂（即是现在分布式系统时代做自动扩容很快，但对于TPS较大的服务来说这些异常高的请求量仍然是有显著影响的），就会和服务A协商，定一个服务A的TPS阈值，设置限",
+        "wordCount": 105
     }
 </script>
 
@@ -366,20 +353,10 @@ var _hmt = _hmt || [];
         
 <nav id="article-nav">
     
-        <a href="/2019/12/07/strange-Go-2/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            Go的奇特之处2--Go语言的slice
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2019/10/27/uber-h3-preliminary-research/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2019/12/07/strange-Go-2/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">初探Uber H3原理</p>
+        <p class="article-nav-title">Go的奇特之处2--Go语言的slice</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -390,6 +367,15 @@ var _hmt = _hmt || [];
         
             
                 
+<div class="widget-wrap widget-list">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <div id="toc" class="toc-article">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Rate-Limiter"><span class="toc-number">1.</span> <span class="toc-text">Rate Limiter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#限流算法（rate-limiting-algorithm）"><span class="toc-number">2.</span> <span class="toc-text">限流算法（rate limiting algorithm）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏桶法（Leaky-Bucket）和令牌桶法（Token-Bucket）"><span class="toc-number">2.1.</span> <span class="toc-text">漏桶法（Leaky Bucket）和令牌桶法（Token Bucket）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#固定窗口法（Fixed-Window）"><span class="toc-number">2.2.</span> <span class="toc-text">固定窗口法（Fixed Window）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#滑动日志法（Sliding-Log）"><span class="toc-number">2.3.</span> <span class="toc-text">滑动日志法（Sliding Log）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#滑动窗口法（Sliding-Window）"><span class="toc-number">2.4.</span> <span class="toc-text">滑动窗口法（Sliding Window）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式限流器（distributed-rate-limiter）"><span class="toc-number">3.</span> <span class="toc-text">分布式限流器（distributed rate limiter）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置在负载均衡器（Load-Balancer）"><span class="toc-number">3.1.</span> <span class="toc-text">配置在负载均衡器（Load Balancer）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置在中心化数据库"><span class="toc-number">3.2.</span> <span class="toc-text">配置在中心化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化基于中心化数据库的限流器"><span class="toc-number">3.3.</span> <span class="toc-text">优化基于中心化数据库的限流器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">4.</span> <span class="toc-text">小结</span></a></li></ol>
+        </div>
+    </div>
+</div>
+
 
             
                 

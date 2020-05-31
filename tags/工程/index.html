@@ -6,13 +6,13 @@
     
 
     
-    <title>标签: HBase | Honly&#39;s Blog</title>
+    <title>标签: 工程 | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta property="og:type" content="website">
 <meta property="og:title" content="Honly&#39;s Blog">
-<meta property="og:url" content="http://guanhonly.github.io/tags/HBase/index.html">
+<meta property="og:url" content="http://guanhonly.github.io/tags/工程/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
@@ -144,7 +144,7 @@ var _hmt = _hmt || [];
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-tag"></i>标签: <em>HBase</em>
+    <i class="icon fa fa-tag"></i>标签: <em>工程</em>
     </h1>
 </div>
 
@@ -157,7 +157,7 @@ var _hmt = _hmt || [];
         
         <section class="archives-wrap">
             <div class="archive-year-wrap">
-                <a href="/archives/2018" class="archive-year"><i class="icon fa fa-calendar-o"></i>2018</a>
+                <a href="/archives/2020" class="archive-year"><i class="icon fa fa-calendar-o"></i>2020</a>
             </div>
             <div class="archives">
     
@@ -168,17 +168,17 @@ var _hmt = _hmt || [];
         <article class="article article-summary">
     <div class="article-summary-inner">
         
-        <a href="/2018/12/01/hbase-construction1/" class="thumbnail">
+        <a href="/2020/05/30/distributed-rate-limiter/" class="thumbnail">
     
     
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/programming-800.jpg)" alt="HBase原理探究（1）" class="thumbnail-image"></span>
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/lake-ohau-new-zealand-1106.jpg)" alt="如何设计一个分布式限流器（distributed rate limiter）" class="thumbnail-image"></span>
     
     
         
 <span class="comment-counter">
     <i class="fa fa-comments-o"></i>
     
-        <span><a href="http://guanhonly.github.io/2018/12/01/hbase-construction1/#isso-thread"></a></span>
+        <span><a href="http://guanhonly.github.io/2020/05/30/distributed-rate-limiter/#isso-thread"></a></span>
     
 </span>
 
@@ -191,18 +191,17 @@ var _hmt = _hmt || [];
             <div class="category">
             <a class="article-category-link" href="/categories/技术/">技术</a>
             </div>
-            <div class="date"><time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time></div>
+            <div class="date"><time datetime="2020-05-30T15:44:23.000Z" itemprop="datePublished">2020-05-30</time></div>
         </div>
         
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2018/12/01/hbase-construction1/">HBase原理探究（1）</a>
+        <a href="/2020/05/30/distributed-rate-limiter/">如何设计一个分布式限流器（distributed rate limiter）</a>
         </h1>
     
 
         <p class="article-excerpt">
-            HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。
-若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不
+            Rate Limiter限流器（rate limiter）是一种在实际工程中广泛应用的组件，其主要作用就是限制上游服务的请求量。比如一个公司有两个服务：服务A和服务B，服务A需要经常请求服务B，那么服务B为了保证自己不被来自A的异常高的请求打挂（即是现在分布式系统时代做自动扩容很快，但对于TPS较大的服务来说这些异常高的请求量仍然是有显著影响的），就会和服务A协商，定一个服务A的TPS阈值，设置限
         </p>
     </div>
 </article>
