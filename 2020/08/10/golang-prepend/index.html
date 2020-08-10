@@ -6,26 +6,26 @@
     
 
     
-    <title>轨迹压缩算法(Polyline encoding algorithm)探究 | Honly&#39;s Blog</title>
+    <title>Go语言slice前置插入（prepend）的坑 | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="GIS,算法,Google,轨迹">
+    <meta name="keywords" content="Go语言">
     
-    <meta name="description" content="前言文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Ti">
-<meta name="keywords" content="GIS,算法,Google,轨迹">
+    <meta name="description" content="最近在工作中遇到一个需求，抽象为数据结构的问题就是：对于一个只记录了前向节点的链表，把其中所有节点的值转化为一个数组，数组需要保持原链表中各个值的顺序。也就是一个链表节点的数据结构长这样： 1234type ListNode struct &amp;#123;    Val int    Prev *ListNode&amp;#125; 需要向前遍历这个链表，用一个slice记录其每个节点的值，并且保持值在链表中">
+<meta name="keywords" content="Go语言">
 <meta property="og:type" content="article">
-<meta property="og:title" content="轨迹压缩算法(Polyline encoding algorithm)探究">
-<meta property="og:url" content="http://guanhonly.github.io/2019/09/05/PolylineEncoding/index.html">
+<meta property="og:title" content="Go语言slice前置插入（prepend）的坑">
+<meta property="og:url" content="http://guanhonly.github.io/2020/08/10/golang-prepend/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
-<meta property="og:description" content="前言文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Ti">
+<meta property="og:description" content="最近在工作中遇到一个需求，抽象为数据结构的问题就是：对于一个只记录了前向节点的链表，把其中所有节点的值转化为一个数组，数组需要保持原链表中各个值的顺序。也就是一个链表节点的数据结构长这样： 1234type ListNode struct &amp;#123;    Val int    Prev *ListNode&amp;#125; 需要向前遍历这个链表，用一个slice记录其每个节点的值，并且保持值在链表中">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://www.hdwallpapers.net/previews/spiral-dots-990.jpg">
-<meta property="og:updated_time" content="2019-12-07T14:19:58.800Z">
+<meta property="og:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg">
+<meta property="og:updated_time" content="2020-08-10T16:00:53.028Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="轨迹压缩算法(Polyline encoding algorithm)探究">
-<meta name="twitter:description" content="前言文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Ti">
-<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/spiral-dots-990.jpg">
+<meta name="twitter:title" content="Go语言slice前置插入（prepend）的坑">
+<meta name="twitter:description" content="最近在工作中遇到一个需求，抽象为数据结构的问题就是：对于一个只记录了前向节点的链表，把其中所有节点的值转化为一个数组，数组需要保持原链表中各个值的顺序。也就是一个链表节点的数据结构长这样： 1234type ListNode struct &amp;#123;    Val int    Prev *ListNode&amp;#125; 需要向前遍历这个链表，用一个slice记录其每个节点的值，并且保持值在链表中">
+<meta name="twitter:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg">
     
 
     
@@ -158,14 +158,14 @@ var _hmt = _hmt || [];
 </div>
 
                         <div class="main-body-content">
-                            <article id="post-PolylineEncoding" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+                            <article id="post-golang-prepend" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        轨迹压缩算法(Polyline encoding algorithm)探究
+        Go语言slice前置插入（prepend）的坑
         </h1>
     
 
@@ -176,8 +176,8 @@ var _hmt = _hmt || [];
                 
     <div class="article-date">
       <i class="fa fa-calendar"></i>
-      <a href="/2019/09/05/PolylineEncoding/" class="article-date">
-         <time datetime="2019-09-05T12:17:10.000Z" itemprop="datePublished">2019-09-05</time>
+      <a href="/2020/08/10/golang-prepend/" class="article-date">
+         <time datetime="2020-08-10T15:22:56.000Z" itemprop="datePublished">2020-08-10</time>
       </a>
     </div>
 
@@ -187,7 +187,7 @@ var _hmt = _hmt || [];
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/Google/">Google</a>, <a class="tag-link" href="/tags/算法/">算法</a>, <a class="tag-link" href="/tags/轨迹/">轨迹</a>
+        <a class="tag-link" href="/tags/Go语言/">Go语言</a>
     </div>
 
                 
@@ -198,39 +198,13 @@ var _hmt = _hmt || [];
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><strong>文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo</strong><br>一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(<em>longitude</em>)，$y$一般对应纬度(<em>latitude</em>)），$t$是记录这个轨迹点的时间戳(<em>Timestamp</em>), $A$则是这个轨迹点的属性。如果只想保留一个轨迹点最基本的信息，则只需要保留其空间信息和时间信息，即可以将一个轨迹点表示为 $p = (x, y, t)$。在写代码时，一个轨迹点的类型可以定义如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PointTs</span> </span>&#123;</span><br><span class="line">    <span class="keyword">double</span> lng;</span><br><span class="line">    <span class="keyword">double</span> lat;</span><br><span class="line">    <span class="keyword">long</span> timestamp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>而这样保存一个轨迹点，$x$和$y$一般使用<em>double</em>类型，$t$一般使用<em>long</em>类型，再加上至少3个字符的分隔符（分隔x,y,t和每个轨迹点），一个轨迹点就要占 <code>Double.SIZE * 2 + Long.SIZE + Character.SIZE * 3 == 27 * Byte.SIZE</code>, 也就是说保存一个轨迹点至少需要占27个字节。在如今轨迹数量越来越大的情况下，有必要使用轨迹压缩的算法来解决轨迹数据量过大的问题。在查阅了资料后，我在Google地图开发平台中看到了Google采用的轨迹数据压缩算法，名为<a href="https://developers.google.com/maps/documentation/utilities/polylinealgorithm" target="_blank" rel="noopener">Polyline encoding algorithm</a>（需要科学上网），可以将若干个轨迹点编码成一串字符串，并且实现轨迹的压缩。这是一个有损的压缩算法，并且可以压缩有符号的数字。<br>接下来我将从编码和解码两个方面解析这个算法，并给出示例代码。</p>
-<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><p>Polyline encoding算法的核心思想是对一个浮点数进行压缩，比如说，有一个经度为：<br><code>-179.9832104</code></p>
-<p>对于这样的浮点型数字，首先需要做的是想办法去掉其小数点。所以，可以预设一个10的整数倍的值来与这个浮点数相乘，并取得整数。</p>
-<ol>
-<li><p>在这里，我预设这个值为$10^5$，将这个经度乘以$10^5$，得到：<br><code>-17998321</code></p>
-</li>
-<li><p>将上一步得到的整数转换成二进制，由于我们的值是负数，得到的是<code>17998321</code>的补码：<br><code>11111110 11101101 01011110 00001111</code></p>
-</li>
-<li><p>将二进制数左移一位：<br><code>11111101 11011010 10111100 00011110</code></p>
-</li>
-<li><p>如果原来的数是负数，则取反码：<br><code>00000010 00100101 01000011 11100001</code><br>3、4两步的目的是为了区分正负数，这样做后，负数的最后一位都是<code>1</code>，正数的最后一位都是<code>0</code></p>
-</li>
-<li><p>从右到左，每5位分为一组（一组称为一个chunk）：<br><code>00001 00010 01010 10000 11111 00001</code><br>这样可以舍弃高位的0，节约空间。</p>
-</li>
-<li><p>将这些分组顺序反转（reverse order）：<br><code>00001 11111 10000 01010 00010 00001</code><br>这样做的目的是在写代码时可以每次从低位取数据，更适合代码实现。因为一般而言，写代码读二进制时，读高位比较复杂，而读低位较简单（例如，读最后五位只需要 <code>&amp;0x1F</code>），读到最后几位后可以直接append到结果中，不用插入到结果的前端，效率更高。</p>
-</li>
-<li><p>除了最后一个chunk，其他chunk和<code>0x20</code>进行<code>或</code>操作：<br><code>100001 111111 110000 101010 100010 000001</code><br>这一步的目的是保证只有最后一个chunk是小于<code>0x20</code>的。起到了分隔的作用。</p>
-</li>
-<li><p>分别将每个二进制的chunk转化为十进制的数字：<br><code>33 63 48 42 34 1</code></p>
-</li>
-<li><p>对每个数字都加上63：<br><code>96 126 111 105 97 64</code><br>由于ASCII码前63位中有很多不可显示的控制符（比如NULL、换行符之类的），并且第127个是删除符，所以这一步将数字范围控制在了64~126之间。</p>
-</li>
-<li><p>将数字转化成ASCII表中对应的字符：</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`~oia@</span><br></pre></td></tr></table></figure>
-<p>综上，一个浮点数被编码成了一串字符串，并且自带分隔符。对于时间戳这样的长整型来说，不进行第1步也可以编码为一串字符串，那么，将经度、纬度和时间戳的编码拼接起来就能够组成一个轨迹点的编码，还不用额外的分隔符。<br>其实如果单独对一个数字来说，这个方法的压缩率并不高，有时候还会得不偿失。比如上述的数字<code>-179.9832104</code>，使用这种方法压缩后成为5个字符，占5个字节。如果将直接乘以$10^5$，可以直接用有符号的整型表示，还只占4个字节呢！所以，这个算法还有一个思想就是：<strong>后一个值用其与前一个值的差值表示</strong>，由于差值比较小，所以在上述的第5步时可以将高位的零舍弃掉，节省空间。下面是Google地图开发平台中给出的例子（这个例子中没有带时间戳）：</p>
-<p><img src="https://github.com/guanhonly/HonlyBlogHelper/blob/master/images/google_polyline_encode.png?raw=true" alt="图1 Example of polyline encoding"></p>
-<p>可以看到，这个例子中除了第一个轨迹点存储时全量信息（完整的经纬度数据）之外，后面的轨迹点都是存储的相对于前一个轨迹点偏移量。</p>
-<h3 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h3><p>解码其实就比较简单了，相当于把编码步骤倒过来执行一遍。编码中的步骤4可以使得我们在解码时知道这个数字是正数还是负数，步骤7可以让我们知道数字的边界在哪，所以还是比较方便解码的，我在此就不再赘述解码过程了。</p>
-<h3 id="Talk-is-cheap-show-me-the-code"><a href="#Talk-is-cheap-show-me-the-code" class="headerlink" title="Talk is cheap, show me the code"></a>Talk is cheap, show me the code</h3><p>原理知道了之后，代码就比较简单了，贴一个我写的代码：<br><a href="https://github.com/guanhonly/SimpleTrajectoryCompressor" target="_blank" rel="noopener">SimpleTrajectoryCompressor</a></p>
+            <p>最近在工作中遇到一个需求，抽象为数据结构的问题就是：对于一个只记录了前向节点的链表，把其中所有节点的值转化为一个数组，数组需要保持原链表中各个值的顺序。也就是一个链表节点的数据结构长这样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ListNode <span class="keyword">struct</span> &#123;</span><br><span class="line">    Val <span class="keyword">int</span></span><br><span class="line">    Prev *ListNode</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要向前遍历这个链表，用一个slice记录其每个节点的值，并且保持值在链表中的相对位置。咋一看这个需求很简单，只需要向前遍历链表，然后不断地往slice的最前面插入链表节点的值就行。于是写出了这样的代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> res []<span class="keyword">int</span></span><br><span class="line">currNode := head <span class="comment">// Type of head is *ListNode</span></span><br><span class="line"><span class="keyword">for</span> head != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// Prepend</span></span><br><span class="line">    res = <span class="built_in">append</span>([]<span class="keyword">int</span>&#123;head.Val&#125;, res...)</span><br><span class="line">    currNode = currNode.Prev</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相信很多人都会这么写，这样写也没有逻辑上的问题，并且很多算法题的题解都是这么写的。还有一些博主将这样的前置插入美名曰prepend，写一些博客教导新手这么写。<br>先开始我也是这么写的（主要还是因为前人的代码里存在类似的操作），于是写几个ut过了之后，找别人review，reviewer也觉得可以，于是代码就心安理得地提交了。<br>等到代码部署的时候，突然发现latency暴增，于是紧急回滚代码看问题。最终高latency的来源锁定在上面的代码，想了一下，高latency只可能来源于prepend操作（关于append的原理，可以看我之前的一篇博客：<a href="https://guanhonly.github.io/2019/12/07/strange-Go-2/">Go的奇特之处2–Go语言的slice</a>）。在这种prepend操作中，每次append都会申请新地址空间，这是非常耗时的，如果链表长度很长（在这个需求中链表的长度可以达到上千），那么若干次申请新地址空间，就会造成高latency。<br>找到原因，便开始着手该代码，由于这个需求能知道链表的最大可能长度，改起来比较简单：从一开始为slice申请足够的空间，然后将数值从后向前填入到slice中，最后截取slice即可：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// length is the longest possible length of list.</span></span><br><span class="line">res := <span class="built_in">make</span>([]<span class="keyword">int</span>, length)</span><br><span class="line">iter := length<span class="number">-1</span></span><br><span class="line">currNode := head <span class="comment">// Type of head is *ListNode</span></span><br><span class="line"><span class="keyword">for</span> head != <span class="literal">nil</span> &#123;</span><br><span class="line">    res[iter] = head.Val</span><br><span class="line">    head = head.Prev</span><br><span class="line">    iter--</span><br><span class="line">&#125;</span><br><span class="line">res = res[iter+<span class="number">1</span>:]</span><br></pre></td></tr></table></figure>
+<p>如果实现无法知道链表的最大可能长度，可以先设置一个较大值，每次填充slice前先检查一下iter是否大于等于0，如果不是则对slice进行扩容再操作。<br>修改完代码，和之前的方法进行本地测试对比，发现latency竟然能够下降两个数量级（latency单位为毫秒）。不得不感叹申请新地址空间是一个多么耗时的操作，以后写代码需要多多注意。</p>
 
         </div>
         <footer class="article-footer">
@@ -238,7 +212,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/09/05/PolylineEncoding/" data-id="ckdopdjwv0006gou1tq9vh2tj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2020/08/10/golang-prepend/" data-id="ckdopdjwa0000gou1i5mc6gkq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -308,16 +282,18 @@ var _hmt = _hmt || [];
             "@type": "Person",
             "name": "Honly"
         },
-        "headline": "轨迹压缩算法(Polyline encoding algorithm)探究",
-        "image": "http://guanhonly.github.iohttps://www.hdwallpapers.net/previews/spiral-dots-990.jpg",
-        "keywords": "GIS 算法 Google 轨迹",
+        "headline": "Go语言slice前置插入（prepend）的坑",
+        "image": "http://guanhonly.github.iohttps://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1575136913690&di=6ec3739e966c810bcfc815e3ddaf7bf3&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1961281258%2C3773414350%26fm%3D214%26gp%3D0.jpg",
+        "keywords": "Go语言",
         "genre": "技术",
-        "datePublished": "2019-09-05",
-        "dateCreated": "2019-09-05",
-        "dateModified": "2019-12-07",
-        "url": "http://guanhonly.github.io/2019/09/05/PolylineEncoding/",
-        "description": "前言文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Ti",
-        "wordCount": 152
+        "datePublished": "2020-08-10",
+        "dateCreated": "2020-08-10",
+        "dateModified": "2020-08-11",
+        "url": "http://guanhonly.github.io/2020/08/10/golang-prepend/",
+        "description": "最近在工作中遇到一个需求，抽象为数据结构的问题就是：对于一个只记录了前向节点的链表，把其中所有节点的值转化为一个数组，数组需要保持原链表中各个值的顺序。也就是一个链表节点的数据结构长这样：
+1234type ListNode struct &#123;    Val int    Prev *ListNode&#125;
+需要向前遍历这个链表，用一个slice记录其每个节点的值，并且保持值在链表中",
+        "wordCount": 163
     }
 </script>
 
@@ -372,20 +348,10 @@ var _hmt = _hmt || [];
         
 <nav id="article-nav">
     
-        <a href="/2019/10/27/uber-h3-preliminary-research/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            初探Uber H3原理
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2019/04/20/nvidia-driver-error/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2020/05/30/distributed-rate-limiter/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">Ubuntu16.04+1080ti显卡驱动循环登录问题解决办法</p>
+        <p class="article-nav-title">如何设计一个分布式限流器（distributed rate limiter）</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -396,15 +362,6 @@ var _hmt = _hmt || [];
         
             
                 
-<div class="widget-wrap widget-list">
-    <h3 class="widget-title">目录</h3>
-    <div class="widget">
-        <div id="toc" class="toc-article">
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编码"><span class="toc-number">2.</span> <span class="toc-text">编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解码"><span class="toc-number">3.</span> <span class="toc-text">解码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Talk-is-cheap-show-me-the-code"><span class="toc-number">4.</span> <span class="toc-text">Talk is cheap, show me the code</span></a></li></ol>
-        </div>
-    </div>
-</div>
-
 
             
                 
