@@ -21,7 +21,7 @@
 <meta property="og:description" content="2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/Twitter-H3.png">
-<meta property="og:updated_time" content="2019-12-07T14:12:14.904Z">
+<meta property="og:updated_time" content="2020-08-18T12:45:02.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初探Uber H3原理">
 <meta name="twitter:description" content="2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译">
@@ -241,6 +241,7 @@ var _hmt = _hmt || [];
 </blockquote>
 <p>可以看到，其实对于层级数比较小的网格，后面很多位是不需要的，如果全置为0则会浪费很多空间，所以H3索引值是可以压缩的。压缩算法在官方文档里没有讲，需要看代码才能知道了，这都是后话。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Uber提出的这个H3索引其实有很强的实用性，除了上述的基本原理外，H3还支持空间覆盖和各种查询功能。虽然Uber批判了一番传统的空间索引，但是个人感觉H3并不是在所有时空查询/空间查询场景下都适用，例如在空间范围矩形范围查询场景下，其效率可能不如GeoHash/Z2/S2/Hilbert。并且H3舍弃了一部分海上的区域，只适用于陆地上空间数据的索引，对于轮船轨迹之类的空间数据就不太适用了。并且Uber自己也说，H3现在用于市场的定量分析（H3 is used throughout Uber to support quantitative analysis of our marketplace），H3还有没有被Uber用到其他地方，也许只有Uber自己知道。<br>原理讲解就到这里，H3的使用方法和源码还请移步文章开头给出的H3官方文档和项目地址。后续如果有时间我会再探究一下H3的源码学习一下:smile:。</p>
+<p>——————————————————————————————————————————————————————————<br>打个小广告：<br>Grab中国招聘一个资深地图PM，base北京，要求5年+经验，有英语交流能力，最好有地图经验。<br>上班时间1075，没有996，work-life balance~<br>如果有兴趣可以用<code>关于</code>里的邮箱联系我。<br>还能看到这条招聘消息表示招聘有效~</p>
 
         </div>
         <footer class="article-footer">
@@ -248,7 +249,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/" data-id="ckdzxc7cm001abwu1b6an1jiw" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/" data-id="ckdzxxd2y001bawu1i1nxuy8e" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -324,10 +325,10 @@ var _hmt = _hmt || [];
         "genre": "技术",
         "datePublished": "2019-10-27",
         "dateCreated": "2019-10-27",
-        "dateModified": "2019-12-07",
+        "dateModified": "2020-08-18",
         "url": "http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/",
         "description": "2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译",
-        "wordCount": 124
+        "wordCount": 125
     }
 </script>
 

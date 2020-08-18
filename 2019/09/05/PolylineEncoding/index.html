@@ -21,7 +21,7 @@
 <meta property="og:description" content="前言文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Ti">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://www.hdwallpapers.net/previews/spiral-dots-990.jpg">
-<meta property="og:updated_time" content="2019-12-07T14:19:58.800Z">
+<meta property="og:updated_time" content="2020-08-18T12:45:21.609Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="轨迹压缩算法(Polyline encoding algorithm)探究">
 <meta name="twitter:description" content="前言文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Ti">
@@ -231,6 +231,7 @@ var _hmt = _hmt || [];
 <p>可以看到，这个例子中除了第一个轨迹点存储时全量信息（完整的经纬度数据）之外，后面的轨迹点都是存储的相对于前一个轨迹点偏移量。</p>
 <h3 id="解码"><a href="#解码" class="headerlink" title="解码"></a>解码</h3><p>解码其实就比较简单了，相当于把编码步骤倒过来执行一遍。编码中的步骤4可以使得我们在解码时知道这个数字是正数还是负数，步骤7可以让我们知道数字的边界在哪，所以还是比较方便解码的，我在此就不再赘述解码过程了。</p>
 <h3 id="Talk-is-cheap-show-me-the-code"><a href="#Talk-is-cheap-show-me-the-code" class="headerlink" title="Talk is cheap, show me the code"></a>Talk is cheap, show me the code</h3><p>原理知道了之后，代码就比较简单了，贴一个我写的代码：<br><a href="https://github.com/guanhonly/SimpleTrajectoryCompressor" target="_blank" rel="noopener">SimpleTrajectoryCompressor</a></p>
+<p>——————————————————————————————————————————————————————————<br>打个小广告：<br>Grab中国招聘一个资深地图PM，base北京，要求5年+经验，有英语交流能力，最好有地图经验。<br>上班时间1075，没有996，work-life balance~<br>如果有兴趣可以用<code>关于</code>里的邮箱联系我。<br>还能看到这条招聘消息表示招聘有效~</p>
 
         </div>
         <footer class="article-footer">
@@ -238,7 +239,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/09/05/PolylineEncoding/" data-id="ckdzxc7an0004bwu1qdg7nvn4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2019/09/05/PolylineEncoding/" data-id="ckdzxxd0u0000awu11ep5hl3w" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -314,10 +315,10 @@ var _hmt = _hmt || [];
         "genre": "技术",
         "datePublished": "2019-09-05",
         "dateCreated": "2019-09-05",
-        "dateModified": "2019-12-07",
+        "dateModified": "2020-08-18",
         "url": "http://guanhonly.github.io/2019/09/05/PolylineEncoding/",
         "description": "前言文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Ti",
-        "wordCount": 152
+        "wordCount": 153
     }
 </script>
 
