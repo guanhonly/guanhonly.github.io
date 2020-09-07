@@ -6,17 +6,26 @@
     
 
     
-    <title>归档 | Honly&#39;s Blog</title>
+    <title>记一道动态规划+数学期望的算法题 | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Honly&#39;s Blog">
-<meta property="og:url" content="http://guanhonly.github.io/archives/index.html">
+    <meta name="keywords" content="算法">
+    
+    <meta name="description" content="最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。这道题的题目如下：  一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&amp;lt;= pD, pR, pS &amp;lt;=1，pD+pR+pS = 1。从左上角格子到右下">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一道动态规划+数学期望的算法题">
+<meta property="og:url" content="http://guanhonly.github.io/2020/09/07/a-question-about-dp-and-expectation/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
+<meta property="og:description" content="最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。这道题的题目如下：  一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&amp;lt;= pD, pR, pS &amp;lt;=1，pD+pR+pS = 1。从左上角格子到右下">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.hdwallpapers.net/previews/cubic-rainbow-384.jpg">
+<meta property="og:updated_time" content="2020-09-07T14:48:33.164Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Honly&#39;s Blog">
+<meta name="twitter:title" content="记一道动态规划+数学期望的算法题">
+<meta name="twitter:description" content="最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。这道题的题目如下：  一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&amp;lt;= pD, pR, pS &amp;lt;=1，pD+pR+pS = 1。从左上角格子到右下">
+<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/cubic-rainbow-384.jpg">
     
 
     
@@ -144,529 +153,164 @@ var _hmt = _hmt || [];
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>归档
+    <a class="page-title-link" href="/categories/技术/">技术</a>
     </h1>
 </div>
 
                         <div class="main-body-content">
-                            
-
-    
-    
+                            <article id="post-a-question-about-dp-and-expectation" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+    <div class="article-inner">
         
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2020" class="archive-year"><i class="icon fa fa-calendar-o"></i>2020</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2020/09/07/a-question-about-dp-and-expectation/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/cubic-rainbow-384.jpg)" alt="记一道动态规划+数学期望的算法题" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2020/09/07/a-question-about-dp-and-expectation/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2020-09-07T13:28:31.000Z" itemprop="datePublished">2020-09-07</time></div>
-        </div>
-        
+            <header class="article-header">
+                
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2020/09/07/a-question-about-dp-and-expectation/">记一道动态规划+数学期望的算法题</a>
+        记一道动态规划+数学期望的算法题
         </h1>
     
 
-        <p class="article-excerpt">
-            最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。这道题的题目如下：
-
-一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&lt;= pD, pR, pS &lt;=1，pD+pR+pS = 1。从左上角格子到右下
-        </p>
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+      <i class="fa fa-calendar"></i>
+      <a href="/2020/09/07/a-question-about-dp-and-expectation/" class="article-date">
+         <time datetime="2020-09-07T13:28:31.000Z" itemprop="datePublished">2020-09-07</time>
+      </a>
     </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2020/08/30/etcd-service-discovery/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/digital-rose-1049.jpg)" alt="用etcd做服务发现（service discovery）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2020/08/30/etcd-service-discovery/#isso-thread"></a></span>
-    
-</span>
 
 
-    
-</a>
+                
 
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2020-08-29T16:00:36.000Z" itemprop="datePublished">2020-08-30</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2020/08/30/etcd-service-discovery/">用etcd做服务发现（service discovery）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            什么是服务发现服务发现其实有两层含义，第一层是实例发现，第二层是端口发现。如果有两个服务A和B，两个服务都是分布式系统，在某个时刻服务A作为客户端要请求服务B，那么这时从服务A中的某个实例（instance）Ai就要访问服务B中的某个实例Bi，那么Ai找到一个合适的Bi就是服务发现的第一层含义，即实例发现。Ai找到合适的Bi后其实还没完事，Ai需要知道Bi响应这个请求的应用程序，也就是说需要知道B
-        </p>
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/算法/">算法</a>
     </div>
-</article>
-    
-        </div>
-    
 
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2020/08/10/golang-prepend/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg)" alt="Go语言slice前置插入（prepend）的坑" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2020/08/10/golang-prepend/#isso-thread"></a></span>
-    
-</span>
+                
 
+                
 
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
             </div>
-            <div class="date"><time datetime="2020-08-10T15:22:56.000Z" itemprop="datePublished">2020-08-10</time></div>
-        </div>
         
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2020/08/10/golang-prepend/">Go语言slice前置插入（prepend）的坑</a>
-        </h1>
-    
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。<br>这道题的题目如下：</p>
+<blockquote>
+<p>一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&lt;= pD, pR, pS &lt;=1，pD+pR+pS = 1。从左上角格子到右下角格子的步数期望是多少？</p>
+</blockquote>
+<p>看到网格，从左上角走到右下角，第一反应这就是一道常规的动态规划。这个反应没错，那么接下来就是怎么去推导状态转移方程。</p>
+<p>如果设$step(i, j)$为从左上角到$(i, j)$的步数期望，那么需要找到一种函数关系$f(x)$，使得：<br>$$step(i, j) = f(step(i-1, j), step(i, j-1))$$<br>注意题目中有个条件：就算停留在原地一次，也算走了一步。如果用传统的dp思维，那么从$(i-1, j)$和$(i, j-1)$到$(i, j)$的状态转移方程就十分复杂，因为可能在格子上无限停留，得先求和再求极限。并且从$(0,0)$到$(0,0)$的步数期望并不为0（因为可能在左上角一直停留，也算步数），这个问题就难解了。所以，要再想想有没有简单的方法。<br>如果我们设期望$E(i, j)$为从$(i, j)$到右下角的步数期望，那么问题就转换成从$E(n-1, m-1)$递推到$E(0, 0)$，而$E(n-1, m-1)$是肯定为0的，问题突然开始出现了转机。<br>那么，考虑到$E(i, j)$会原地不动，我们先不急着得到状态转移方程，先列一下$E(i, j)$和什么相关。首先，思路是从右下角开始往左上递推，那么和$E(i, j)$有关的就是$E(i+1, j)$和$E(i, j+1)$了，可以得出如下的方程：<br>$$E(i, j) = pD \times E(i+1, j) + pR \times E(i, j+1) + pS \times E(i, j) + 1$$<br>这个方程中，连$E(i, j)$自身都在等号右侧，我刚列出来的时候也感觉有点别扭，但这个题的核心就在这里要绕个弯。根据上面的方程，可以求出$E(i, j)$的通项为：<br>$$E(i, j) = \frac{pD \times E(i+1, j) + pR \times E(i, j+1) + 1}{1-pS}$$<br>对于处于边缘区域的最下面的一行和最右边的一列，是分别没有$E(i+1, j)$和$E(i, j+1)$的，那么他们就没有这两项。所以总结出来通项就是：<br>如果i=n-1且j=m-1, 则$E(i, j) = 0$<br>如果i=n-1，则$E(i, j) = \frac{pR \times E(i, j+1) + 1}{1-pS}$<br>如果j=m-1，则$E(i, j) = \frac{pD \times E(i+1, j) + 1}{1-pS}$<br>如果0&lt;=i&lt;n-1且0&lt;=j&lt;m-1，则$E(i, j) = \frac{pD \times E(i+1, j) + pR \times E(i, j+1) + 1}{1-pS}$</p>
+<p>有了上面的思考和dp状态转移方程，代码就比较容易写了，这里我用Golang写了一个：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">solve</span><span class="params">(grid [][][3]<span class="keyword">float64</span>)</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">    n := <span class="built_in">len</span>(grid)</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    m := <span class="built_in">len</span>(grid[<span class="number">0</span>])</span><br><span class="line">    dp := <span class="built_in">make</span>([][]<span class="keyword">float64</span>, n)</span><br><span class="line">    <span class="keyword">for</span> i:=n<span class="number">-1</span>; i&gt;=<span class="number">0</span>; i-- &#123;</span><br><span class="line">        dp[i] = <span class="built_in">make</span>([]<span class="keyword">float64</span>, m)</span><br><span class="line">        <span class="keyword">if</span> i == n<span class="number">-1</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> j := m<span class="number">-2</span>; j&gt;=<span class="number">0</span>; j-- &#123;</span><br><span class="line">                dp[n<span class="number">-1</span>][j] = (dp[n<span class="number">-1</span>][j+<span class="number">1</span>]*grid[n<span class="number">-1</span>][j][<span class="number">1</span>] + <span class="number">1</span>) / (<span class="number">1</span>-grid[n<span class="number">-1</span>][j][<span class="number">2</span>])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            dp[i][m<span class="number">-1</span>] = (dp[i+<span class="number">1</span>][m<span class="number">-1</span>]*grid[i][m<span class="number">-1</span>][<span class="number">0</span>] + <span class="number">1</span>) / (<span class="number">1</span> - grid[i][m<span class="number">-1</span>][<span class="number">2</span>])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i:=n<span class="number">-2</span>; i&gt;=<span class="number">0</span>; i-- &#123;</span><br><span class="line">        <span class="keyword">for</span> j:=m<span class="number">-2</span>; j&gt;=<span class="number">0</span>; j-- &#123;</span><br><span class="line">            toDown := grid[i][j][<span class="number">0</span>]</span><br><span class="line">            toRight := grid[i][j][<span class="number">1</span>]</span><br><span class="line">            stop := grid[i][j][<span class="number">2</span>]</span><br><span class="line">            dp[i][j] = (toDown*dp[i+<span class="number">1</span>][j] + toRight*dp[i][j+<span class="number">1</span>] + <span class="number">1</span>) / (<span class="number">1</span>-stop)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实按照上面的思路，正推也可以推出来。如果设$E(i, j)$为从左上角到$(i, j)$的步数期望，就会有：<br>$$E(i, j) = pD \times E(i-1, j) + pR \times E(i, j-1) + pS \times E(i, j) + 1$$<br>$E(0, 0)$会满足这个条件：<br>$$E(0, 0) = pS \times E(0, 0) + 1$$<br>按照上文的思路，把$E(i, j)$的通项求出，也能从左上角推导到右下角。</p>
+<p>写完不得不感叹，动态规划的算法题真的是千变万化，需要开动脑筋多想想。</p>
 
-        <p class="article-excerpt">
-            最近在工作中遇到一个需求，抽象为数据结构的问题就是：对于一个只记录了前向节点的链表，把其中所有节点的值转化为一个数组，数组需要保持原链表中各个值的顺序。也就是一个链表节点的数据结构长这样：
-1234type ListNode struct &#123;    Val int    Prev *ListNode&#125;
-需要向前遍历这个链表，用一个slice记录其每个节点的值，并且保持值在链表中
-        </p>
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://guanhonly.github.io/2020/09/07/a-question-about-dp-and-expectation/" data-id="ckesmcpxd0000a4u1uqfk9rcj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "Honly"
+        },
+        "headline": "记一道动态规划+数学期望的算法题",
+        "image": "http://guanhonly.github.iohttps://www.hdwallpapers.net/previews/cubic-rainbow-384.jpg",
+        "keywords": "算法",
+        "genre": "技术",
+        "datePublished": "2020-09-07",
+        "dateCreated": "2020-09-07",
+        "dateModified": "2020-09-07",
+        "url": "http://guanhonly.github.io/2020/09/07/a-question-about-dp-and-expectation/",
+        "description": "最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。这道题的题目如下：
+
+一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&lt;= pD, pR, pS &lt;=1，pD+pR+pS = 1。从左上角格子到右下",
+        "wordCount": 514
+    }
+</script>
+
 </article>
-    
 
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2020/05/30/distributed-rate-limiter/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/lake-ohau-new-zealand-1106.jpg)" alt="如何设计一个分布式限流器（distributed rate limiter）" class="thumbnail-image"></span>
-    
+    <section id="comments">
     
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2020/05/30/distributed-rate-limiter/#isso-thread"></a></span>
-    
-</span>
+<div id="comment-container"></div>
 
 
     
-</a>
+    </section>
 
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2020-05-30T15:44:23.000Z" itemprop="datePublished">2020-05-30</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2020/05/30/distributed-rate-limiter/">如何设计一个分布式限流器（distributed rate limiter）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            Rate Limiter限流器（rate limiter）是一种在实际工程中广泛应用的组件，其主要作用就是限制上游服务的请求量。比如一个公司有两个服务：服务A和服务B，服务A需要经常请求服务B，那么服务B为了保证自己不被来自A的异常高的请求打挂（即是现在分布式系统时代做自动扩容很快，但对于TPS较大的服务来说这些异常高的请求量仍然是有显著影响的），就会和服务A协商，定一个服务A的TPS阈值，设置限
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-        
-            </div></section>
-        
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2019" class="archive-year"><i class="icon fa fa-calendar-o"></i>2019</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/12/07/strange-Go-2/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg)" alt="Go的奇特之处2--Go语言的slice" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/12/07/strange-Go-2/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-12-07T14:21:20.000Z" itemprop="datePublished">2019-12-07</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/12/07/strange-Go-2/">Go的奇特之处2--Go语言的slice</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            Go语言中的slice，你可以将它简单地看作一个动态数组。动态数组在很多语言中都有实现，比如C++中的vector&lt;&gt;，Java中的Array&lt;&gt;，Python中的[]。那为什么要说Go语言的slice奇怪？首先来回顾一下slice的基本知识：
-
-slice由三部分组成：首地址、长度len、容量cap
-
-那么，根据slice的这些特性，slice有啥奇特的呢？首先，举个例子
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/11/30/strange-Go-1/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg)" alt="Go的奇特之处1--Go语言的作用域" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/11/30/strange-Go-1/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-11-30T15:09:45.000Z" itemprop="datePublished">2019-11-30</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/11/30/strange-Go-1/">Go的奇特之处1--Go语言的作用域</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            作用域是指一个变量或函数在代码中能够有效地使用这个名称的范围。这个概念可能是老生常谈，在所有语言中都有这个概念，但是Go语言的作用域比较奇特。为了行文方便，我把由一对花括号{ }框起来的区域叫做句法块（其实这是在Go语言圣经上看到的概念）。在一个句法块内定义的变量或函数在这个句法块外是不能被调用的，你可以在一个句法块外定义一个相同名称的变量或函数，但那不同于句法块内的变量和函数，相当于生成了另外一
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/10/27/uber-h3-preliminary-research/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/Twitter-H3.png)" alt="初探Uber H3原理" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-10-27T03:05:13.000Z" itemprop="datePublished">2019-10-27</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/10/27/uber-h3-preliminary-research/">初探Uber H3原理</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/09/05/PolylineEncoding/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/spiral-dots-990.jpg)" alt="轨迹压缩算法(Polyline encoding algorithm)探究" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/09/05/PolylineEncoding/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-09-05T12:17:10.000Z" itemprop="datePublished">2019-09-05</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/09/05/PolylineEncoding/">轨迹压缩算法(Polyline encoding algorithm)探究</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            前言文中的代码表达采用Java，如果不想看原理，可以直接跳到博客末尾，有我写的一个Java版的demo一般来说，轨迹是由若干个轨迹点组成的数组来表达的，每个轨迹点可以表达为 $p = (x, y, t, A)$。其中 $x, y$ 是其空间坐标（一般来说，空间坐标用经纬度表示，即$x$一般对应经度(longitude)，$y$一般对应纬度(latitude)），$t$是记录这个轨迹点的时间戳(Ti
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/04/20/nvidia-driver-error/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://www.aihami.com/uploads/allimg/181117/172-1Q11FZ910592.png)" alt="Ubuntu16.04+1080ti显卡驱动循环登录问题解决办法" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/04/20/nvidia-driver-error/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-04-20T14:35:42.000Z" itemprop="datePublished">2019-04-20</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/04/20/nvidia-driver-error/">Ubuntu16.04+1080ti显卡驱动循环登录问题解决办法</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            昨天发现Ubuntu在登录界面循环登录，百度之后说是显卡驱动问题，于是将显卡驱动卸了，可是之后却再也装不上，装上了之后又循环登录了。
-机器情况是两块NVIDIA 1080Ti，Ubuntu16.04系统。为了解决这个问题，百度、Google搜了半天，发现了一个写的很好的帖子Ubuntu16.04+1080ti显卡驱动安装流程+循环登录问题，上面的所有方法试过之后并没有什么卵用，尝试在NVIDIA官
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2019/03/30/s2-approximate-polygon-by-cell/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://upload-images.jianshu.io/upload_images/1194012-81eadaf2f5da7e8d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)" alt="Google s2 lib研究之空间覆盖" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2019/03/30/s2-approximate-polygon-by-cell/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2019-03-30T13:07:54.000Z" itemprop="datePublished">2019-03-30</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2019/03/30/s2-approximate-polygon-by-cell/">Google s2 lib研究之空间覆盖</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            本文适合于对Google s2有一定了解或对空间索引有一定了解的读者。
-空间索引常用的方法是空间填充曲线，比如Hilbert, Geohash等，被用于许多查询场景中。Google也推出了自己的空间索引——Google s2，这个项目是一个开源项目，有兴趣的可以直接看Google s2 java版源码和官方文档。对Google s2的介绍可以看Google’s S2, geometry on th
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-
-    </div></section>
-
-
-    <nav id="page-nav">
-        <span class="pages">第 1 页，共 2 页</span>
-        <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">&raquo;</a>
-    </nav>
 
 
                         </div>
@@ -703,6 +347,19 @@ slice由三部分组成：首地址、长度len、容量cap
             
         </ul>
     </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/08/30/etcd-service-discovery/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">用etcd做服务发现（service discovery）</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
