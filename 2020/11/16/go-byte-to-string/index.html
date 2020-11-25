@@ -6,17 +6,26 @@
     
 
     
-    <title>归档: 2018 | Honly&#39;s Blog</title>
+    <title>Go单个字节（byte）转字符串（string）的一点坑 | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Honly&#39;s Blog">
-<meta property="og:url" content="http://guanhonly.github.io/archives/2018/index.html">
+    <meta name="keywords" content="Go语言">
+    
+    <meta name="description" content="最近遇到一个小问题，由于某个api只支持写入string，而我生成的压缩后的数据都是一个字节的byte，所以不得不将byte转成string。于是写出了如下的代码： 1s := string(b) // b is byte 这样只要b在00000000 到11111111之间，编译是不会报任何问题的，随便写了几个ut也没有问题，于是提交了代码。等到部署后发现，数据量比预估的大了很多，于是仔细rev">
+<meta name="keywords" content="Go语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go单个字节（byte）转字符串（string）的一点坑">
+<meta property="og:url" content="http://guanhonly.github.io/2020/11/16/go-byte-to-string/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
+<meta property="og:description" content="最近遇到一个小问题，由于某个api只支持写入string，而我生成的压缩后的数据都是一个字节的byte，所以不得不将byte转成string。于是写出了如下的代码： 1s := string(b) // b is byte 这样只要b在00000000 到11111111之间，编译是不会报任何问题的，随便写了几个ut也没有问题，于是提交了代码。等到部署后发现，数据量比预估的大了很多，于是仔细rev">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg">
+<meta property="og:updated_time" content="2020-11-25T14:19:30.750Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Honly&#39;s Blog">
+<meta name="twitter:title" content="Go单个字节（byte）转字符串（string）的一点坑">
+<meta name="twitter:description" content="最近遇到一个小问题，由于某个api只支持写入string，而我生成的压缩后的数据都是一个字节的byte，所以不得不将byte转成string。于是写出了如下的代码： 1s := string(b) // b is byte 这样只要b在00000000 到11111111之间，编译是不会报任何问题的，随便写了几个ut也没有问题，于是提交了代码。等到部署后发现，数据量比预估的大了很多，于是仔细rev">
+<meta name="twitter:image" content="https://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg">
     
 
     
@@ -144,222 +153,160 @@ var _hmt = _hmt || [];
                         <div class="main-body-header">
     <h1 class="header">
     
-    <i class="icon fa fa-archive"></i>归档: 2018
+    <a class="page-title-link" href="/categories/技术/">技术</a>
     </h1>
 </div>
 
                         <div class="main-body-content">
-                            
-
-    
-    
+                            <article id="post-go-byte-to-string" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+    <div class="article-inner">
         
-        
-        <section class="archives-wrap">
-            <div class="archive-year-wrap">
-                <a href="/archives/2018" class="archive-year"><i class="icon fa fa-calendar-o"></i>2018</a>
-            </div>
-            <div class="archives">
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/12/27/XZOdering/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/the-louvre-866.jpg)" alt="XZ曲线探究" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2018/12/27/XZOdering/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2018-12-27T13:51:59.000Z" itemprop="datePublished">2018-12-27</time></div>
-        </div>
-        
+            <header class="article-header">
+                
     
         <h1 class="article-title" itemprop="name">
-        <a href="/2018/12/27/XZOdering/">XZ曲线探究</a>
+        Go单个字节（byte）转字符串（string）的一点坑
         </h1>
     
 
-        <p class="article-excerpt">
-            最近在做时空数据库相关的项目，需要做一些空间索引的工作，于是研究了一番GeoMesa和GeoWave。发现他们专门为Polygon类型数据使用了一种叫做XZ曲线的索引。空间填充曲线对于一个GISer来说十分熟悉，但XZ曲线确实是之前闻所未闻。根据GeoMesa的介绍，找到了XZ曲线的论文。论文写得晦涩难懂，看了半天仍未完全看明白。于是又去看GeoWave中关于XZ曲线的源码，终于将XZ的基本原理大
-        </p>
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+      <i class="fa fa-calendar"></i>
+      <a href="/2020/11/16/go-byte-to-string/" class="article-date">
+         <time datetime="2020-11-16T09:38:06.000Z" itemprop="datePublished">2020-11-16</time>
+      </a>
     </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/12/03/python-learn-1/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1543845210001&di=a8cbf00ca081fef392ccf73090a4406b&imgtype=0&src=http%3A%2F%2Fi2.hdslb.com%2Fbfs%2Farchive%2Fe499857dd1ed639e869b5b973aef06e182211f3d.jpg)" alt="（转载）Python基础" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2018/12/03/python-learn-1/#isso-thread"></a></span>
-    
-</span>
 
 
-    
-</a>
+                
 
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Go语言/">Go语言</a>
+    </div>
+
+                
+
+                
+
             </div>
-            <div class="date"><time datetime="2018-12-03T10:35:12.000Z" itemprop="datePublished">2018-12-03</time></div>
-        </div>
         
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/12/03/python-learn-1/">（转载）Python基础</a>
-        </h1>
-    
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>最近遇到一个小问题，由于某个api只支持写入string，而我生成的压缩后的数据都是一个字节的byte，所以不得不将byte转成string。于是写出了如下的代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s := <span class="keyword">string</span>(b) <span class="comment">// b is byte</span></span><br></pre></td></tr></table></figure>
+<p>这样只要b在<code>00000000</code> 到<code>11111111</code>之间，编译是不会报任何问题的，随便写了几个ut也没有问题，于是提交了代码。<br>等到部署后发现，数据量比预估的大了很多，于是仔细review代码，发现问题只可能出在byte转string的时候。多写了几个测试用例后发现，当单个byte转string时，如果byte的值大于127，那么转换出来的string就会占用两个字节。<br>比如127转string，长度为1，但把128转string的时候，长度就为2了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> b <span class="keyword">byte</span> = <span class="number">128</span></span><br><span class="line">s := <span class="keyword">string</span>(b)</span><br><span class="line">fmt.Println(<span class="built_in">len</span>(s)) <span class="comment">// Print 2</span></span><br></pre></td></tr></table></figure>
+<p>究其原因，可能是由于127是ASCII码的最大值，而128已经到了扩展ASCII码表，Go语言不知道为什么会对扩展ASCII码里的单个byte转string的时候解析出两个字节的string。要规避这种神奇的转换也很简单，那就是先将单个byte转成数组，再转成string：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s := <span class="keyword">string</span>([]<span class="keyword">byte</span>&#123;b&#125;)</span><br></pre></td></tr></table></figure>
+<p>这样转出来就一点问题都没有了，也是很神奇。</p>
 
-        <p class="article-excerpt">
-            转载自：Python基础长文
-一、Day10.print123name = input("What is your name?")print("Hello "+name )# 或者print("Hello",name ),print中逗号分隔直接将字符串用空格分隔，若用+号连接，并且想留空格，则在前一字符串留空格即可
-1.输入输出123username=input("username:")pass
-        </p>
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://guanhonly.github.io/2020/11/16/go-byte-to-string/" data-id="ckhxiin8o0006agu1kemo9ls3" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
     </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "Honly"
+        },
+        "headline": "Go单个字节（byte）转字符串（string）的一点坑",
+        "image": "http://guanhonly.github.iohttps://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg",
+        "keywords": "Go语言",
+        "genre": "技术",
+        "datePublished": "2020-11-16",
+        "dateCreated": "2020-11-16",
+        "dateModified": "2020-11-25",
+        "url": "http://guanhonly.github.io/2020/11/16/go-byte-to-string/",
+        "description": "最近遇到一个小问题，由于某个api只支持写入string，而我生成的压缩后的数据都是一个字节的byte，所以不得不将byte转成string。于是写出了如下的代码：
+1s := string(b) // b is byte
+这样只要b在00000000 到11111111之间，编译是不会报任何问题的，随便写了几个ut也没有问题，于是提交了代码。等到部署后发现，数据量比预估的大了很多，于是仔细rev",
+        "wordCount": 51
+    }
+</script>
+
 </article>
-    
-        </div>
-    
 
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/12/01/hbase-construction1/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/programming-800.jpg)" alt="HBase原理探究（1）" class="thumbnail-image"></span>
-    
+    <section id="comments">
     
         
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2018/12/01/hbase-construction1/#isso-thread"></a></span>
-    
-</span>
+<div id="comment-container"></div>
 
 
     
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2018-12-01T12:21:12.000Z" itemprop="datePublished">2018-12-01</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/12/01/hbase-construction1/">HBase原理探究（1）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            HBase的行、列和列族HBase的最基本的单位是列(column)，一列或多列形成一行(row)，并由唯一的行键(rowkey)来确定存储，rowkey按照字典排序。 一个表(table)中有若干行，其中每列可能有多个版本，这些不同的版本按照时间戳(timestamp)区分。
-若干个列构成一个列族(column family)，一个列族中的所有列存储在一个HFile中。列族在创建表时就定义好，不
-        </p>
-    </div>
-</article>
-    
-
-    
-    
-    
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
-        <a href="/2018/12/01/howInstall/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://www.hdwallpapers.net/previews/lioness-in-black-and-white-852.jpg)" alt="基于hexo的marble模板" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-        <span><a href="http://guanhonly.github.io/2018/12/01/howInstall/#isso-thread"></a></span>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/技术/">技术</a>
-            </div>
-            <div class="date"><time datetime="2018-12-01T11:36:39.000Z" itemprop="datePublished">2018-12-01</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2018/12/01/howInstall/">基于hexo的marble模板</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            我的旧版博客使用的模板。项目github地址：hexo-theme-marble
-
-自己动手做的一个github个人主页，由于之前没有做过前端，所以在@ppoffice的Alex项目基础上改的。主要是根据我的个人喜好进行的界面的调整，并增加了评论功能。评论功能采用的gitalk。
-整个界面追求极致简洁，黑白配色，所以取名marble。
-安装方法：1. nodejs和hexo的安装可以参考这篇博客：
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-
-    </div></section>
+    </section>
 
 
 
@@ -397,6 +344,19 @@ var _hmt = _hmt || [];
             
         </ul>
     </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2020/09/07/a-question-about-dp-and-expectation/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">记一道动态规划+数学期望的算法题</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
     
     <div class="widgets-container">
         
