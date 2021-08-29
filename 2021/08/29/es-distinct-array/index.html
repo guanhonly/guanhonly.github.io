@@ -6,26 +6,26 @@
     
 
     
-    <title>初探Uber H3原理 | Honly&#39;s Blog</title>
+    <title>ElasticSearch 数组去重 | Honly&#39;s Blog</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-    <meta name="keywords" content="GIS,算法,空间索引,Uber">
+    <meta name="keywords" content="Elasticsearch,实用教程">
     
-    <meta name="description" content="2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译">
-<meta name="keywords" content="GIS,算法,空间索引,Uber">
+    <meta name="description" content="往ES某个字段中插入值时，有时候需要对结果进行去重，即需要这个字段里所有的值是互异的。而ES又没有Set这样的数据结构，所以需要在插入的时候执行脚本来实现这样的功能。 在参考了ES官方文档Script后，可以很容易写出这样的脚本，假设values字段是数组类型的，需要存储去重的值： 1234567List values = [];if (ctx._source.containsKey(&apos;value">
+<meta name="keywords" content="Elasticsearch,实用教程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="初探Uber H3原理">
-<meta property="og:url" content="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/index.html">
+<meta property="og:title" content="ElasticSearch 数组去重">
+<meta property="og:url" content="http://guanhonly.github.io/2021/08/29/es-distinct-array/index.html">
 <meta property="og:site_name" content="Honly&#39;s Blog">
-<meta property="og:description" content="2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译">
+<meta property="og:description" content="往ES某个字段中插入值时，有时候需要对结果进行去重，即需要这个字段里所有的值是互异的。而ES又没有Set这样的数据结构，所以需要在插入的时候执行脚本来实现这样的功能。 在参考了ES官方文档Script后，可以很容易写出这样的脚本，假设values字段是数组类型的，需要存储去重的值： 1234567List values = [];if (ctx._source.containsKey(&apos;value">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/Twitter-H3.png">
-<meta property="og:updated_time" content="2020-08-30T03:27:33.243Z">
+<meta property="og:image" content="https://www.hdwallpapers.net/previews/reflection-polyscape-1085.jpg">
+<meta property="og:updated_time" content="2021-08-29T08:39:49.110Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="初探Uber H3原理">
-<meta name="twitter:description" content="2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译">
-<meta name="twitter:image" content="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/Twitter-H3.png">
+<meta name="twitter:title" content="ElasticSearch 数组去重">
+<meta name="twitter:description" content="往ES某个字段中插入值时，有时候需要对结果进行去重，即需要这个字段里所有的值是互异的。而ES又没有Set这样的数据结构，所以需要在插入的时候执行脚本来实现这样的功能。 在参考了ES官方文档Script后，可以很容易写出这样的脚本，假设values字段是数组类型的，需要存储去重的值： 1234567List values = [];if (ctx._source.containsKey(&apos;value">
+<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/reflection-polyscape-1085.jpg">
     
 
     
@@ -158,14 +158,14 @@ var _hmt = _hmt || [];
 </div>
 
                         <div class="main-body-content">
-                            <article id="post-uber-h3-preliminary-research" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+                            <article id="post-es-distinct-array" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        初探Uber H3原理
+        ElasticSearch 数组去重
         </h1>
     
 
@@ -176,8 +176,8 @@ var _hmt = _hmt || [];
                 
     <div class="article-date">
       <i class="fa fa-calendar"></i>
-      <a href="/2019/10/27/uber-h3-preliminary-research/" class="article-date">
-         <time datetime="2019-10-27T03:05:13.000Z" itemprop="datePublished">2019-10-27</time>
+      <a href="/2021/08/29/es-distinct-array/" class="article-date">
+         <time datetime="2021-08-29T08:08:36.000Z" itemprop="datePublished">2021-08-29</time>
       </a>
     </div>
 
@@ -187,7 +187,7 @@ var _hmt = _hmt || [];
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/GIS/">GIS</a>, <a class="tag-link" href="/tags/Uber/">Uber</a>, <a class="tag-link" href="/tags/空间索引/">空间索引</a>, <a class="tag-link" href="/tags/算法/">算法</a>
+        <a class="tag-link" href="/tags/Elasticsearch/">Elasticsearch</a>, <a class="tag-link" href="/tags/实用教程/">实用教程</a>
     </div>
 
                 
@@ -198,49 +198,11 @@ var _hmt = _hmt || [];
         
         
         <div class="article-entry" itemprop="articleBody">
-            <p>2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：<a href="https://github.com/uber/h3" target="_blank" rel="noopener">h3</a>）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：<br>简略版：<a href="https://eng.uber.com/h3/" target="_blank" rel="noopener">H3: Uber’s Hexagonal Hierarchical Spatial Index</a><br>详细版：<a href="https://uber.github.io/h3/#/documentation/overview/introduction" target="_blank" rel="noopener">H3 introdutction</a>。<br>如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译和解释了一点原理层面的东西。</p>
-<h2 id="六边形网格索引"><a href="#六边形网格索引" class="headerlink" title="六边形网格索引"></a>六边形网格索引</h2><p>H3是一种基于网格的空间索引，但跟普通的矩形网格索引不同的是，他的每一个网格都是正六边形。为啥要选正六边形呢，因为在基于网格的空间索引中，使用的多边形的边数越多，则一个网格越近似圆形，做缓冲区查询、kNN查询什么的也就越方便。而做网格索引又要求空间能够被网格铺满，不能有缝隙。根据初中数学知识，我们知道一个多边形的内角和公式为：<br>$$<br>\theta = (x - 2) * 180^\circ<br>$$</p>
-<p>其中，x为多边形的边数，$\theta$为多边形的内角和。则一个正多边形的每个角的角度为 $\frac{\theta}{x}=\frac{(x - 2) * 180^\circ}{x}$，而如果需要多边形能够铺满空间，则在多边形的顶点相交处，设每个顶点有y个多边形相交，需要满足以下等式：</p>
-<p>$$<br>\frac{360^\circ}{y} = \frac{(x - 2) * 180^\circ}{x}<br>$$<br>以上等式的求解过程我不再赘述，这个等式只有三组整数解：<br>$$<br>\begin{cases}<br>x=3&amp;\<br>y=6&amp;\<br>\end{cases}<br>\begin{cases}<br>x=4&amp;\<br>y=4&amp;\<br>\end{cases}<br>\begin{cases}<br>x=6&amp;\<br>y=3&amp;\<br>\end{cases}<br>$$<br>因此，能够做网格空间索引的形状只有三角形、矩形和六边形，而六边形因为边数最多，最接近圆，所以理论上来说在某些场景下是最优的选择。<br>Uber的技术博客上也给出了使用六边形做空间索引的优越性：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center"></th>
-<th style="text-align:center"></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center"><img src="https://uber.github.io/h3/images/neighbors-triangle.png" alt="图1.1 三角形到其邻三角形"></td>
-<td style="text-align:center"><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image25-1.png" alt="图1.2 矩形到其邻矩形"></td>
-<td style="text-align:center"><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image22.png" alt="图1.3 六边形到其邻六边形"></td>
-</tr>
-</tbody>
-</table>
-<p>上图展示了三种网格到其相邻网格的距离，可以看到，只有六边形到其相邻六边形的距离都是相等的。所以，H3就使用六边形作为网格索引的基本单元，实现空间索引。  </p>
-<h2 id="无变形的投影"><a href="#无变形的投影" class="headerlink" title="无变形的投影"></a>无变形的投影</h2><p>在GIS领域中，对空间填充曲线熟悉的同学应该知道，不论是GeoHash, Z2或者Hilbert，虽然看起来都是将空间按照经纬度分割成了一个个大小相等的网格，但实际上这些网格的实际面积并不相等。对于靠近极地的网格，虽然经纬度的间隔没变，但由于地球的曲率，这些网格的实际面积远小于靠近赤道的网格。<br>这种实际面积不相等的网格索引可能会造成一个问题，那就是由于网格大小不一致导致网格内数据量不一致，造成热网格和冷网格，Uber认为这会大大降低空间查询效率（<em>笔者按：其实时空数据本身分布就十分不均匀，网格对应的实际大小不一致倒不是一个很大的影响，个人感觉在这一点上Uber有点言过其实</em>）。于是，H3干脆摒弃传统的地图投影，直接在地球上铺满六边形（如图2）。<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image12.png" alt="图2 六边形铺满地球"><br>但是，理想很美好，现实却需要考虑如何实现。这么多六边形，到高层级的时候很难对齐进行一一编码，这么看来使用六边形铺满地球不太现实。那怎么办呢？一个办法就是对这些六边形进行分区管理。H3实现的方法是：将地球当作一个二十面体，这个二十面体的每一个面都是球面三角形，有12个顶点，称为球形二十面体（spherical icosahedron），在这个球形十二面体的每个面上都有相同排列方式的六边形。由于这个球形二十面体的12个顶点每一个都在地球上的水里，可以保证对于每个面做处理时不会遇到边界的edge case，因为Uber还没有轮船快艇业务，只需要保证在陆地上H3好使就行。这个球形二十面体的示意图见图3。<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image9-1-300x297.png" alt="图3 球形二十面体"><br>再考虑到图2所示的六边形网格，在第0层，这个球形二十面体的每一个面长这样：<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image3-1.png" alt="图4 二十面体的一个面"><br>这样一来，可以看到，在一个球面三角形的顶角处有个小三角形，这个小三角形就是H3的一种edge case：在二十面体的顶点处，有五个面交于这个顶点，每个面在这个顶点处都有一个小三角形，所以这些小三角形会形成一个五边形。也就是说，H3并不能保证每个空间单元都是六边形，在一些地方还是会存在五边形，但是这样做也不会造成很大影响，因为根据球形二十面体每个顶点都在水里的特性，这种五边形只会出现在水域周围，不会对Uber的打车和外卖业务造成很大的影响。根据这样的索引特性，H3规定在索引的第0层，每个面和图4一样，每个面上有5.5个六边形和$\frac{3}{5}$个五边形，即第0层一共有110个六边形和12个五边形。H3将这110个六边形称为基网格（base cells）。H3最高可以到15层，也就是说H3有16个层级的空间索引粒度，在粒度最细的第15层中，平均每个网格的大小为0.9平方米，平均边长为0.509713米。在往下一层划分时，每个父网格对应7个子网格，父子网格之间的对应关系是这样的：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center"></th>
-<th style="text-align:center"></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center"><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image19-1-280x300.png" alt="图4.1 爷爷网格"></td>
-<td style="text-align:center"><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image5-280x300.png" alt="图4.2 父亲网格"></td>
-<td style="text-align:center"><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image6-1-280x300.png" alt="图4.3 儿子网格"></td>
-</tr>
-</tbody>
-</table>
-<p>可以看到，父子网格之间并没有严密的对齐，父网格和其所对应的7个子网格之间会有一点差异，这种差异也导致了H3并不能表现出很好的层级关系。  </p>
-<h2 id="编码方式"><a href="#编码方式" class="headerlink" title="编码方式"></a>编码方式</h2><p>对六边形索引，H3使用了一种IJK坐标系来确定六边形的位置。IJK坐标系长这样：<br><img src="https://uber.github.io/h3/images/ijkp.png" alt="图5 IJK坐标系"><br>当然，H3不会简单地使用这种坐标系来对所有六边形进行编码，因为在每一个层级六边形的排列方式都不太一样。总的来说，在所有层级中，六边形的排列方式只有两种类型，称为Class II和Class III。在这两种类型的排列方式中，IJK坐标系的三个轴的方向不太一样。对于这种在一个二十面体的面上，根据不同的六边形排列方式使用不同方向坐标轴的坐标系，H3称之为FaceIJK坐标系：<br><img src="https://uber.github.io/h3/images/classII.III.png" alt="图6 FaceIJK坐标系"><br>那么对于一个面上所有层级的所有六边形，都使用FaceIJK坐标系编码，再加上面的唯一标识符可不可以？答案是可以，但没必要，因为如果这样做，H3编码会更加表示不了层级之间的关系。H3为了突出层级之间的关联性，使用了一种方法：每个六边形都包含其父六边形的坐标。这样只需要规定好每个网格的子网格坐标的计算方法，对于子网格，只需在父网格的坐标后面追加子网格的坐标即可。这样一来，只需关注一个网格的7个子网格如何计算坐标，所有层级的每个网格的坐标都可以递归得到，这7个网格坐标的计算方法见图7，为了表述方便，我称之为<strong>IJK七网格坐标系</strong>。那么还有12个五边形咋办？不好意思，那12个五边形随着层级划分仍然是12个，层级越高这些五边形越小，并且都在海里，影响不大，直接不管了！<br><img src="https://uber.github.io/h3/images/cpidigits.png" alt="图7 七个网格的坐标"><br>同时，H3还专门设置了一种叫做网格有向边（directed edges of grid cells）的东西（如图8），其目的是为了网格能够快速地找到其某个邻网格。这种网格有向边分为单向网格有向边和双向网格有向边，比如说，对于两个相邻网格A和B，其相交的边是E，如果E是一条由A-&gt;B的单向边，那么只能通过A快速找到邻居B，B不能快速找到邻居A；而如果E是一条双向边，那么A可以快速地找到B，B也可以快速地找到A。<br><img src="https://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/image17-768x539.png" alt="图8 网格有向边"><br>那么，说了这么多，终于要说到最关键的H3索引值了。<br>H3的索引值最多占63个比特位，可以用一个长整型表示，其结构如下所示：</p>
-<blockquote>
-<p><strong>0-3位</strong>：索引模式。0表示无效，1表示普通的网格，2表示单向边，3表示双向边（我也不知道为啥要用4个比特位表示，明明表示4种模式两位就够了，可能是为了以后能够加模式吧）；<br><strong>4-6位</strong>：如果索引模式是0或1，则没用；如果是2或3，表示这条边是这个六边形的哪条边，取值范围1-6；<br><strong>7-10位</strong>：表示层级，取值范围0-15；<br><strong>11-17位</strong>：表示这个网格属于哪个基网格，取值范围0-121；<br><strong>18-21位</strong>：表示这个网格的第一代祖宗网格在<strong>IJK七网格坐标系</strong>下的坐标；<br><strong>n-n+2(n&lt;=61)位</strong>：同上，表示这个网格的第i代祖宗网格在<strong>IJK七网格坐标系</strong>下的坐标</p>
-</blockquote>
-<p>可以看到，其实对于层级数比较小的网格，后面很多位是不需要的，如果全置为0则会浪费很多空间，所以H3索引值是可以压缩的。压缩算法在官方文档里没有讲，需要看代码才能知道了，这都是后话。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Uber提出的这个H3索引其实有很强的实用性，除了上述的基本原理外，H3还支持空间覆盖和各种查询功能。虽然Uber批判了一番传统的空间索引，但是个人感觉H3并不是在所有时空查询/空间查询场景下都适用，例如在空间范围矩形范围查询场景下，其效率可能不如GeoHash/Z2/S2/Hilbert。并且H3舍弃了一部分海上的区域，只适用于陆地上空间数据的索引，对于轮船轨迹之类的空间数据就不太适用了。并且Uber自己也说，H3现在用于市场的定量分析（H3 is used throughout Uber to support quantitative analysis of our marketplace），H3还有没有被Uber用到其他地方，也许只有Uber自己知道。<br>原理讲解就到这里，H3的使用方法和源码还请移步文章开头给出的H3官方文档和项目地址。后续如果有时间我会再探究一下H3的源码学习一下:smile:。</p>
+            <p>往ES某个字段中插入值时，有时候需要对结果进行去重，即需要这个字段里所有的值是互异的。而ES又没有Set这样的数据结构，所以需要在插入的时候执行脚本来实现这样的功能。</p>
+<p>在参考了ES官方文档<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-scripting.html" target="_blank" rel="noopener">Script</a>后，可以很容易写出这样的脚本，假设values字段是数组类型的，需要存储去重的值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">List values = [];</span><br><span class="line"><span class="keyword">if</span> (ctx._source.containsKey(<span class="string">'values'</span>)) &#123;</span><br><span class="line">    values.addAll(ctx._source.values);</span><br><span class="line">&#125;</span><br><span class="line">values.addAll(params.values);</span><br><span class="line">values = values.stream().distinct.collect(Collectors.toList());</span><br><span class="line">ctx_source.values = values;</span><br></pre></td></tr></table></figure>
+<p>其中<code>params.values</code>是需要插入的值，这样每次插入时都会经过去重，保证了values字段中的值都是互异的。完整的DSL如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST test_index/_update</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"script"</span>:&#123;</span><br><span class="line">        <span class="attr">"source"</span>:<span class="string">"List values=[];if(ctx._source.containsKey('values'))&#123;values.addAll(ctx._source.values);&#125;values.addAll(params.values);values = values.stream().distinct.collect(Collectors.toList());ctx_source.values = values;"</span>,</span><br><span class="line">        <span class="attr">"params"</span>:&#123;</span><br><span class="line">            <span class="attr">"values"</span>:[<span class="string">"a"</span>,<span class="string">"b"</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
         </div>
         <footer class="article-footer">
@@ -248,7 +210,7 @@ var _hmt = _hmt || [];
 
 
 
-    <a data-url="http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/" data-id="ckswym7re0025uwu1hyfrqp5x" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://guanhonly.github.io/2021/08/29/es-distinct-array/" data-id="ckswym7p20005uwu1hghzmj0t" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -318,16 +280,18 @@ var _hmt = _hmt || [];
             "@type": "Person",
             "name": "Honly"
         },
-        "headline": "初探Uber H3原理",
-        "image": "http://guanhonly.github.iohttps://1fykyq3mdn5r21tpna3wkdyi-wpengine.netdna-ssl.com/wp-content/uploads/2018/06/Twitter-H3.png",
-        "keywords": "GIS 算法 空间索引 Uber",
+        "headline": "ElasticSearch 数组去重",
+        "image": "http://guanhonly.github.iohttps://www.hdwallpapers.net/previews/reflection-polyscape-1085.jpg",
+        "keywords": "Elasticsearch 实用教程",
         "genre": "技术",
-        "datePublished": "2019-10-27",
-        "dateCreated": "2019-10-27",
-        "dateModified": "2020-08-30",
-        "url": "http://guanhonly.github.io/2019/10/27/uber-h3-preliminary-research/",
-        "description": "2018年初，Uber正式开源了他们自己的一种空间索引算法H3（H3项目地址：h3）。最近偶然得知了这个算法，于是Google了一下，发现Uber还是比较良心地在其官网上给出了很多算法原理的讲解：简略版：H3: Uber’s Hexagonal Hierarchical Spatial Index详细版：H3 introdutction。如果英文还不错的话，建议直接看官方的介绍，我这里只是大致翻译",
-        "wordCount": 124
+        "datePublished": "2021-08-29",
+        "dateCreated": "2021-08-29",
+        "dateModified": "2021-08-29",
+        "url": "http://guanhonly.github.io/2021/08/29/es-distinct-array/",
+        "description": "往ES某个字段中插入值时，有时候需要对结果进行去重，即需要这个字段里所有的值是互异的。而ES又没有Set这样的数据结构，所以需要在插入的时候执行脚本来实现这样的功能。
+在参考了ES官方文档Script后，可以很容易写出这样的脚本，假设values字段是数组类型的，需要存储去重的值：
+1234567List values = [];if (ctx._source.containsKey('value",
+        "wordCount": 116
     }
 </script>
 
@@ -382,20 +346,10 @@ var _hmt = _hmt || [];
         
 <nav id="article-nav">
     
-        <a href="/2019/11/30/strange-Go-1/" id="article-nav-newer" class="article-nav-link-wrap">
-        <strong class="article-nav-caption">下一篇</strong>
-        <p class="article-nav-title">
-        
-            Go的奇特之处1--Go语言的作用域
-        
-        </p>
-        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
-    </a>
     
-    
-        <a href="/2019/09/05/PolylineEncoding/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2020/12/15/es-sum-and-agg/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">上一篇</strong>
-        <p class="article-nav-title">轨迹压缩算法(Polyline encoding algorithm)探究</p>
+        <p class="article-nav-title">Elasticsearch sum和group by(aggregation)的集成</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -406,15 +360,6 @@ var _hmt = _hmt || [];
         
             
                 
-<div class="widget-wrap widget-list">
-    <h3 class="widget-title">目录</h3>
-    <div class="widget">
-        <div id="toc" class="toc-article">
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#六边形网格索引"><span class="toc-number">1.</span> <span class="toc-text">六边形网格索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#无变形的投影"><span class="toc-number">2.</span> <span class="toc-text">无变形的投影</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编码方式"><span class="toc-number">3.</span> <span class="toc-text">编码方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
-        </div>
-    </div>
-</div>
-
 
             
                 
