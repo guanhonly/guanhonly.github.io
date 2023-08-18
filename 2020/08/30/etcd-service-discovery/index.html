@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+
+    
+
+    
+    <title>用etcd做服务发现（service discovery） | Honly&#39;s Blog</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="Go语言,工程,架构">
+    
+    <meta name="description" content="什么是服务发现服务发现其实有两层含义，第一层是实例发现，第二层是端口发现。如果有两个服务A和B，两个服务都是分布式系统，在某个时刻服务A作为客户端要请求服务B，那么这时从服务A中的某个实例（instance）Ai就要访问服务B中的某个实例Bi，那么Ai找到一个合适的Bi就是服务发现的第一层含义，即实例发现。Ai找到合适的Bi后其实还没完事，Ai需要知道Bi响应这个请求的应用程序，也就是说需要知道B">
+<meta name="keywords" content="Go语言,工程,架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用etcd做服务发现（service discovery）">
+<meta property="og:url" content="http://guanhonly.github.io/2020/08/30/etcd-service-discovery/index.html">
+<meta property="og:site_name" content="Honly&#39;s Blog">
+<meta property="og:description" content="什么是服务发现服务发现其实有两层含义，第一层是实例发现，第二层是端口发现。如果有两个服务A和B，两个服务都是分布式系统，在某个时刻服务A作为客户端要请求服务B，那么这时从服务A中的某个实例（instance）Ai就要访问服务B中的某个实例Bi，那么Ai找到一个合适的Bi就是服务发现的第一层含义，即实例发现。Ai找到合适的Bi后其实还没完事，Ai需要知道Bi响应这个请求的应用程序，也就是说需要知道B">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.hdwallpapers.net/previews/digital-rose-1049.jpg">
+<meta property="og:updated_time" content="2020-08-30T04:42:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用etcd做服务发现（service discovery）">
+<meta name="twitter:description" content="什么是服务发现服务发现其实有两层含义，第一层是实例发现，第二层是端口发现。如果有两个服务A和B，两个服务都是分布式系统，在某个时刻服务A作为客户端要请求服务B，那么这时从服务A中的某个实例（instance）Ai就要访问服务B中的某个实例Bi，那么Ai找到一个合适的Bi就是服务发现的第一层含义，即实例发现。Ai找到合适的Bi后其实还没完事，Ai需要知道Bi响应这个请求的应用程序，也就是说需要知道B">
+<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/digital-rose-1049.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="/favicon.png">
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ae9213049755939da4c27576d330fe00";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">Stay hungry. Stay foolish.</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/技术/">技术</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/生活/">生活</a></li></ul>
+                                    
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/archives/">归档</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/2017/01/01/aboutme/">关于</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/技术/">技术</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-etcd-service-discovery" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        用etcd做服务发现（service discovery）
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+      <i class="fa fa-calendar"></i>
+      <a href="/2020/08/30/etcd-service-discovery/" class="article-date">
+         <time datetime="2020-08-29T16:00:36.000Z" itemprop="datePublished">2020-08-30</time>
+      </a>
+    </div>
+
+
+                
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Go语言/">Go语言</a>, <a class="tag-link" href="/tags/工程/">工程</a>, <a class="tag-link" href="/tags/架构/">架构</a>
+    </div>
+
+                
+
+                
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <h2 id="什么是服务发现"><a href="#什么是服务发现" class="headerlink" title="什么是服务发现"></a>什么是服务发现</h2><p>服务发现其实有两层含义，第一层是实例发现，第二层是端口发现。<br>如果有两个服务A和B，两个服务都是分布式系统，在某个时刻服务A作为客户端要请求服务B，那么这时从服务A中的某个实例（instance）Ai就要访问服务B中的某个实例Bi，那么Ai找到一个合适的Bi就是服务发现的第一层含义，即实例发现。<br>Ai找到合适的Bi后其实还没完事，Ai需要知道Bi响应这个请求的应用程序，也就是说需要知道Bi响应这个请求的端口号。由于大部分应用程序的端口号都是随机的，Ai不知道到底请求哪个端口，这就需要Bi找个办法告知Ai。这就是端口发现。<br>本文所述的服务发现包括实例发现和端口发现，因为虽然说现在是微服务时代，但还是有很多服务承载着若干个功能，这就需要用不同的端口去实现不同的功能，也就需要做端口发现。</p>
+<h2 id="为什么要用etcd"><a href="#为什么要用etcd" class="headerlink" title="为什么要用etcd"></a>为什么要用etcd</h2><p>如果只考虑效果，不考虑时间、金钱和人力成本，其实用啥样的数据库都能做服务发现。但对于一个用Go语言写的服务来说，由于etcd本身就是Go语言写的，API简单，具有强一致性，并且还有消息广播功能，主要还开源。这也就让etcd有得天独厚的优势，让很多Go语言的服务都用etcd来做服务发现和配置分发。另外，etcd也形成了自己的生态，和K8s集成的很好（可能因为都是Go语言写的），所以现在Go服务用etcd的越来越多。</p>
+<h2 id="怎么用etcd做服务发现"><a href="#怎么用etcd做服务发现" class="headerlink" title="怎么用etcd做服务发现"></a>怎么用etcd做服务发现</h2><p>对于客户端来说，请求需要分配到哪个实例是完全不知道的，这时候就需要在客户端和服务端之间加入一个服务发现层。一个简单的思想就是，引入一个etcd集群，服务端每次有新实例加入服务时，就向etcd中注册自己的ip和port。客户端只要访问etcd，拿到能够响应请求，并且<strong>合适</strong>的那个实例的ip和port即可。</p>
+<p>比如服务B有个功能Add，服务B中的某个实例Bi在启动时可以注册功能Add的端口和自身的ip到etcd。Bi可以将功能名、ip和端口号组合后存储到etcd，比如以<code>\&lt;FunctionName\&gt;:\&lt;hostIP\&gt;:\&lt;port\&gt;</code>的格式作为key，以<code>\&lt;hostIP\&gt;:\&lt;port\&gt;</code>的格式作为value存储。当服务A请求服务B的Add功能时，请求会先到etcd，根据前缀<code>\&lt;FunctionName\&gt;:</code>拿到能够支持的这个功能的ip和port，然后以某种负载均衡的方式请求一个ip和port，这种负载均衡方式一般都采用round-robin，以保证服务B中的每个实例承载的流量尽量平均。<br>对于应用程序来说，其实并不想关心这些服务发现的过程，所以在客户端和服务端都有一层服务发现的协议（以下称为服务发现层），来使得这些过程对于应用程序来说是无感知的。服务端的服务发现层就需要在实例添加的时候将实例的ip和port注册到etcd，并且定时向etcd发送心跳，如果etcd超过某个时间没有收到该ip和port的心跳，那么etcd就会删除掉这条记录。客户端的服务发现层就需要每次去请求etcd拿到合适的ip和port返回给应用程序，应用程序再进行远程调用。<br>如果客户端每次都要请求etcd拿合适的ip和port，那么每次都要增加远程调用，会增大每次调用的延迟，这时就需要想办法减少远程调用。如果我们允许调用失败的存在，那么可以将请求和服务发现解耦，进行异步的服务发现。<br>借助etcd强大的监听（Watch）功能，可以很方便地实现请求和服务发现的异步调用。客户端可以在本地用缓存记录服务端最新的ip和port，如果etcd有新增的key，即代表服务端有新上的实例，etcd就通知客户端，客户端在本地缓存新增这个ip和port。如果etcd有删除的key，即代表服务端有实例下线（可能是服务端主动缩容或机器爆炸了），也会通知客户端，客户端就可以删除本地缓存中这个ip和port。这样每次客户端调用服务端的时候，只需要检查本地的ip和port列表，用一种负载均衡的方式去请求服务端的某个ip和port即可。或许这种异步调用有时会出现一种edge case：服务端某个实例刚下线，etcd还没来得及通知到客户端，客户端刚好需要访问这个实例，这时客户端对服务端的这个请求就会发生不可达的错误。但是发生这种不一致错误的概率很小，站在成本的角度来说，客户端本地缓存ip和port，进行异步调用是用etcd做服务发现成本最低的方案。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>其实端口发现在很多著名的RPC实现里都早已实现了，一般就是在知名端口加一个portmapper，服务端请求这个知名端口拿到需要的端口即可。实例发现有很多种解决方案，Go服务用etcd做实例发现很多公司都有成熟的解决方案，实际工程和架构中需要考虑的问题肯定比本文中描述的要多，但基本思想都和本文中描述的差不多。如果作为一个服务的架构师，用开源的etcd并且用本地缓存异步调用做服务发现是一种兼顾了性能和成本的方案。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://guanhonly.github.io/2020/08/30/etcd-service-discovery/" data-id="cllgodj39000dq4qmmpfz0xtl" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "Honly"
+        },
+        "headline": "用etcd做服务发现（service discovery）",
+        "image": "http://guanhonly.github.iohttps://www.hdwallpapers.net/previews/digital-rose-1049.jpg",
+        "keywords": "Go语言 工程 架构",
+        "genre": "技术",
+        "datePublished": "2020-08-30",
+        "dateCreated": "2020-08-30",
+        "dateModified": "2020-08-30",
+        "url": "http://guanhonly.github.io/2020/08/30/etcd-service-discovery/",
+        "description": "什么是服务发现服务发现其实有两层含义，第一层是实例发现，第二层是端口发现。如果有两个服务A和B，两个服务都是分布式系统，在某个时刻服务A作为客户端要请求服务B，那么这时从服务A中的某个实例（instance）Ai就要访问服务B中的某个实例Bi，那么Ai找到一个合适的Bi就是服务发现的第一层含义，即实例发现。Ai找到合适的Bi后其实还没完事，Ai需要知道Bi响应这个请求的应用程序，也就是说需要知道B",
+        "wordCount": 18
+    }
+</script>
+
+</article>
+
+    <section id="comments">
+    
+        
+<div id="comment-container"></div>
+
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/HonlyGuan" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/honly.guan" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/guanhonly" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2020/09/07/a-question-about-dp-and-expectation/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            记一道动态规划+数学期望的算法题
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2020/08/10/golang-prepend/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Go语言slice前置插入（prepend）的坑</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+<div class="widget-wrap widget-list">
+    <h3 class="widget-title">目录</h3>
+    <div class="widget">
+        <div id="toc" class="toc-article">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是服务发现"><span class="toc-number">1.</span> <span class="toc-text">什么是服务发现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要用etcd"><span class="toc-number">2.</span> <span class="toc-text">为什么要用etcd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么用etcd做服务发现"><span class="toc-number">3.</span> <span class="toc-text">怎么用etcd做服务发现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">4.</span> <span class="toc-text">小结</span></a></li></ol>
+        </div>
+    </div>
+</div>
+
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2023/07/20/trans-blog-announce/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/生活/">生活</a></p>
+                            <p class="item-title"><a href="/2023/07/20/trans-blog-announce/" class="title">博客迁移</a></p>
+                            <p class="item-date"><time datetime="2023-07-20T13:57:22.000Z" itemprop="datePublished">2023-07-20</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2022/01/09/go-sort/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg)" alt="Go二分查找sort.Search" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2022/01/09/go-sort/" class="title">Go二分查找sort.Search</a></p>
+                            <p class="item-date"><time datetime="2022-01-09T08:45:25.000Z" itemprop="datePublished">2022-01-09</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2021/08/29/es-distinct-array/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/reflection-polyscape-1085.jpg)" alt="ElasticSearch 数组去重" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2021/08/29/es-distinct-array/" class="title">ElasticSearch 数组去重</a></p>
+                            <p class="item-date"><time datetime="2021-08-29T08:08:36.000Z" itemprop="datePublished">2021-08-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/12/15/es-sum-and-agg/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/3d-colorful-spiral-1057.jpg)" alt="Elasticsearch sum和group by(aggregation)的集成" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2020/12/15/es-sum-and-agg/" class="title">Elasticsearch sum和group by(aggregation)的集成</a></p>
+                            <p class="item-date"><time datetime="2020-12-15T15:28:13.000Z" itemprop="datePublished">2020-12-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/11/16/go-byte-to-string/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg)" alt="Go单个字节（byte）转字符串（string）的一点坑" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2020/11/16/go-byte-to-string/" class="title">Go单个字节（byte）转字符串（string）的一点坑</a></p>
+                            <p class="item-date"><time datetime="2020-11-16T09:38:06.000Z" itemprop="datePublished">2020-11-16</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch/">Elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go语言/">Go语言</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uber/">Uber</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程/">工程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/架构/">架构</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/轨迹/">轨迹</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Elasticsearch/" style="font-size: 12.5px;">Elasticsearch</a> <a href="/tags/GIS/" style="font-size: 15px;">GIS</a> <a href="/tags/Google/" style="font-size: 12.5px;">Google</a> <a href="/tags/Go语言/" style="font-size: 20px;">Go语言</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Uber/" style="font-size: 10px;">Uber</a> <a href="/tags/实用教程/" style="font-size: 15px;">实用教程</a> <a href="/tags/工程/" style="font-size: 12.5px;">工程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/架构/" style="font-size: 12.5px;">架构</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 12.5px;">空间索引</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/轨迹/" style="font-size: 10px;">轨迹</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="https://xctorres.github.io/">xcTorres&#39;s blog</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://lb-yu.github.io/">lb-yu&#39;s blog</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://kalasearch.cn">卡拉搜索</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2023 Honly</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        id: window.location.pathname.substr(0, 50),
+        repo: 'guanhonly.github.io',
+        owner: 'guanhonly',
+        distractionFreeMode: 'true',
+        admin: "guanhonly"
+    })
+    gitalk.render('comment-container')
+</script>
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

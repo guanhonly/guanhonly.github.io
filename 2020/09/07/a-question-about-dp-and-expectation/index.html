@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+
+    
+
+    
+    <title>记一道动态规划+数学期望的算法题 | Honly&#39;s Blog</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="keywords" content="算法">
+    
+    <meta name="description" content="最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。这道题的题目如下：  一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&amp;lt;= pD, pR, pS &amp;lt;=1，pD+pR+pS = 1。从左上角格子到右下">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一道动态规划+数学期望的算法题">
+<meta property="og:url" content="http://guanhonly.github.io/2020/09/07/a-question-about-dp-and-expectation/index.html">
+<meta property="og:site_name" content="Honly&#39;s Blog">
+<meta property="og:description" content="最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。这道题的题目如下：  一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&amp;lt;= pD, pR, pS &amp;lt;=1，pD+pR+pS = 1。从左上角格子到右下">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://www.hdwallpapers.net/previews/cubic-rainbow-384.jpg">
+<meta property="og:updated_time" content="2020-09-07T14:48:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一道动态规划+数学期望的算法题">
+<meta name="twitter:description" content="最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。这道题的题目如下：  一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&amp;lt;= pD, pR, pS &amp;lt;=1，pD+pR+pS = 1。从左上角格子到右下">
+<meta name="twitter:image" content="https://www.hdwallpapers.net/previews/cubic-rainbow-384.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="/favicon.png">
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.4.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?ae9213049755939da4c27576d330fe00";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                        <h2 class="subtitle-wrap">
+                            <p class="subtitle">Stay hungry. Stay foolish.</p>
+                        </h2>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/技术/">技术</a></li><li class="main-nav-list-item"><a class="main-nav-list-link" href="/categories/生活/">生活</a></li></ul>
+                                    
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/archives/">归档</a>
+                                </li>
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/2017/01/01/aboutme/">关于</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    <a class="page-title-link" href="/categories/技术/">技术</a>
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-a-question-about-dp-and-expectation" class="article article-single article-type-post" itemscope="" itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        记一道动态规划+数学期望的算法题
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+      <i class="fa fa-calendar"></i>
+      <a href="/2020/09/07/a-question-about-dp-and-expectation/" class="article-date">
+         <time datetime="2020-09-07T13:28:31.000Z" itemprop="datePublished">2020-09-07</time>
+      </a>
+    </div>
+
+
+                
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/算法/">算法</a>
+    </div>
+
+                
+
+                
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p>最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。<br>这道题的题目如下：</p>
+<blockquote>
+<p>一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&lt;= pD, pR, pS &lt;=1，pD+pR+pS = 1。从左上角格子到右下角格子的步数期望是多少？</p>
+</blockquote>
+<p>看到网格，从左上角走到右下角，第一反应这就是一道常规的动态规划。这个反应没错，那么接下来就是怎么去推导状态转移方程。</p>
+<p>如果设$step(i, j)$为从左上角到$(i, j)$的步数期望，那么需要找到一种函数关系$f(x)$，使得：<br>$$step(i, j) = f(step(i-1, j), step(i, j-1))$$<br>注意题目中有个条件：就算停留在原地一次，也算走了一步。如果用传统的dp思维，那么从$(i-1, j)$和$(i, j-1)$到$(i, j)$的状态转移方程就十分复杂，因为可能在格子上无限停留，得先求和再求极限。并且从$(0,0)$到$(0,0)$的步数期望并不为0（因为可能在左上角一直停留，也算步数），这个问题就难解了。所以，要再想想有没有简单的方法。<br>如果我们设期望$E(i, j)$为从$(i, j)$到右下角的步数期望，那么问题就转换成从$E(n-1, m-1)$递推到$E(0, 0)$，而$E(n-1, m-1)$是肯定为0的，问题突然开始出现了转机。<br>那么，考虑到$E(i, j)$会原地不动，我们先不急着得到状态转移方程，先列一下$E(i, j)$和什么相关。首先，思路是从右下角开始往左上递推，那么和$E(i, j)$有关的就是$E(i+1, j)$和$E(i, j+1)$了，可以得出如下的方程：<br>$$E(i, j) = pD \times E(i+1, j) + pR \times E(i, j+1) + pS \times E(i, j) + 1$$<br>这个方程中，连$E(i, j)$自身都在等号右侧，我刚列出来的时候也感觉有点别扭，但这个题的核心就在这里要绕个弯。根据上面的方程，可以求出$E(i, j)$的通项为：<br>$$E(i, j) = \frac{pD \times E(i+1, j) + pR \times E(i, j+1) + 1}{1-pS}$$<br>对于处于边缘区域的最下面的一行和最右边的一列，是分别没有$E(i+1, j)$和$E(i, j+1)$的，那么他们就没有这两项。所以总结出来通项就是：<br>如果i=n-1且j=m-1, 则$E(i, j) = 0$<br>如果i=n-1，则$E(i, j) = \frac{pR \times E(i, j+1) + 1}{1-pS}$<br>如果j=m-1，则$E(i, j) = \frac{pD \times E(i+1, j) + 1}{1-pS}$<br>如果0&lt;=i&lt;n-1且0&lt;=j&lt;m-1，则$E(i, j) = \frac{pD \times E(i+1, j) + pR \times E(i, j+1) + 1}{1-pS}$</p>
+<p>有了上面的思考和dp状态转移方程，代码就比较容易写了，这里我用Golang写了一个：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">solve</span><span class="params">(grid [][][3]<span class="keyword">float64</span>)</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">    n := <span class="built_in">len</span>(grid)</span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    m := <span class="built_in">len</span>(grid[<span class="number">0</span>])</span><br><span class="line">    dp := <span class="built_in">make</span>([][]<span class="keyword">float64</span>, n)</span><br><span class="line">    <span class="keyword">for</span> i:=n<span class="number">-1</span>; i&gt;=<span class="number">0</span>; i-- &#123;</span><br><span class="line">        dp[i] = <span class="built_in">make</span>([]<span class="keyword">float64</span>, m)</span><br><span class="line">        <span class="keyword">if</span> i == n<span class="number">-1</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> j := m<span class="number">-2</span>; j&gt;=<span class="number">0</span>; j-- &#123;</span><br><span class="line">                dp[n<span class="number">-1</span>][j] = (dp[n<span class="number">-1</span>][j+<span class="number">1</span>]*grid[n<span class="number">-1</span>][j][<span class="number">1</span>] + <span class="number">1</span>) / (<span class="number">1</span>-grid[n<span class="number">-1</span>][j][<span class="number">2</span>])</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            dp[i][m<span class="number">-1</span>] = (dp[i+<span class="number">1</span>][m<span class="number">-1</span>]*grid[i][m<span class="number">-1</span>][<span class="number">0</span>] + <span class="number">1</span>) / (<span class="number">1</span> - grid[i][m<span class="number">-1</span>][<span class="number">2</span>])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i:=n<span class="number">-2</span>; i&gt;=<span class="number">0</span>; i-- &#123;</span><br><span class="line">        <span class="keyword">for</span> j:=m<span class="number">-2</span>; j&gt;=<span class="number">0</span>; j-- &#123;</span><br><span class="line">            toDown := grid[i][j][<span class="number">0</span>]</span><br><span class="line">            toRight := grid[i][j][<span class="number">1</span>]</span><br><span class="line">            stop := grid[i][j][<span class="number">2</span>]</span><br><span class="line">            dp[i][j] = (toDown*dp[i+<span class="number">1</span>][j] + toRight*dp[i][j+<span class="number">1</span>] + <span class="number">1</span>) / (<span class="number">1</span>-stop)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实按照上面的思路，正推也可以推出来。如果设$E(i, j)$为从左上角到$(i, j)$的步数期望，就会有：<br>$$E(i, j) = pD \times E(i-1, j) + pR \times E(i, j-1) + pS \times E(i, j) + 1$$<br>$E(0, 0)$会满足这个条件：<br>$$E(0, 0) = pS \times E(0, 0) + 1$$<br>按照上文的思路，把$E(i, j)$的通项求出，也能从左上角推导到右下角。</p>
+<p>写完不得不感叹，动态规划的算法题真的是千变万化，需要开动脑筋多想想。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://guanhonly.github.io/2020/09/07/a-question-about-dp-and-expectation/" data-id="cllgodj2u0001q4qmbuez4dyu" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "Honly"
+        },
+        "headline": "记一道动态规划+数学期望的算法题",
+        "image": "http://guanhonly.github.iohttps://www.hdwallpapers.net/previews/cubic-rainbow-384.jpg",
+        "keywords": "算法",
+        "genre": "技术",
+        "datePublished": "2020-09-07",
+        "dateCreated": "2020-09-07",
+        "dateModified": "2020-09-07",
+        "url": "http://guanhonly.github.io/2020/09/07/a-question-about-dp-and-expectation/",
+        "description": "最近碰到一个算法题，开始觉得很简单，后来觉得有点难，后来做了做发现其实没有那么难，感觉有点意思。在这里分享一下这道题和解题思路。这道题的题目如下：
+
+一个n*m的网格，每个格子上有三个参数pD,pR,pS。pD表示下一步走到下方格子的概率，pR表示下一步走到右方格子的概率，pS表示下一步仍然在原地的概率。0&lt;= pD, pR, pS &lt;=1，pD+pR+pS = 1。从左上角格子到右下",
+        "wordCount": 514
+    }
+</script>
+
+</article>
+
+    <section id="comments">
+    
+        
+<div id="comment-container"></div>
+
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="https://twitter.com/HonlyGuan" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="https://www.facebook.com/honly.guan" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/guanhonly" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2020/11/16/go-byte-to-string/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">下一篇</strong>
+        <p class="article-nav-title">
+        
+            Go单个字节（byte）转字符串（string）的一点坑
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="/2020/08/30/etcd-service-discovery/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">用etcd做服务发现（service discovery）</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2023/07/20/trans-blog-announce/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/生活/">生活</a></p>
+                            <p class="item-title"><a href="/2023/07/20/trans-blog-announce/" class="title">博客迁移</a></p>
+                            <p class="item-date"><time datetime="2023-07-20T13:57:22.000Z" itemprop="datePublished">2023-07-20</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2022/01/09/go-sort/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg)" alt="Go二分查找sort.Search" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2022/01/09/go-sort/" class="title">Go二分查找sort.Search</a></p>
+                            <p class="item-date"><time datetime="2022-01-09T08:45:25.000Z" itemprop="datePublished">2022-01-09</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2021/08/29/es-distinct-array/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/reflection-polyscape-1085.jpg)" alt="ElasticSearch 数组去重" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2021/08/29/es-distinct-array/" class="title">ElasticSearch 数组去重</a></p>
+                            <p class="item-date"><time datetime="2021-08-29T08:08:36.000Z" itemprop="datePublished">2021-08-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/12/15/es-sum-and-agg/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://www.hdwallpapers.net/previews/3d-colorful-spiral-1057.jpg)" alt="Elasticsearch sum和group by(aggregation)的集成" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2020/12/15/es-sum-and-agg/" class="title">Elasticsearch sum和group by(aggregation)的集成</a></p>
+                            <p class="item-date"><time datetime="2020-12-15T15:28:13.000Z" itemprop="datePublished">2020-12-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2020/11/16/go-byte-to-string/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://imgedu.lagou.com/1799830-20191010085649387-2052232483.jpg)" alt="Go单个字节（byte）转字符串（string）的一点坑" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2020/11/16/go-byte-to-string/" class="title">Go单个字节（byte）转字符串（string）的一点坑</a></p>
+                            <p class="item-date"><time datetime="2020-11-16T09:38:06.000Z" itemprop="datePublished">2020-11-16</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/08/">八月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">十二月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch/">Elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIS/">GIS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Go语言/">Go语言</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HBase/">HBase</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Uber/">Uber</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/实用教程/">实用教程</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工程/">工程</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/架构/">架构</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间填充曲线/">空间填充曲线</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/空间索引/">空间索引</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/算法/">算法</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/轨迹/">轨迹</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Elasticsearch/" style="font-size: 12.5px;">Elasticsearch</a> <a href="/tags/GIS/" style="font-size: 15px;">GIS</a> <a href="/tags/Google/" style="font-size: 12.5px;">Google</a> <a href="/tags/Go语言/" style="font-size: 20px;">Go语言</a> <a href="/tags/HBase/" style="font-size: 10px;">HBase</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Uber/" style="font-size: 10px;">Uber</a> <a href="/tags/实用教程/" style="font-size: 15px;">实用教程</a> <a href="/tags/工程/" style="font-size: 12.5px;">工程</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a> <a href="/tags/架构/" style="font-size: 12.5px;">架构</a> <a href="/tags/空间填充曲线/" style="font-size: 10px;">空间填充曲线</a> <a href="/tags/空间索引/" style="font-size: 12.5px;">空间索引</a> <a href="/tags/算法/" style="font-size: 17.5px;">算法</a> <a href="/tags/轨迹/" style="font-size: 10px;">轨迹</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="https://xctorres.github.io/">xcTorres&#39;s blog</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://lb-yu.github.io/">lb-yu&#39;s blog</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://kalasearch.cn">卡拉搜索</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2023 Honly</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'ba96b12559b1c6a7ff63',
+        clientSecret: 'b77c4392fcfb6678af6d76af4cb02fad996a16c0',
+        id: window.location.pathname.substr(0, 50),
+        repo: 'guanhonly.github.io',
+        owner: 'guanhonly',
+        distractionFreeMode: 'true',
+        admin: "guanhonly"
+    })
+    gitalk.render('comment-container')
+</script>
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
